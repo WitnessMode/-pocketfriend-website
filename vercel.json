@@ -1,12 +1,4 @@
 {
-  "version": 2,
-  "name": "pocketfriend-website",
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
