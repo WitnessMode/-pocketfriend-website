@@ -1,0 +1,33 @@
+{
+  "name": "pocketfriend-website",
+  "version": "1.0.0",
+  "description": "Professional AI services company website for PocketFriend.io",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'Build complete - static site ready'",
+    "deploy": "vercel --prod",
+    "preview": "vercel"
+  },
+  "keywords": [
+    "ai",
+    "web-services",
+    "technology",
+    "pocketfriend",
+    "artificial-intelligence",
+    "web-development"
+  ],
+  "author": "PocketFriend.io",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pocketfriend/website"
+  },
+  "homepage": "https://pocketfriend.io",
+  "devDependencies": {
+    "vercel": "^32.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
