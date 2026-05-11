@@ -1,940 +1,654 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="PocketFriend.io - Leading AI and Web Services company providing cutting-edge technology solutions, AI development, and digital transformation services.">
-    <meta name="keywords" content="AI services, web development, artificial intelligence, machine learning, cloud services, digital transformation, technology consulting">
-    <meta name="author" content="PocketFriend.io">
-    <meta property="og:title" content="PocketFriend.io - AI & Web Services">
-    <meta property="og:description" content="Transform your business with cutting-edge AI solutions and professional web services.">
-    <meta property="og:url" content="https://pocketfriend.io">
-    <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="PocketFriend.io - AI & Web Services">
-    <meta name="twitter:description" content="Transform your business with cutting-edge AI solutions and professional web services.">
+    <title>Pocketfriend - Web Design & Local Marketing</title>
     
-    <title>PocketFriend.io - AI & Web Services | Transform Your Business</title>
+    <link rel="icon" href="./assets/logo-icon.png">
     
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <link rel="canonical" href="https://pocketfriend.io">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
-    
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&f[]=cabinet-grotesk@900,800,700,500,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Satoshi', 'sans-serif'],
+                        display: ['Cabinet Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        zinc: { 950: '#09090b', 900: '#18181b', 800: '#27272a', 400: '#a1a1aa' },
+                        brand: '#FF4D00',
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            --dark-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --text-primary: #1a1a2e;
-            --text-secondary: #6b7280;
-            --text-light: rgba(255, 255, 255, 0.9);
-            --surface: #ffffff;
-            --surface-elevated: #f8fafc;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            --border-radius: 20px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-            font-size: 16px;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            line-height: 1.6;
-            color: var(--text-primary);
-            background: var(--surface);
-            overflow-x: hidden;
-        }
-
-        /* Glass Morphism Effects */
-        .glass {
-            background: var(--glass-bg);
+        body { background-color: #09090b; color: #ffffff; -webkit-font-smoothing: antialiased; }
+        .glass-panel {
+            background: rgba(24, 24, 27, 0.3);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
         }
-
-        .glass-dark {
-            background: rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* Header & Navigation */
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            padding: 1rem 0;
-            transition: var(--transition);
-        }
-
-        .header.scrolled {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .nav {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 2rem;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: white;
-            text-decoration: none;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-            transition: var(--transition);
-        }
-
-        .header.scrolled .logo {
-            background: var(--primary-gradient);
+        .text-gradient {
+            background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: none;
         }
-
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-            align-items: center;
+        .reveal { 
+            opacity: 0; 
+            transform: translateY(40px) scale(0.96); 
+            filter: blur(12px); 
+            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1); 
         }
-
-        .nav-link {
-            text-decoration: none;
-            color: var(--text-primary);
-            font-weight: 500;
-            transition: var(--transition);
-            position: relative;
+        .reveal.active { 
+            opacity: 1; 
+            transform: translateY(0) scale(1); 
+            filter: blur(0); 
         }
-
-        .nav-link:hover {
-            color: #667eea;
+        @keyframes subtle-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .animate-float { animation: subtle-float 8s ease-in-out infinite; }
+        .animate-float-delayed { animation: subtle-float 8s ease-in-out 4s infinite; }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .animate-marquee { display: flex; width: 200%; animation: marquee 25s linear infinite; }
+        @keyframes gradient-shift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .animate-gradient { animation: gradient-shift 4s ease infinite; }
+        
+        @keyframes code-fall {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0.5) rotate(var(--rot)); opacity: 0; }
         }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--primary-gradient);
-            transition: var(--transition);
-        }
-
-        .nav-link:hover::after {
-            width: 100%;
-        }
-
-        .cta-button {
-            background: var(--primary-gradient);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: var(--transition);
-            border: none;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .menu-toggle {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
-            gap: 4px;
-        }
-
-        .menu-toggle span {
-            width: 25px;
-            height: 3px;
-            background: var(--text-primary);
-            transition: var(--transition);
-        }
-
-        /* Hero Section */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            position: relative;
-            background: var(--primary-gradient);
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grain)"/></svg>');
-            opacity: 0.3;
-        }
-
-        .hero-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            text-align: center;
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero-title {
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            font-weight: 800;
-            color: white;
-            margin-bottom: 1.5rem;
-            line-height: 1.1;
-        }
-
-        .hero-subtitle {
-            font-size: clamp(1.2rem, 3vw, 1.5rem);
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 3rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .hero-cta {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn-primary {
-            background: white;
-            color: var(--text-primary);
-            padding: 1rem 2rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 50px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            text-decoration: none;
-            font-weight: 600;
-            transition: var(--transition);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-xl);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: white;
-        }
-
-        .floating-elements {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+        .code-particle {
+            position: fixed;
             pointer-events: none;
-        }
-
-        .floating-element {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .floating-element:nth-child(1) { top: 20%; left: 10%; width: 80px; height: 80px; animation-delay: 0s; }
-        .floating-element:nth-child(2) { top: 60%; right: 10%; width: 120px; height: 120px; animation-delay: 2s; }
-        .floating-element:nth-child(3) { bottom: 20%; left: 20%; width: 60px; height: 60px; animation-delay: 4s; }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
-        }
-
-        /* Section Styles */
-        .section {
-            padding: 5rem 0;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        .section-title {
-            font-size: clamp(2rem, 4vw, 3rem);
+            z-index: 99999;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
             font-weight: 700;
-            margin-bottom: 1rem;
-        }
-
-        .section-subtitle {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* Services Grid */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .service-card {
-            background: var(--surface);
-            padding: 2.5rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-md);
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .service-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--primary-gradient);
-        }
-
-        .service-card:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--shadow-xl);
-        }
-
-        .service-icon {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-            display: block;
-        }
-
-        .service-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        .service-description {
-            color: var(--text-secondary);
-            line-height: 1.7;
-        }
-
-        /* About Section */
-        .about {
-            background: var(--surface-elevated);
-        }
-
-        .about-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
-        }
-
-        .about-text {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 1.5rem;
-            background: white;
-            border-radius: 15px;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .stat-label {
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        /* Contact Section */
-        .contact {
-            background: var(--dark-gradient);
-            color: white;
-        }
-
-        .contact-form {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .form-group {
-            margin-bottom: 2rem;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            color: white;
-            font-size: 1rem;
-            transition: var(--transition);
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: #667eea;
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .form-input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .form-textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-
-        .form-submit {
-            width: 100%;
-            background: var(--accent-gradient);
-            color: white;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .form-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        /* Footer */
-        .footer {
-            background: #1a1a2e;
-            color: white;
-            padding: 3rem 0 1rem;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-section h3 {
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-links a {
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .footer-links a:hover {
-            color: white;
-        }
-
-        .footer-bottom {
-            text-align: center;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        /* Animations */
-        .fade-in-up {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.6s ease;
-        }
-
-        .fade-in-up.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            .nav-menu {
-                position: fixed;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: white;
-                flex-direction: column;
-                padding: 2rem;
-                box-shadow: var(--shadow-lg);
-                transform: translateY(-100%);
-                opacity: 0;
-                visibility: hidden;
-                transition: var(--transition);
-            }
-
-            .nav-menu.active {
-                transform: translateY(0);
-                opacity: 1;
-                visibility: visible;
-            }
-
-            .menu-toggle {
-                display: flex;
-            }
-
-            .hero-cta {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .about-content {
-                grid-template-columns: 1fr;
-            }
-
-            .services-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .nav {
-                padding: 0 1rem;
-            }
-
-            .container {
-                padding: 0 1rem;
-            }
-
-            .service-card {
-                padding: 2rem;
-            }
-        }
-
-        /* Loading Animation */
-        .loading {
-            opacity: 0;
-            animation: fadeIn 0.6s ease forwards;
-        }
-
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-
-        /* Scroll Progress */
-        .scroll-progress {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 0%;
-            height: 3px;
-            background: var(--primary-gradient);
-            z-index: 9999;
-            transition: width 0.3s ease;
+            color: #FF4D00;
+            animation: code-fall 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            text-shadow: 0 0 10px rgba(255, 77, 0, 0.5);
         }
     </style>
 </head>
-
-<body class="loading">
-    <!-- Scroll Progress Bar -->
-    <div class="scroll-progress" id="scrollProgress"></div>
+<body class="selection:bg-brand selection:text-white min-h-[100dvh] relative bg-zinc-950">
 
     <!-- Header -->
-    <header class="header" id="header">
-        <nav class="nav">
-            <a href="#" class="logo">Pocket Friend</a>
-            <ul class="nav-menu" id="navMenu">
-                <li><a href="#home" class="nav-link">Home</a></li>
-                <li><a href="#services" class="nav-link">Services</a></li>
-                <li><a href="#about" class="nav-link">About</a></li>
-                <li><a href="#contact" class="nav-link">Contact</a></li>
-                <li><a href="#contact" class="cta-button">Get Started</a></li>
-            </ul>
-            <div class="menu-toggle" id="menuToggle">
-                <span></span>
-                <span></span>
-                <span></span>
+    <header class="fixed top-0 left-0 right-0 z-50 bg-zinc-950/80 backdrop-blur-md border-b border-white/5 py-4 px-6 md:px-12 transition-all">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="#" class="flex items-center gap-3 group">
+                <img src="./assets/logo-icon.png" alt="Pocketfriend Icon" class="h-10 w-auto bg-white p-1.5 rounded-lg transition-transform group-hover:scale-[0.98]">
+            </a>
+            <nav class="hidden md:flex gap-10 items-center font-medium text-sm">
+                <a href="#services" class="text-zinc-400 hover:text-white transition-colors">Services</a>
+                <a href="#process" class="text-zinc-400 hover:text-white transition-colors">Process</a>
+                <a href="#pricing" class="text-zinc-400 hover:text-white transition-colors">Packages</a>
+                <a href="#faq" class="text-zinc-400 hover:text-white transition-colors">FAQ</a>
+            </nav>
+            <div class="flex items-center gap-6">
+                <a href="mailto:contact@pocketfriend.io?subject=Requesting%20a%20Free%20Proposal" class="bg-brand text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-opacity-90 transition-all active:scale-[0.98]">Get Free Proposal</a>
             </div>
-        </nav>
+        </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="floating-elements">
-            <div class="floating-element"></div>
-            <div class="floating-element"></div>
-            <div class="floating-element"></div>
-        </div>
-        <div class="hero-content">
-            <h1 class="hero-title fade-in-up">Transform Your Business with AI</h1>
-            <p class="hero-subtitle fade-in-up">Leading AI and web services company delivering cutting-edge solutions that drive innovation and accelerate growth for businesses worldwide.</p>
-            <div class="hero-cta fade-in-up">
-                <a href="#services" class="btn-primary">Explore Services</a>
-                <a href="#contact" class="btn-secondary">Start Project</a>
+    <main class="pt-[72px]">
+        <!-- Hero Section -->
+        <section class="relative w-full min-h-[90dvh] flex items-center overflow-hidden border-b border-white/5">
+            <div class="absolute inset-0 w-full h-full z-0 pointer-events-none">
+                <video autoplay loop muted playsinline class="w-full h-full object-cover opacity-60 mix-blend-screen scale-105">
+                    <source src="https://framerusercontent.com/assets/81jBBLb0cn8oKOtt6HP64mDIoSk.mp4" type="video/mp4">
+                </video>
+                <div class="absolute inset-0 bg-gradient-to-b from-zinc-950/40 via-transparent to-zinc-950"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/50 to-transparent"></div>
             </div>
-        </div>
-    </section>
 
-    <!-- Services Section -->
-    <section class="section" id="services">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title fade-in-up">Our Services</h2>
-                <p class="section-subtitle fade-in-up">Comprehensive technology solutions designed to propel your business into the future</p>
-            </div>
-            <div class="services-grid">
-                <div class="service-card fade-in-up">
-                    <span class="service-icon">🤖</span>
-                    <h3 class="service-title">AI Solutions</h3>
-                    <p class="service-description">Custom AI development, machine learning models, and intelligent automation systems that transform how you do business.</p>
-                </div>
-                <div class="service-card fade-in-up">
-                    <span class="service-icon">🌐</span>
-                    <h3 class="service-title">Web Development</h3>
-                    <p class="service-description">Modern, responsive websites and web applications built with cutting-edge technologies for optimal performance.</p>
-                </div>
-                <div class="service-card fade-in-up">
-                    <span class="service-icon">💼</span>
-                    <h3 class="service-title">IT Consulting</h3>
-                    <p class="service-description">Strategic technology consulting to optimize your IT infrastructure and digital transformation initiatives.</p>
-                </div>
-                <div class="service-card fade-in-up">
-                    <span class="service-icon">📱</span>
-                    <h3 class="service-title">Mobile Solutions</h3>
-                    <p class="service-description">Native and cross-platform mobile applications that deliver exceptional user experiences across all devices.</p>
-                </div>
-                <div class="service-card fade-in-up">
-                    <span class="service-icon">☁️</span>
-                    <h3 class="service-title">Cloud Services</h3>
-                    <p class="service-description">Cloud migration, infrastructure management, and scalable solutions to power your business growth.</p>
-                </div>
-                <div class="service-card fade-in-up">
-                    <span class="service-icon">🔒</span>
-                    <h3 class="service-title">Cybersecurity</h3>
-                    <p class="service-description">Comprehensive security solutions to protect your digital assets and ensure business continuity.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+            <div class="max-w-7xl mx-auto px-6 md:px-12 w-full flex flex-col lg:flex-row items-center justify-between gap-16 py-20 relative z-10">
+                <div class="w-full lg:w-1/2 flex flex-col items-start text-left reveal">
+                    <div class="mb-10 flex items-center gap-4 group cursor-pointer">
+                        <div class="relative w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white border border-white/20 flex items-center justify-center overflow-hidden group-hover:scale-105 transition-all duration-500 shadow-[0_0_30px_-5px_rgba(255,77,0,0.3)]">
+                            <img src="./assets/logo-icon.png" alt="Pocketfriend Icon" class="w-10 h-10 object-contain group-hover:scale-110 transition-transform duration-500 relative z-10">
+                        </div>
+                        <div class="font-display text-4xl sm:text-5xl font-bold tracking-tight flex items-baseline">
+                            <span class="text-white">Pocket</span>
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand via-orange-400 to-brand bg-[length:200%_auto] animate-gradient">friend</span>
+                        </div>
+                    </div>
+                    
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-brand/30 bg-brand/10 text-brand text-xs font-bold tracking-widest uppercase mb-8">
+                        <span class="w-1.5 h-1.5 rounded-full bg-brand animate-pulse"></span>
+                        Local Business Growth
+                    </div>
 
-    <!-- About Section -->
-    <section class="section about" id="about">
-        <div class="container">
-            <div class="about-content">
-                <div class="fade-in-up">
-                    <h2 class="section-title">Innovating the Future</h2>
-                    <p class="about-text">
-                        At PocketFriend.io, we're passionate about harnessing the power of artificial intelligence and cutting-edge web technologies to solve complex business challenges. Our team of expert developers, AI engineers, and digital strategists work collaboratively to deliver solutions that don't just meet expectations—they exceed them.
+                    <h1 class="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tighter leading-[0.95] mb-8 text-gradient">
+                        Get Your Local<br>Business Online<br>& Growing.
+                    </h1>
+                    
+                    <p class="text-lg md:text-xl text-zinc-400 leading-relaxed max-w-[45ch] mb-10 font-sans font-light">
+                        We build professional websites, manage robust cloud infrastructures, and cut tech costs for businesses—from local shops to scaling enterprises.
                     </p>
-                    <p class="about-text">
-                        Founded on the principles of innovation, quality, and client success, we've helped hundreds of businesses transform their operations and achieve unprecedented growth through technology.
-                    </p>
-                </div>
-                <div class="stats-grid fade-in-up">
-                    <div class="stat-item">
-                        <div class="stat-number">500+</div>
-                        <div class="stat-label">Projects Completed</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">98%</div>
-                        <div class="stat-label">Client Satisfaction</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">50+</div>
-                        <div class="stat-label">AI Models Deployed</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">24/7</div>
-                        <div class="stat-label">Support Available</div>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                        <a href="mailto:contact@pocketfriend.io?subject=Requesting%20a%20Free%20Proposal" class="bg-white text-zinc-950 px-8 py-4 rounded-full font-medium text-center hover:bg-zinc-200 transition-all active:scale-[0.98]">
+                            Get Free Proposal via Email
+                        </a>
+                        <a href="https://wa.me/17868609286?text=Hi%20Pocketfriend!%20I%20would%20like%20to%20get%20a%20free%20proposal." target="_blank" class="bg-transparent border border-white/20 text-white px-8 py-4 rounded-full font-medium text-center flex items-center justify-center gap-2 hover:bg-white/5 transition-all">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                            WhatsApp Us
+                        </a>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
+            
+                <div class="w-full lg:w-1/2 relative h-[500px] lg:h-[650px] z-0 reveal hidden lg:block" style="transition-delay: 0.2s;">
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-brand/10 blur-[120px] rounded-full pointer-events-none"></div>
+                    
+                    <!-- Dashboard Mockup (Repurposed for Marketing) -->
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] glass-panel rounded-3xl p-6 shadow-2xl border border-white/10 z-20">
+                        <div class="flex justify-between items-center mb-6 border-b border-white/5 pb-4">
+                            <div class="flex gap-2">
+                                <div class="w-3 h-3 rounded-full bg-zinc-700"></div>
+                                <div class="w-3 h-3 rounded-full bg-zinc-700"></div>
+                                <div class="w-3 h-3 rounded-full bg-zinc-700"></div>
+                            </div>
+                            <div class="h-6 w-24 bg-brand/20 text-brand rounded-full flex items-center justify-center text-[10px] font-bold">Leads Active</div>
+                        </div>
+                        
+                        <div class="grid grid-cols-3 gap-4 mb-4">
+                            <div class="bg-zinc-900/80 rounded-xl p-4 border border-white/5">
+                                <div class="text-zinc-500 text-[10px] uppercase mb-1">Local Views</div>
+                                <div class="text-white font-mono text-xl">+342%</div>
+                            </div>
+                            <div class="bg-zinc-900/80 rounded-xl p-4 border border-white/5">
+                                <div class="text-zinc-500 text-[10px] uppercase mb-1">Calls</div>
+                                <div class="text-white font-mono text-xl text-emerald-400">84</div>
+                            </div>
+                            <div class="bg-zinc-900/80 rounded-xl p-4 border border-white/5">
+                                <div class="text-zinc-500 text-[10px] uppercase mb-1">Google Rank</div>
+                                <div class="text-white font-mono text-xl">#1</div>
+                            </div>
+                        </div>
 
-    <!-- Contact Section -->
-    <section class="section contact" id="contact">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title fade-in-up">Let's Build Something Amazing</h2>
-                <p class="section-subtitle fade-in-up">Ready to transform your business with AI? Get in touch and let's discuss your project.</p>
+                        <div class="bg-zinc-900/80 rounded-xl p-4 border border-white/5 h-32 flex items-end gap-2 justify-between">
+                            <div class="w-full bg-brand/20 rounded-t-sm h-[40%] hover:h-[45%] transition-all"></div>
+                            <div class="w-full bg-brand/40 rounded-t-sm h-[60%] hover:h-[65%] transition-all"></div>
+                            <div class="w-full bg-brand/60 rounded-t-sm h-[30%] hover:h-[35%] transition-all"></div>
+                            <div class="w-full bg-brand/80 rounded-t-sm h-[80%] hover:h-[85%] transition-all"></div>
+                            <div class="w-full bg-brand rounded-t-sm h-[100%]"></div>
+                            <div class="w-full bg-brand/80 rounded-t-sm h-[70%] hover:h-[75%] transition-all"></div>
+                            <div class="w-full bg-brand/60 rounded-t-sm h-[50%] hover:h-[55%] transition-all"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <form class="contact-form fade-in-up" id="contactForm" action="https://formspree.io/f/xqaleebl" method="POST">
-                <div class="form-group">
-                    <label for="name" class="form-label">Full Name</label>
-                    <input type="text" id="name" name="name" class="form-input" placeholder="Your full name" required>
+        </section>
+
+        <!-- Trusted By Marquee -->
+        <section class="w-full py-12 border-y border-white/5 bg-zinc-950/50 overflow-hidden relative">
+            <div class="max-w-7xl mx-auto px-6 md:px-12 mb-8 text-center reveal">
+                <p class="text-zinc-500 text-sm font-medium uppercase tracking-widest">Proudly Partnering With Local Businesses</p>
+            </div>
+            <div class="relative w-full overflow-hidden flex reveal group" style="transition-delay: 0.2s;">
+                <div class="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-zinc-950 to-transparent z-10 pointer-events-none"></div>
+                <div class="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-zinc-950 to-transparent z-10 pointer-events-none"></div>
+                
+                <div class="animate-marquee flex gap-16 md:gap-24 items-center justify-around group-hover:[animation-play-state:paused] transition-all text-xl font-display font-bold text-zinc-500">
+                    <span class="hover:text-white transition-colors cursor-pointer">Restaurants</span>
+                    <span class="hover:text-brand transition-colors cursor-pointer">Contractors</span>
+                    <span class="hover:text-white transition-colors cursor-pointer">Salons</span>
+                    <span class="hover:text-brand transition-colors cursor-pointer">Barbershops</span>
+                    <span class="hover:text-white transition-colors cursor-pointer">Dentists</span>
+                    <span class="hover:text-brand transition-colors cursor-pointer">Real Estate</span>
+                    <span class="hover:text-white transition-colors cursor-pointer">Retail Shops</span>
+                    <!-- Duplicate -->
+                    <span class="hover:text-white transition-colors cursor-pointer">Restaurants</span>
+                    <span class="hover:text-brand transition-colors cursor-pointer">Contractors</span>
+                    <span class="hover:text-white transition-colors cursor-pointer">Salons</span>
+                    <span class="hover:text-brand transition-colors cursor-pointer">Barbershops</span>
+                    <span class="hover:text-white transition-colors cursor-pointer">Dentists</span>
+                    <span class="hover:text-brand transition-colors cursor-pointer">Real Estate</span>
+                    <span class="hover:text-white transition-colors cursor-pointer">Retail Shops</span>
                 </div>
-                <div class="form-group">
-                    <label for="email" class="form-label">Email Address</label>
-                    <input type="email" id="email" name="email" class="form-input" placeholder="your@email.com" required>
+            </div>
+        </section>
+
+        <!-- About Us -->
+        <section class="max-w-5xl mx-auto px-6 md:px-12 py-32 text-center reveal">
+            <h2 class="font-display text-4xl md:text-5xl tracking-tighter mb-8">We are your local digital growth partner.</h2>
+            <p class="text-xl text-zinc-400 leading-relaxed mb-6">
+                We understand that running a business takes all your time and energy. You shouldn’t have to stress about building a website, configuring secure networks, or fighting with cloud databases.
+            </p>
+            <p class="text-xl text-zinc-400 leading-relaxed">
+                Whether you need to <strong>attract local customers with a modern website</strong>, integrate your <strong>Point of Sale (POS) into a robust database</strong>, or need an <strong>enterprise-grade cloud migration (AWS, Google, Azure) to drastically cut tech costs</strong>—we handle it all. We make sure your business runs flawlessly behind the scenes.
+            </p>
+        </section>
+
+        <!-- Services -->
+        <section id="services" class="max-w-7xl mx-auto px-6 md:px-12 py-20 border-t border-white/5">
+            <div class="text-center mb-20 reveal">
+                <h2 class="font-display text-4xl md:text-6xl tracking-tighter mb-6 text-gradient">Everything you need to succeed online.</h2>
+                <p class="text-zinc-400 text-lg max-w-2xl mx-auto">From beautiful websites to local SEO, we handle it all so you don't have to.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Service 1 -->
+                <div class="glass-panel rounded-[2rem] p-8 reveal group animate-float" style="animation-delay: 0s;">
+                    <h3 class="font-display text-2xl mb-3 text-white">Website Design</h3>
+                    <p class="text-zinc-400 text-sm">Beautiful, custom websites designed to build trust and turn your visitors into paying customers.</p>
                 </div>
-                <div class="form-group">
-                    <label for="company" class="form-label">Company</label>
-                    <input type="text" id="company" name="company" class="form-input" placeholder="Your company name">
+                <!-- Service 2 -->
+                <div class="glass-panel rounded-[2rem] p-8 reveal group animate-float" style="transition-delay: 0.1s; animation-delay: 1s;">
+                    <h3 class="font-display text-2xl mb-3 text-white">Website Redesign</h3>
+                    <p class="text-zinc-400 text-sm">Is your current site old or hard to use on phones? We’ll give it a fresh, modern, and high-performing makeover.</p>
                 </div>
-                <div class="form-group">
-                    <label for="message" class="form-label">Project Details</label>
-                    <textarea id="message" name="message" class="form-input form-textarea" placeholder="Tell us about your project..." required></textarea>
+                <!-- Service 3 -->
+                <div class="glass-panel rounded-[2rem] p-8 reveal group animate-float" style="transition-delay: 0.2s; animation-delay: 2s;">
+                    <h3 class="font-display text-2xl mb-3 text-white">Google Profile</h3>
+                    <p class="text-zinc-400 text-sm">We’ll put your business on the map so local customers can easily find you when they search nearby.</p>
                 </div>
-                <button type="submit" class="form-submit">Send Message</button>
-            </form>
-        </div>
-    </section>
+                <!-- Service 4 -->
+                <div class="glass-panel rounded-[2rem] p-8 reveal group animate-float" style="transition-delay: 0.3s; animation-delay: 3s;">
+                    <h3 class="font-display text-2xl mb-3 text-white">Local SEO</h3>
+                    <p class="text-zinc-400 text-sm">Show up higher in local search results and beat out your competitors for the top spot on Google.</p>
+                </div>
+                <!-- Service 5 -->
+                <div class="glass-panel rounded-[2rem] p-8 reveal group animate-float" style="animation-delay: 1.5s;">
+                    <h3 class="font-display text-2xl mb-3 text-white">Fast Hosting</h3>
+                    <p class="text-zinc-400 text-sm">Fast, secure hosting and ongoing updates so your website never goes down or gets hacked.</p>
+                </div>
+                <!-- Service 6 -->
+                <div class="glass-panel rounded-[2rem] p-8 reveal group animate-float" style="transition-delay: 0.1s; animation-delay: 2.5s;">
+                    <h3 class="font-display text-2xl mb-3 text-white">Social Setup</h3>
+                    <p class="text-zinc-400 text-sm">Get your Facebook and Instagram profiles set up the right way to connect with your community.</p>
+                </div>
+                <!-- Service 7 -->
+                <div class="glass-panel rounded-[2rem] p-8 reveal group animate-float" style="transition-delay: 0.2s; animation-delay: 0.5s;">
+                    <h3 class="font-display text-2xl mb-3 text-white">Lead Forms</h3>
+                    <p class="text-zinc-400 text-sm">Make it incredibly easy for customers to request a quote, book an appointment, or ask a question online.</p>
+                </div>
+                <!-- Service 8 -->
+                <div class="glass-panel rounded-[2rem] p-8 reveal group animate-float" style="transition-delay: 0.3s; animation-delay: 1.5s;">
+                    <h3 class="font-display text-2xl mb-3 text-white">Branding</h3>
+                    <p class="text-zinc-400 text-sm">Need a logo refresh or consistent brand colors? We’ll make your business look polished and professional.</p>
+                </div>
+                <!-- Service 9 -->
+                <div class="glass-panel rounded-[2rem] p-8 reveal group animate-float" style="animation-delay: 0.5s;">
+                    <h3 class="font-display text-2xl mb-3 text-white">Network Setup</h3>
+                    <p class="text-zinc-400 text-sm">Reliable network setup for small businesses, seamlessly scaling up to larger enterprise infrastructures as you grow.</p>
+                </div>
+                <!-- Service 10 -->
+                <div class="glass-panel rounded-[2rem] p-8 reveal group animate-float" style="transition-delay: 0.1s; animation-delay: 2s;">
+                    <h3 class="font-display text-2xl mb-3 text-white">Cloud Migrations</h3>
+                    <p class="text-zinc-400 text-sm">Secure and efficient data migrations to AWS, Google Cloud, and Azure to optimize your workflows.</p>
+                </div>
+                <!-- Service 11 -->
+                <div class="glass-panel rounded-[2rem] p-8 reveal group animate-float" style="transition-delay: 0.2s; animation-delay: 1s;">
+                    <h3 class="font-display text-2xl mb-3 text-white">Database & POS</h3>
+                    <p class="text-zinc-400 text-sm">Custom database configurations and seamless integration with your Point of Sale (POS) systems.</p>
+                </div>
+                <!-- Service 12 -->
+                <div class="glass-panel rounded-[2rem] p-8 reveal group animate-float" style="transition-delay: 0.3s; animation-delay: 3s;">
+                    <h3 class="font-display text-2xl mb-3 text-white">Cost Reduction</h3>
+                    <p class="text-zinc-400 text-sm">We audit and modernize your tech stack to drastically minimize maintenance costs from small shops to enterprise customers.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why Choose Us -->
+        <section class="w-full py-32 border-y border-white/5 bg-zinc-900/30 overflow-hidden relative">
+            <div class="max-w-7xl mx-auto px-6 md:px-12 text-center mb-20 reveal">
+                <h2 class="font-display text-4xl md:text-6xl tracking-tighter mb-6">Why local businesses love us.</h2>
+            </div>
+            
+            <div class="relative w-full overflow-hidden flex reveal">
+                <!-- Left/Right Edge Fades -->
+                <div class="absolute left-0 top-0 bottom-0 w-24 md:w-64 bg-gradient-to-r from-zinc-950 to-transparent z-10 pointer-events-none"></div>
+                <div class="absolute right-0 top-0 bottom-0 w-24 md:w-64 bg-gradient-to-l from-zinc-950 to-transparent z-10 pointer-events-none"></div>
+                
+                <div class="animate-marquee flex gap-8 items-stretch w-max group hover:[animation-play-state:paused] transition-all py-4">
+                    <!-- Set 1 -->
+                    <div class="w-[320px] md:w-[400px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors">
+                        <h3 class="font-display text-xl mb-3 text-brand">Simple Process</h3>
+                        <p class="text-zinc-400 text-sm leading-relaxed">We speak plain English, not tech jargon. We guide you every single step of the way.</p>
+                    </div>
+                    <div class="w-[320px] md:w-[400px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors">
+                        <h3 class="font-display text-xl mb-3 text-brand">Affordable Packages</h3>
+                        <p class="text-zinc-400 text-sm leading-relaxed">Clear, upfront pricing that respects your small business budget. No hidden fees.</p>
+                    </div>
+                    <div class="w-[320px] md:w-[400px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors">
+                        <h3 class="font-display text-xl mb-3 text-brand">Mobile-Friendly</h3>
+                        <p class="text-zinc-400 text-sm leading-relaxed">Over 60% of traffic is on mobile. Every site we build looks flawless on phones and tablets.</p>
+                    </div>
+                    <div class="w-[320px] md:w-[400px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors">
+                        <h3 class="font-display text-xl mb-3 text-brand">Fast Turnaround</h3>
+                        <p class="text-zinc-400 text-sm leading-relaxed">Get your new website live in weeks, not months. Time is money.</p>
+                    </div>
+                    <div class="w-[320px] md:w-[400px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors">
+                        <h3 class="font-display text-xl mb-3 text-brand">Ongoing Support</h3>
+                        <p class="text-zinc-400 text-sm leading-relaxed">We don't just build your site and vanish. We're here whenever you need updates or help.</p>
+                    </div>
+                    <div class="w-[320px] md:w-[400px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors">
+                        <h3 class="font-display text-xl mb-3 text-brand">Clear Communication</h3>
+                        <p class="text-zinc-400 text-sm leading-relaxed">You'll always know what we're working on and what's coming next. No guessing.</p>
+                    </div>
+
+                    <!-- Set 2 (Duplicate for infinite loop) -->
+                    <div class="w-[320px] md:w-[400px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors">
+                        <h3 class="font-display text-xl mb-3 text-brand">Simple Process</h3>
+                        <p class="text-zinc-400 text-sm leading-relaxed">We speak plain English, not tech jargon. We guide you every single step of the way.</p>
+                    </div>
+                    <div class="w-[320px] md:w-[400px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors">
+                        <h3 class="font-display text-xl mb-3 text-brand">Affordable Packages</h3>
+                        <p class="text-zinc-400 text-sm leading-relaxed">Clear, upfront pricing that respects your small business budget. No hidden fees.</p>
+                    </div>
+                    <div class="w-[320px] md:w-[400px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors">
+                        <h3 class="font-display text-xl mb-3 text-brand">Mobile-Friendly</h3>
+                        <p class="text-zinc-400 text-sm leading-relaxed">Over 60% of traffic is on mobile. Every site we build looks flawless on phones and tablets.</p>
+                    </div>
+                    <div class="w-[320px] md:w-[400px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors">
+                        <h3 class="font-display text-xl mb-3 text-brand">Fast Turnaround</h3>
+                        <p class="text-zinc-400 text-sm leading-relaxed">Get your new website live in weeks, not months. Time is money.</p>
+                    </div>
+                    <div class="w-[320px] md:w-[400px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors">
+                        <h3 class="font-display text-xl mb-3 text-brand">Ongoing Support</h3>
+                        <p class="text-zinc-400 text-sm leading-relaxed">We don't just build your site and vanish. We're here whenever you need updates or help.</p>
+                    </div>
+                    <div class="w-[320px] md:w-[400px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors">
+                        <h3 class="font-display text-xl mb-3 text-brand">Clear Communication</h3>
+                        <p class="text-zinc-400 text-sm leading-relaxed">You'll always know what we're working on and what's coming next. No guessing.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Process -->
+        <section id="process" class="py-32 relative overflow-hidden">
+            <div class="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+                <h2 class="font-display text-4xl md:text-6xl tracking-tighter mb-24 reveal text-center">How It Works.</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
+                    <div class="hidden md:block absolute top-10 left-10 right-10 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+                    
+                    <div class="reveal">
+                        <div class="h-20 w-20 bg-zinc-950 border border-white/10 rounded-full flex items-center justify-center font-display text-2xl text-zinc-500 mb-6 mx-auto relative z-10 bg-zinc-900">01</div>
+                        <h3 class="font-display text-xl mb-3 text-center">Discovery Call</h3>
+                        <p class="text-zinc-400 text-sm text-center">We chat about your business, your goals, and what makes you unique. No tech talk.</p>
+                    </div>
+                    
+                    <div class="reveal" style="transition-delay: 0.1s;">
+                        <div class="h-20 w-20 bg-zinc-950 border border-brand/50 shadow-[0_0_30px_-10px_#FF4D00] rounded-full flex items-center justify-center font-display text-2xl text-brand mb-6 mx-auto relative z-10 bg-zinc-900">02</div>
+                        <h3 class="font-display text-xl mb-3 text-center">Design & Content</h3>
+                        <p class="text-zinc-400 text-sm text-center">We design a beautiful layout and write clear, persuasive words that sell your services.</p>
+                    </div>
+                    
+                    <div class="reveal" style="transition-delay: 0.2s;">
+                        <div class="h-20 w-20 bg-zinc-950 border border-white/10 rounded-full flex items-center justify-center font-display text-2xl text-zinc-500 mb-6 mx-auto relative z-10 bg-zinc-900">03</div>
+                        <h3 class="font-display text-xl mb-3 text-center">Build & Review</h3>
+                        <p class="text-zinc-400 text-sm text-center">We build your site and share a private link for you to review. We tweak it until you love it.</p>
+                    </div>
+
+                    <div class="reveal" style="transition-delay: 0.3s;">
+                        <div class="h-20 w-20 bg-zinc-950 border border-white/10 rounded-full flex items-center justify-center font-display text-2xl text-zinc-500 mb-6 mx-auto relative z-10 bg-zinc-900">04</div>
+                        <h3 class="font-display text-xl mb-3 text-center">Launch & Support</h3>
+                        <p class="text-zinc-400 text-sm text-center">We hit launch, celebrate, and stay on standby to keep everything fast and secure.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section id="pricing" class="max-w-7xl mx-auto px-6 md:px-12 py-32 border-t border-white/5">
+            <div class="text-center mb-20 reveal">
+                <h2 class="font-display text-4xl md:text-6xl tracking-tighter mb-6">Simple, honest pricing.</h2>
+                <p class="text-zinc-400 text-lg max-w-2xl mx-auto">Choose a structure that fits your goals and scale as your operations grow.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                <!-- Tier 1 -->
+                <div class="glass-panel rounded-3xl p-10 reveal">
+                    <h3 class="font-display text-2xl mb-2">Starter Website</h3>
+                    <div class="text-zinc-400 text-sm mb-6 min-h-[40px]">The perfect launchpad for new businesses.</div>
+                    <ul class="space-y-4 mb-10 text-sm text-zinc-300">
+                        <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>3-Page Custom Website</li>
+                        <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Mobile-Friendly Design</li>
+                        <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Contact/Quote Form</li>
+                        <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Basic SEO Setup</li>
+                    </ul>
+                    <a href="mailto:contact@pocketfriend.io?subject=Inquiry:%20Starter%20Website%20Package&body=Hi%20Pocketfriend,%0A%0AI%20am%20interested%20in%20the%20Starter%20Website%20Package.%20Please%20let%20me%20know%20the%20next%20steps.%0A%0AThanks!" class="block text-center w-full py-4 rounded-xl border border-white/10 hover:bg-white hover:text-black transition-colors font-medium">Start Simple</a>
+                </div>
+                
+                <!-- Tier 2 (Highlighted) -->
+                <div class="glass-panel rounded-3xl p-10 border-brand/50 bg-brand/5 relative reveal transform md:-translate-y-4 shadow-[0_0_50px_-15px_rgba(255,77,0,0.2)]" style="transition-delay: 0.1s;">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-brand text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Most Popular</div>
+                    <h3 class="font-display text-2xl mb-2 text-brand">Business Growth</h3>
+                    <div class="text-zinc-400 text-sm mb-6 min-h-[40px]">A complete digital foundation to capture local leads.</div>
+                    <ul class="space-y-4 mb-10 text-sm text-zinc-300">
+                        <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>5-Page Website</li>
+                        <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Google Business Profile Setup</li>
+                        <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Local SEO Optimization</li>
+                        <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Fast, Secure Hosting</li>
+                    </ul>
+                    <a href="mailto:contact@pocketfriend.io?subject=Inquiry:%20Business%20Growth%20Package&body=Hi%20Pocketfriend,%0A%0AI%20am%20interested%20in%20the%20Business%20Growth%20Package.%20Please%20let%20me%20know%20the%20next%20steps.%0A%0AThanks!" class="block text-center w-full py-4 rounded-xl bg-brand text-white hover:bg-brand/90 transition-colors font-medium">Grow My Business</a>
+                </div>
+                
+                <!-- Tier 3 -->
+                <div class="glass-panel rounded-3xl p-10 reveal" style="transition-delay: 0.2s;">
+                    <h3 class="font-display text-2xl mb-2">Premium Local</h3>
+                    <div class="text-zinc-400 text-sm mb-6 min-h-[40px]">The ultimate hands-off solution to dominate search.</div>
+                    <ul class="space-y-4 mb-10 text-sm text-zinc-300">
+                        <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>10-Page Website</li>
+                        <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Advanced Local SEO</li>
+                        <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Social Media Setup</li>
+                        <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Monthly Performance Reports</li>
+                    </ul>
+                    <a href="mailto:contact@pocketfriend.io?subject=Inquiry:%20Premium%20Local%20Marketing%20Package&body=Hi%20Pocketfriend,%0A%0AI%20am%20interested%20in%20the%20Premium%20Local%20Marketing%20Package.%20Please%20let%20me%20know%20the%20next%20steps.%0A%0AThanks!" class="block text-center w-full py-4 rounded-xl border border-white/10 hover:bg-white hover:text-black transition-colors font-medium">Dominate Search</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section class="py-32 border-t border-white/5 bg-zinc-900/30">
+            <div class="max-w-7xl mx-auto px-6 md:px-12 text-center mb-16 reveal">
+                <h2 class="font-display text-4xl md:text-5xl tracking-tighter mb-4">Trusted by local owners.</h2>
+            </div>
+            <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-panel p-8 rounded-3xl reveal">
+                    <p class="text-zinc-400 italic mb-6">"I'm a plumber, not a computer guy. Pocketfriend made the whole process incredibly easy. My phone has been ringing twice as much since the new site went live!"</p>
+                    <div class="font-bold text-white">— Mike T., Local Plumber</div>
+                </div>
+                <div class="glass-panel p-8 rounded-3xl reveal" style="transition-delay: 0.1s;">
+                    <p class="text-zinc-400 italic mb-6">"Our old bakery website was a mess on mobile. The new site is absolutely beautiful, and the Google Business setup they did brings in new tourists every single weekend."</p>
+                    <div class="font-bold text-white">— Sarah L., Bakery Owner</div>
+                </div>
+                <div class="glass-panel p-8 rounded-3xl reveal" style="transition-delay: 0.2s;">
+                    <p class="text-zinc-400 italic mb-6">"I thought a professional website would cost a fortune. The Starter Package was perfectly affordable, and they launched it perfectly on time. Highly recommended!"</p>
+                    <div class="font-bold text-white">— James R., Landscaping</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faq" class="py-32 border-t border-white/5">
+            <div class="max-w-4xl mx-auto px-6 md:px-12">
+                <div class="text-center mb-16 reveal">
+                    <h2 class="font-display text-4xl md:text-5xl tracking-tighter mb-6">Frequently Asked Questions</h2>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="glass-panel rounded-2xl p-6 reveal group cursor-pointer hover:bg-white/5 transition-colors">
+                        <h4 class="font-display text-xl mb-2 group-hover:text-brand transition-colors">How long does it take to build a website?</h4>
+                        <p class="text-zinc-400 text-sm leading-relaxed">Most of our starter websites are live in 2-3 weeks. Larger, more complex packages typically take 4-6 weeks depending on how quickly we receive feedback.</p>
+                    </div>
+                    <div class="glass-panel rounded-2xl p-6 reveal group cursor-pointer hover:bg-white/5 transition-colors" style="transition-delay: 0.1s;">
+                        <h4 class="font-display text-xl mb-2 group-hover:text-brand transition-colors">Do I need to provide content?</h4>
+                        <p class="text-zinc-400 text-sm leading-relaxed">You can provide your own text if you'd like, but you don't have to! We offer professional copywriting to make your services sound irresistible.</p>
+                    </div>
+                    <div class="glass-panel rounded-2xl p-6 reveal group cursor-pointer hover:bg-white/5 transition-colors" style="transition-delay: 0.2s;">
+                        <h4 class="font-display text-xl mb-2 group-hover:text-brand transition-colors">Can you redesign my existing website?</h4>
+                        <p class="text-zinc-400 text-sm leading-relaxed">Absolutely. We'll take what you currently have and completely upgrade it to a modern, lightning-fast, mobile-friendly design.</p>
+                    </div>
+                    <div class="glass-panel rounded-2xl p-6 reveal group cursor-pointer hover:bg-white/5 transition-colors">
+                        <h4 class="font-display text-xl mb-2 group-hover:text-brand transition-colors">Can you help me show up on Google?</h4>
+                        <p class="text-zinc-400 text-sm leading-relaxed">Definitely. Local SEO and Google Business Profile setup are core features included in our growth packages.</p>
+                    </div>
+                    <div class="glass-panel rounded-2xl p-6 reveal group cursor-pointer hover:bg-white/5 transition-colors" style="transition-delay: 0.1s;">
+                        <h4 class="font-display text-xl mb-2 group-hover:text-brand transition-colors">Is the website mobile-friendly?</h4>
+                        <p class="text-zinc-400 text-sm leading-relaxed">100%. More than half of your potential customers are looking at your site on their phones, so we always design for mobile first.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section id="contact" class="max-w-4xl mx-auto px-6 py-32 text-center reveal border-t border-white/5">
+            <h2 class="font-display text-5xl md:text-7xl tracking-tighter mb-8">Let's Build Something Great.</h2>
+            <p class="text-xl text-zinc-400 mb-12 max-w-2xl mx-auto">Your customers are searching for your services online right now. Don't lose them to an outdated website or a missing Google profile.</p>
+            <a href="mailto:contact@pocketfriend.io" class="inline-flex items-center gap-3 bg-brand text-white px-10 py-5 rounded-full font-bold text-lg hover:bg-brand/90 transition-all active:scale-[0.98]">
+                Book Your Free Strategy Call
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </a>
+        </section>
+
+    </main>
 
     <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>Pocket Friend</h3>
-                    <p>Transforming businesses with cutting-edge AI and web technologies. Your trusted partner in digital innovation.</p>
+    <footer class="border-t border-white/5 bg-zinc-950 pt-20 pb-10">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
+            <div class="md:col-span-5">
+                <div class="flex items-center gap-3 mb-6">
+                    <img src="./assets/logo-icon.png" alt="Pocketfriend Icon" class="h-8 w-auto bg-white p-1 rounded">
+                    <span class="text-white font-display font-bold text-xl">Pocketfriend</span>
                 </div>
-                <div class="footer-section">
-                    <h3>Services</h3>
-                    <ul class="footer-links">
-                        <li><a href="#services">AI Solutions</a></li>
-                        <li><a href="#services">Web Development</a></li>
-                        <li><a href="#services">IT Consulting</a></li>
-                        <li><a href="#services">Mobile Solutions</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>Company</h3>
-                    <ul class="footer-links">
-                        <li><a href="#about">About Us</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>Connect</h3>
-                    <ul class="footer-links">
-                        <li><a href="mailto:contact@pocketfriend.io">contact@pocketfriend.io</a></li>
-                    </ul>
+                <p class="text-zinc-400 text-sm max-w-xs leading-relaxed mb-8">
+                    Your local digital growth partner. We build professional websites and marketing systems for small businesses.
+                </p>
+                <div class="flex flex-col gap-3 text-zinc-300 text-sm font-medium">
+                    <a href="mailto:contact@pocketfriend.io" class="hover:text-white transition-colors flex items-center gap-3 group"><svg class="text-brand group-hover:scale-110 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg> contact@pocketfriend.io</a>
+                    <a href="https://wa.me/17868609286" target="_blank" class="hover:text-white transition-colors flex items-center gap-3 group"><svg class="text-brand group-hover:scale-110 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg> (786) 860-9286 (Call or WhatsApp)</a>
                 </div>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 PocketFriend.io. All rights reserved. | Crafted with ❤️ for innovation</p>
+            
+            <div class="md:col-span-2 md:col-start-8">
+                <h4 class="text-white font-medium mb-6 tracking-wide">Platform</h4>
+                <ul class="flex flex-col gap-4 text-zinc-400 text-sm">
+                    <li><a href="#services" class="hover:text-white transition-colors">Services</a></li>
+                    <li><a href="#process" class="hover:text-white transition-colors">Process</a></li>
+                    <li><a href="#pricing" class="hover:text-white transition-colors">Pricing</a></li>
+                </ul>
+            </div>
+            
+            <div class="md:col-span-2">
+                <h4 class="text-white font-medium mb-6 tracking-wide">Company</h4>
+                <ul class="flex flex-col gap-4 text-zinc-400 text-sm">
+                    <li><a href="#" class="hover:text-white transition-colors">About</a></li>
+                    <li><a href="#contact" class="hover:text-white transition-colors">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-6 border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-zinc-500 text-xs tracking-wider">
+            <span>© 2026 POCKETFRIEND. ALL RIGHTS RESERVED.</span>
+            <div class="flex gap-8">
+                <a href="#" class="hover:text-white transition-colors">FACEBOOK</a>
+                <a href="#" class="hover:text-white transition-colors">INSTAGRAM</a>
             </div>
         </div>
     </footer>
 
+    <!-- Intersection Observer -->
     <script>
-        // Smooth scrolling and animations
-        document.addEventListener('DOMContentLoaded', function() {
-            // Mobile menu toggle
-            const menuToggle = document.getElementById('menuToggle');
-            const navMenu = document.getElementById('navMenu');
-            
-            menuToggle.addEventListener('click', function() {
-                navMenu.classList.toggle('active');
-            });
-
-            // Header scroll effect
-            const header = document.getElementById('header');
-            window.addEventListener('scroll', function() {
-                if (window.scrollY > 100) {
-                    header.classList.add('scrolled');
-                } else {
-                    header.classList.remove('scrolled');
-                }
-            });
-
-            // Scroll progress bar
-            const scrollProgress = document.getElementById('scrollProgress');
-            window.addEventListener('scroll', function() {
-                const scrollTop = document.documentElement.scrollTop;
-                const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-                const scrollPercent = (scrollTop / scrollHeight) * 100;
-                scrollProgress.style.width = scrollPercent + '%';
-            });
-
-            // Intersection Observer for animations
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-
-            const observer = new IntersectionObserver(function(entries) {
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
+                        entry.target.classList.add('active');
+                    } else {
+                        // Remove class when scrolling past to trigger animation again
+                        entry.target.classList.remove('active');
                     }
                 });
-            }, observerOptions);
+            }, { threshold: 0.1 });
 
-            // Observe all elements with fade-in-up class
-            document.querySelectorAll('.fade-in-up').forEach(el => {
-                observer.observe(el);
-            });
-
-            // Contact form handling with Formspree
-            const contactForm = document.getElementById('contactForm');
-            contactForm.addEventListener('submit', function(e) {
-                const submitBtn = contactForm.querySelector('.form-submit');
-                const originalText = submitBtn.textContent;
-                submitBtn.textContent = 'Sending...';
-                submitBtn.disabled = true;
-                
-                // Let Formspree handle the actual submission
-                // On success/error, reset the button
-                setTimeout(() => {
-                    submitBtn.textContent = originalText;
-                    submitBtn.disabled = false;
-                }, 3000);
-            });
-
-            // Smooth scrolling for navigation links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                        // Close mobile menu if open
-                        navMenu.classList.remove('active');
-                    }
-                });
-            });
-
-            // Parallax effect for floating elements
-            window.addEventListener('scroll', function() {
-                const scrolled = window.pageYOffset;
-                const parallax = document.querySelectorAll('.floating-element');
-                
-                parallax.forEach((element, index) => {
-                    const speed = 0.5 + (index * 0.2);
-                    element.style.transform = `translateY(${scrolled * speed}px)`;
-                });
-            });
-
-            // Add loading complete class
-            setTimeout(() => {
-                document.body.classList.add('loaded');
-            }, 100);
+            document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
         });
 
-        // Performance optimization: Debounce scroll events
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
+        // Interactive Code Particle Click Effect
+        const codeSnippets = ['</>', '{}', 'div', '=>', 'import', 'async', 'return', '200 OK', '[]', 'function()', '++'];
+        document.addEventListener('click', (e) => {
+            // Spawn 5-8 particles per click
+            const numParticles = Math.floor(Math.random() * 4) + 5;
+            
+            for (let i = 0; i < numParticles; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'code-particle';
+                particle.textContent = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+                
+                // Set starting position to exactly where the cursor is
+                particle.style.left = (e.clientX - 10) + 'px';
+                particle.style.top = (e.clientY - 10) + 'px';
+                
+                // Random physics calculations
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 50 + Math.random() * 100; // Scatter distance
+                const tx = Math.cos(angle) * velocity;
+                const ty = (Math.sin(angle) * velocity) + (Math.random() * 100 + 50); // Extra downward gravity
+                const rot = (Math.random() - 0.5) * 360; // Random rotation
+                
+                // Pass variables to CSS keyframes
+                particle.style.setProperty('--tx', `${tx}px`);
+                particle.style.setProperty('--ty', `${ty}px`);
+                particle.style.setProperty('--rot', `${rot}deg`);
+                
+                document.body.appendChild(particle);
+                
+                // Cleanup element from DOM after animation completes
+                setTimeout(() => {
+                    particle.remove();
+                }, 1000);
+            }
+        });
+
+        // DNA Code Trail Pointer
+        let mouseX = 0, mouseY = 0;
+        let dnaTick = 0;
+        const dnaChars = ['0', '1', '{', '}', '</>', 'A', 'C', 'T', 'G'];
+
+        function spawnDNAParticle(x, y, phase) {
+            const p = document.createElement('div');
+            p.textContent = dnaChars[Math.floor(Math.random() * dnaChars.length)];
+            p.className = 'fixed pointer-events-none z-[999997] text-brand font-mono text-[10px] font-bold opacity-80 transition-all duration-1000 ease-out -translate-x-1/2 -translate-y-1/2';
+            
+            // Calculate double-helix orbit position
+            const offsetX = Math.sin(phase) * 15;
+            const offsetY = Math.cos(phase) * 15;
+            
+            p.style.left = (x + offsetX) + 'px';
+            p.style.top = (y + offsetY) + 'px';
+            
+            document.body.appendChild(p);
+            
+            // Animate falling away and fading
+            requestAnimationFrame(() => {
+                p.style.transform = `translate(-50%, calc(-50% + 30px)) scale(0.5) rotate(${Math.random() * 90}deg)`;
+                p.style.opacity = '0';
+            });
+            
+            setTimeout(() => p.remove(), 1000);
         }
 
-        // Enhanced scroll handling with debounce
-        const debouncedScrollHandler = debounce(() => {
-            // Additional scroll optimizations can be added here
-        }, 10);
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
 
-        window.addEventListener('scroll', debouncedScrollHandler);
+            // Spawn DNA Trail
+            dnaTick += 0.3;
+            if (Math.random() > 0.2) { // Throttle slightly for performance
+                spawnDNAParticle(mouseX, mouseY, dnaTick); // Strand 1
+                spawnDNAParticle(mouseX, mouseY, dnaTick + Math.PI); // Strand 2 (opposite side)
+            }
+        });
     </script>
 </body>
 </html>
