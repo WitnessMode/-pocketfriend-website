@@ -50,7 +50,7 @@
             transform: translateY(0) scale(1); 
             filter: blur(0); 
         }
-        @keyframes subtle-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes subtle-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -10px; } }
         .animate-float { animation: subtle-float 8s ease-in-out infinite; }
         .animate-float-delayed { animation: subtle-float 8s ease-in-out 4s infinite; }
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
