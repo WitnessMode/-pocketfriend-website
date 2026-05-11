@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Pocketfriend</title>
+    
+    <link rel="icon" href="./assets/logo-icon.png">
+    
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&f[]=cabinet-grotesk@900,800,700,500,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Satoshi', 'sans-serif'],
+                        display: ['Cabinet Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        zinc: { 950: '#09090b', 900: '#18181b', 800: '#27272a', 400: '#a1a1aa' },
+                        brand: '#FF4D00',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #09090b; color: #ffffff; -webkit-font-smoothing: antialiased; }
+        .glass-panel {
+            background: rgba(24, 24, 27, 0.3);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .reveal { 
+            opacity: 0; 
+            transform: translateY(40px) scale(0.96); 
+            filter: blur(12px); 
+            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1); 
+        }
+        .reveal.active { 
+            opacity: 1; 
+            transform: translateY(0) scale(1); 
+            filter: blur(0); 
+        }
+        @keyframes subtle-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -10px; } }
+        .animate-float { animation: subtle-float 8s ease-in-out infinite; }
+        .animate-float-delayed { animation: subtle-float 8s ease-in-out 4s infinite; }
+        @keyframes gradient-shift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .animate-gradient { animation: gradient-shift 4s ease infinite; }
+        
+        @keyframes code-fall {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0.5) rotate(var(--rot)); opacity: 0; }
+        }
+        .code-particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 99999;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            font-weight: 700;
+            color: #FF4D00;
+            animation: code-fall 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            text-shadow: 0 0 10px rgba(255, 77, 0, 0.5);
+        }
+        
+        /* Form inputs styling */
+        .form-input {
+            width: 100%;
+            background: rgba(24, 24, 27, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            padding: 1rem 1.25rem;
+            color: white;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        .form-input:focus {
+            border-color: #FF4D00;
+            box-shadow: 0 0 15px rgba(255, 77, 0, 0.2);
+            background: rgba(24, 24, 27, 0.8);
+        }
+    </style>
+</head>
+<body class="selection:bg-brand selection:text-white min-h-[100dvh] flex flex-col relative bg-zinc-950">
+
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-zinc-950/80 backdrop-blur-md border-b border-white/5 py-4 px-6 md:px-12 transition-all">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3 group">
+                <img src="./assets/logo-icon.png" alt="Pocketfriend Icon" class="h-10 w-auto bg-white p-1.5 rounded-lg transition-transform group-hover:scale-[0.98]">
+            </a>
+            <nav class="hidden md:flex gap-10 items-center font-medium text-sm">
+                <a href="index.html#services" class="text-zinc-400 hover:text-white transition-colors">Services</a>
+                <a href="index.html#process" class="text-zinc-400 hover:text-white transition-colors">Process</a>
+                <a href="about.html" class="text-zinc-400 hover:text-white transition-colors">About Us</a>
+                <a href="contact.html" class="text-white hover:text-white transition-colors">Contact</a>
+            </nav>
+            <div class="flex items-center gap-6">
+                <a href="contact.html" class="bg-brand text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-opacity-90 transition-all active:scale-[0.98]">Get Free Proposal</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-[100px] flex-grow relative overflow-hidden">
+        <!-- Background Decor -->
+        <div class="absolute top-1/4 right-0 w-[600px] h-[600px] bg-brand/10 blur-[120px] rounded-full pointer-events-none z-0"></div>
+
+        <section class="max-w-7xl mx-auto px-6 py-24 md:py-32 relative z-10 flex flex-col lg:flex-row gap-16">
+            
+            <!-- Left Info Side -->
+            <div class="w-full lg:w-5/12 text-left">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-brand/30 bg-brand/10 text-brand text-xs font-bold tracking-widest uppercase mb-6 reveal">
+                    <span class="w-1.5 h-1.5 rounded-full bg-brand animate-pulse"></span>
+                    Get in Touch
+                </div>
+                <h1 class="font-display text-5xl md:text-7xl tracking-tighter mb-6 text-gradient reveal" style="transition-delay: 0.1s;">
+                    Let's upgrade your business.
+                </h1>
+                <p class="text-lg text-zinc-400 leading-relaxed font-light mb-12 reveal" style="transition-delay: 0.2s;">
+                    Ready to automate your workflows, build a stunning website, or integrate AI into your local business? Fill out the form, and our team will get back to you with a free, tailored proposal.
+                </p>
+
+                <div class="flex flex-col gap-6 reveal" style="transition-delay: 0.3s;">
+                    <div class="glass-panel p-6 rounded-2xl flex items-start gap-4 animate-float">
+                        <div class="text-brand text-2xl mt-1">✉</div>
+                        <div>
+                            <h4 class="text-white font-medium mb-1">Email Us Directly</h4>
+                            <a href="mailto:contact@pocketfriend.io" class="text-zinc-400 hover:text-brand transition-colors text-sm">contact@pocketfriend.io</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Form Side -->
+            <div class="w-full lg:w-7/12 reveal" style="transition-delay: 0.4s;">
+                <div class="glass-panel p-8 md:p-10 rounded-[2rem]">
+                    <form action="mailto:contact@pocketfriend.io" method="POST" enctype="text/plain" class="flex flex-col gap-6">
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="flex flex-col gap-2">
+                                <label for="name" class="text-sm font-medium text-zinc-300">Your Name</label>
+                                <input type="text" id="name" name="Name" required class="form-input" placeholder="John Doe">
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <label for="business" class="text-sm font-medium text-zinc-300">Business Name</label>
+                                <input type="text" id="business" name="Business Name" class="form-input" placeholder="Pocketfriend LLC">
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <label for="email" class="text-sm font-medium text-zinc-300">Email Address</label>
+                            <input type="email" id="email" name="Email" required class="form-input" placeholder="john@example.com">
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <label for="service" class="text-sm font-medium text-zinc-300">What are you interested in?</label>
+                            <select id="service" name="Interested Service" class="form-input appearance-none">
+                                <option value="Website Design">Website Design</option>
+                                <option value="AI Chatbots & Assistants">AI Chatbots & Assistants</option>
+                                <option value="Process Automation">Process Automation</option>
+                                <option value="Local SEO & Google Visibility">Local SEO & Google Visibility</option>
+                                <option value="Database & POS Setup">Database & POS Setup</option>
+                                <option value="Other / Full Package">Other / Full Package</option>
+                            </select>
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <label for="message" class="text-sm font-medium text-zinc-300">How can we help you grow?</label>
+                            <textarea id="message" name="Message" rows="4" required class="form-input resize-none" placeholder="Tell us about your current challenges..."></textarea>
+                        </div>
+
+                        <button type="submit" class="mt-4 bg-brand text-white px-8 py-4 rounded-xl font-medium hover:bg-opacity-90 transition-all active:scale-[0.98] w-full shadow-[0_0_20px_-5px_rgba(255,77,0,0.4)]">
+                            Send Request
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-zinc-950 pt-20 pb-10 border-t border-white/5 relative z-10">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
+            <div class="md:col-span-4">
+                <a href="index.html" class="flex items-center gap-3 mb-6">
+                    <img src="./assets/logo-icon.png" alt="Pocketfriend Logo" class="h-8 w-auto bg-white p-1 rounded-md">
+                    <span class="font-display text-xl font-bold tracking-tight">Pocketfriend</span>
+                </a>
+                <p class="text-zinc-400 text-sm mb-6 max-w-sm">
+                    Bringing smart websites, automation, and practical AI to local businesses.
+                </p>
+                <a href="mailto:contact@pocketfriend.io" class="text-white hover:text-brand transition-colors font-medium">contact@pocketfriend.io</a>
+            </div>
+            
+            <div class="md:col-span-2 md:col-start-8">
+                <h4 class="text-white font-medium mb-6 tracking-wide">Platform</h4>
+                <ul class="flex flex-col gap-4 text-zinc-400 text-sm">
+                    <li><a href="index.html#services" class="hover:text-white transition-colors">Services</a></li>
+                    <li><a href="index.html#process" class="hover:text-white transition-colors">Process</a></li>
+                    <li><a href="index.html#pricing" class="hover:text-white transition-colors">Pricing</a></li>
+                </ul>
+            </div>
+            
+            <div class="md:col-span-2">
+                <h4 class="text-white font-medium mb-6 tracking-wide">Company</h4>
+                <ul class="flex flex-col gap-4 text-zinc-400 text-sm">
+                    <li><a href="about.html" class="hover:text-white transition-colors">About Us</a></li>
+                    <li><a href="contact.html" class="hover:text-white transition-colors text-white">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-6 border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-zinc-500 text-xs tracking-wider">
+            <span>© 2026 POCKETFRIEND. ALL RIGHTS RESERVED.</span>
+            <div class="flex gap-8">
+                <a href="#" class="hover:text-white transition-colors">FACEBOOK</a>
+                <a href="#" class="hover:text-white transition-colors">INSTAGRAM</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+        });
+
+        // Interactive Code Particle Click Effect
+        const codeSnippets = ['</>', '{}', 'div', '=>', 'import', 'async', 'return', '200 OK', '[]', 'function()', '++'];
+        document.addEventListener('click', (e) => {
+            // Prevent particles on form inputs to keep UX clean
+            if (e.target.tagName.toLowerCase() === 'input' || e.target.tagName.toLowerCase() === 'textarea' || e.target.tagName.toLowerCase() === 'select') return;
+            
+            const numParticles = Math.floor(Math.random() * 4) + 5;
+            for (let i = 0; i < numParticles; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'code-particle';
+                particle.textContent = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+                particle.style.left = (e.clientX - 10) + 'px';
+                particle.style.top = (e.clientY - 10) + 'px';
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 50 + Math.random() * 100;
+                const tx = Math.cos(angle) * velocity;
+                const ty = (Math.sin(angle) * velocity) + (Math.random() * 100 + 50);
+                const rot = (Math.random() - 0.5) * 360;
+                particle.style.setProperty('--tx', `${tx}px`);
+                particle.style.setProperty('--ty', `${ty}px`);
+                particle.style.setProperty('--rot', `${rot}deg`);
+                document.body.appendChild(particle);
+                setTimeout(() => particle.remove(), 1000);
+            }
+        });
+
+        // DNA Code Trail Pointer
+        let mouseX = 0, mouseY = 0;
+        let dnaTick = 0;
+        const dnaChars = ['0', '1', '{', '}', '</>', 'A', 'C', 'T', 'G'];
+
+        function spawnDNAParticle(x, y, phase) {
+            const p = document.createElement('div');
+            p.textContent = dnaChars[Math.floor(Math.random() * dnaChars.length)];
+            p.className = 'fixed pointer-events-none z-[999997] text-brand font-mono text-[10px] font-bold opacity-80 transition-all duration-1000 ease-out -translate-x-1/2 -translate-y-1/2';
+            const offsetX = Math.sin(phase) * 15;
+            const offsetY = Math.cos(phase) * 15;
+            p.style.left = (x + offsetX) + 'px';
+            p.style.top = (y + offsetY) + 'px';
+            document.body.appendChild(p);
+            requestAnimationFrame(() => {
+                p.style.transform = `translate(-50%, calc(-50% + 30px)) scale(0.5) rotate(${Math.random() * 90}deg)`;
+                p.style.opacity = '0';
+            });
+            setTimeout(() => p.remove(), 1000);
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            dnaTick += 0.3;
+            if (Math.random() > 0.2) {
+                spawnDNAParticle(mouseX, mouseY, dnaTick);
+                spawnDNAParticle(mouseX, mouseY, dnaTick + Math.PI);
+            }
+        });
+    </script>
+</body>
+</html>
