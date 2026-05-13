@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pocketfriend - Web Design & Local Marketing</title>
-    
     <link rel="icon" href="./assets/logo-icon.png">
     
     <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&f[]=cabinet-grotesk@900,800,700,500,400&display=swap" rel="stylesheet">
@@ -18,7 +17,7 @@
                         display: ['Cabinet Grotesk', 'sans-serif'],
                     },
                     colors: {
-                        zinc: { 950: '#09090b', 900: '#18181b', 800: '#27272a', 400: '#a1a1aa' },
+                        zinc: { 950: '#050505', 900: '#0a0a0a', 800: '#141414', 400: '#a1a1aa' },
                         brand: '#FF4D00',
                     }
                 }
@@ -26,38 +25,184 @@
         }
     </script>
     <style>
-        body { background-color: #09090b; color: #ffffff; -webkit-font-smoothing: antialiased; }
-        .glass-panel {
-            background: rgba(24, 24, 27, 0.3);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        *, *::before, *::after { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { 
+            background-color: #050505; 
+            color: #ffffff; 
+            -webkit-font-smoothing: antialiased; 
+            overflow-x: hidden;
+            cursor: none;
         }
+        
+        /* Bright Pointer */
+        .bright-pointer {
+            position: fixed;
+            top: 0; left: 0;
+            width: 10px; height: 10px;
+            background: #ffffff;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 999999;
+            transform: translate(-50%, -50%);
+            box-shadow:
+                0 0 8px 2px rgba(255, 77, 0, 0.9),
+                0 0 24px 6px rgba(255, 77, 0, 0.5),
+                0 0 48px 14px rgba(255, 77, 0, 0.2);
+        }
+
+        
+        /* Noise Overlay */
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            pointer-events: none;
+            opacity: 0.035;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 256px 256px;
+        }
+        
+        /* Mesh Gradient Canvas */
+        #mesh-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        /* Spotlight Effect */
+        .spotlight {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,77,0,0.06), transparent 40%);
+        }
+        
+        /* Glass Panel v2 */
+        .glass-panel {
+            background: rgba(10, 10, 10, 0.4);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 8px 32px rgba(0,0,0,0.3);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-panel:hover {
+            border-color: rgba(255, 77, 0, 0.2);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 8px 32px rgba(0,0,0,0.4), 0 0 40px -10px rgba(255,77,0,0.15);
+        }
+        
+        /* Text Gradient */
         .text-gradient {
             background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+        .text-gradient-brand {
+            background: linear-gradient(135deg, #FF4D00 0%, #ff8c42 50%, #FF4D00 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient-shift 3s ease infinite;
+        }
+        
+        /* Reveal Animation */
         .reveal { 
             opacity: 0; 
-            transform: translateY(40px) scale(0.96); 
+            transform: translateY(40px) scale(0.97); 
             filter: blur(12px); 
-            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1); 
+            transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1); 
+            /* will-change removed for better performance */
         }
         .reveal.active { 
             opacity: 1; 
             transform: translateY(0) scale(1); 
             filter: blur(0); 
         }
-        @keyframes subtle-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -10px; } }
-        .animate-float { animation: subtle-float 8s ease-in-out infinite; }
-        .animate-float-delayed { animation: subtle-float 8s ease-in-out 4s infinite; }
-        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        .animate-marquee { display: flex; width: 200%; animation: marquee 25s linear infinite; }
-        @keyframes gradient-shift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        .animate-gradient { animation: gradient-shift 4s ease infinite; }
         
+        /* Float Animation */
+        @keyframes subtle-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -12px; } }
+        .animate-float { animation: subtle-float 7s ease-in-out infinite; }
+        .animate-float-delayed { animation: subtle-float 7s ease-in-out 3.5s infinite; }
+        
+        /* Marquee */
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .animate-marquee { display: flex; width: 200%; animation: marquee 30s linear infinite; }
+        
+        /* Gradient Shift */
+        @keyframes gradient-shift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        
+        /* Magnetic Button */
+        .magnetic-btn {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .magnetic-btn::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: inherit;
+            background: linear-gradient(135deg, rgba(255,77,0,0.4), rgba(255,140,66,0.2), rgba(255,77,0,0.4));
+            background-size: 200% 200%;
+            animation: gradient-shift 3s ease infinite;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: -1;
+            filter: blur(8px);
+        }
+        .magnetic-btn:hover::before { opacity: 1; }
+        
+        /* 3D Tilt Card */
+        .tilt-card {
+            transform-style: preserve-3d;
+            transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .tilt-card .card-glow {
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            opacity: 0;
+            transition: opacity 0.3s;
+            background: radial-gradient(400px circle at var(--gx, 50%) var(--gy, 50%), rgba(255,77,0,0.15), transparent 60%);
+            pointer-events: none;
+        }
+        .tilt-card:hover .card-glow { opacity: 1; }
+        .tilt-card .card-content {
+            transform: translateZ(30px);
+        }
+        
+        /* Text Scramble */
+        .scramble-text { display: inline-block; }
+        
+        /* Bento Grid */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+        @media (max-width: 1024px) {
+            .bento-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 640px) {
+            .bento-grid { grid-template-columns: 1fr; }
+            .bento-grid > * { grid-column: span 1 !important; grid-row: span 1 !important; }
+        }
+        
+        /* Process Connector */
+        .process-line {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            transition: stroke-dashoffset 2s ease;
+        }
+        .process-line.active { stroke-dashoffset: 0; }
+        
+        /* Code Particle Click */
         @keyframes code-fall {
             0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
             100% { transform: translate(var(--tx), var(--ty)) scale(0.5) rotate(var(--rot)); opacity: 0; }
@@ -70,46 +215,112 @@
             font-size: 14px;
             font-weight: 700;
             color: #FF4D00;
-            animation: code-fall 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            animation: code-fall 0.7s cubic-bezier(0.25, 1, 0.5, 1) forwards;
             text-shadow: 0 0 10px rgba(255, 77, 0, 0.5);
+        }
+        
+        /* Velocity Skew */
+        .velocity-skew {
+            transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        
+        /* Holographic Shine */
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(25deg); }
+            100% { transform: translateX(200%) rotate(25deg); }
+        }
+        .holo-shine {
+            position: relative;
+            overflow: hidden;
+        }
+        .holo-shine::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: linear-gradient(to right, transparent 0%, rgba(255,255,255,0.03) 50%, transparent 100%);
+            transform: translateX(-100%) rotate(25deg);
+            transition: none;
+        }
+        .holo-shine:hover::after {
+            animation: shine 0.8s ease forwards;
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #FF4D00; border-radius: 3px; }
+        
+        /* Link underline effect */
+        .link-hover {
+            position: relative;
+        }
+        .link-hover::after {
+            content: '';
+            position: absolute;
+            bottom: -2px; left: 0;
+            width: 0; height: 1px;
+            background: #FF4D00;
+            transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .link-hover:hover::after { width: 100%; }
+        
+        /* Hide cursor on touch devices */
+        @media (pointer: coarse) {
+            body { cursor: auto; }
+            .bright-pointer { display: none; }
         }
     </style>
 </head>
 <body class="selection:bg-brand selection:text-white min-h-[100dvh] relative bg-zinc-950">
 
+    <!-- Bright Pointer -->
+    <div class="bright-pointer" id="brightPointer"></div>
+
+    
+    <!-- Noise Overlay -->
+    <div class="noise-overlay"></div>
+    
+    <!-- Mesh Gradient Background -->
+    <canvas id="mesh-canvas"></canvas>
+    
+    <!-- Spotlight -->
+    <div class="spotlight" id="spotlight"></div>
+
     <!-- Header -->
-    <header class="fixed top-0 left-0 right-0 z-50 bg-zinc-950/80 backdrop-blur-md border-b border-white/5 py-4 px-6 md:px-12 transition-all">
+    <header class="fixed top-0 left-0 right-0 z-50 bg-zinc-950/60 backdrop-blur-xl border-b border-white/[0.04] py-4 px-6 md:px-12 transition-all" id="mainHeader">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <a href="#" class="flex items-center gap-3 group">
-                <img src="./assets/logo-icon.png" alt="Pocketfriend Icon" class="h-10 w-auto bg-white p-1.5 rounded-lg transition-transform group-hover:scale-[0.98]">
+            <a href="#" class="flex items-center gap-3 group magnetic-btn">
+                <img src="./assets/logo-icon.png" alt="Pocketfriend Icon" class="h-10 w-auto bg-white p-1.5 rounded-xl transition-transform group-hover:scale-[0.98]">
+                <span class="font-display text-xl font-bold text-white hidden sm:block">Pocketfriend</span>
             </a>
             <nav class="hidden md:flex gap-10 items-center font-medium text-sm">
-                <a href="#services" class="text-zinc-400 hover:text-white transition-colors">Services</a>
-                <a href="#process" class="text-zinc-400 hover:text-white transition-colors">Process</a>
-                <a href="#pricing" class="text-zinc-400 hover:text-white transition-colors">Packages</a>
-                <a href="#faq" class="text-zinc-400 hover:text-white transition-colors">FAQ</a>
+                <a href="#services" class="text-zinc-400 hover:text-white transition-colors link-hover magnetic-btn">Services</a>
+                <a href="#process" class="text-zinc-400 hover:text-white transition-colors link-hover magnetic-btn">Process</a>
+                <a href="#pricing" class="text-zinc-400 hover:text-white transition-colors link-hover magnetic-btn">Packages</a>
+                <a href="#faq" class="text-zinc-400 hover:text-white transition-colors link-hover magnetic-btn">FAQ</a>
             </nav>
             <div class="flex items-center gap-6">
-                <a href="mailto:contact@pocketfriend.io?subject=Requesting%20a%20Free%20Proposal" class="bg-brand text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-opacity-90 transition-all active:scale-[0.98]">Get Free Proposal</a>
+                <a href="mailto:contact@pocketfriend.io?subject=Requesting%20a%20Free%20Proposal" class="magnetic-btn bg-brand text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-opacity-90 transition-all active:scale-[0.98]">Get Free Proposal</a>
             </div>
         </div>
     </header>
 
-    <main class="pt-[72px]">
+    <main class="pt-[72px] relative z-10">
         <!-- Hero Section -->
-        <section class="relative w-full min-h-[90dvh] flex items-center overflow-hidden border-b border-white/5">
+        <section class="relative w-full min-h-[95dvh] flex items-center overflow-hidden border-b border-white/[0.04]">
             <div class="absolute inset-0 w-full h-full z-0 pointer-events-none">
-                <video autoplay loop muted playsinline class="w-full h-full object-cover opacity-60 mix-blend-screen scale-105">
+                <video autoplay loop muted playsinline class="w-full h-full object-cover opacity-40 mix-blend-screen scale-105">
                     <source src="https://framerusercontent.com/assets/81jBBLb0cn8oKOtt6HP64mDIoSk.mp4" type="video/mp4">
                 </video>
-                <div class="absolute inset-0 bg-gradient-to-b from-zinc-950/40 via-transparent to-zinc-950"></div>
-                <div class="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/50 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-b from-zinc-950/60 via-transparent to-zinc-950"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/60 to-transparent"></div>
             </div>
 
             <div class="max-w-7xl mx-auto px-6 md:px-12 w-full flex flex-col lg:flex-row items-center justify-between gap-16 py-20 relative z-10">
                 <div class="w-full lg:w-1/2 flex flex-col items-start text-left reveal">
-                    <div class="mb-10 flex items-center gap-4 group cursor-pointer">
-                        <div class="relative w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white border border-white/20 flex items-center justify-center overflow-hidden group-hover:scale-105 transition-all duration-500 shadow-[0_0_30px_-5px_rgba(255,77,0,0.3)]">
+                    <div class="mb-10 flex items-center gap-4 group cursor-pointer magnetic-btn">
+                        <div class="relative w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white border border-white/20 flex items-center justify-center overflow-hidden group-hover:scale-105 transition-all duration-500 shadow-[0_0_40px_-5px_rgba(255,77,0,0.3)]">
                             <img src="./assets/logo-icon.png" alt="Pocketfriend Icon" class="w-10 h-10 object-contain group-hover:scale-110 transition-transform duration-500 relative z-10">
                         </div>
                         <div class="font-display text-4xl sm:text-5xl font-bold tracking-tight flex items-baseline">
@@ -118,12 +329,12 @@
                         </div>
                     </div>
                     
-                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-brand/30 bg-brand/10 text-brand text-xs font-bold tracking-widest uppercase mb-8">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-brand/20 bg-brand/5 text-brand text-xs font-bold tracking-widest uppercase mb-8 backdrop-blur-sm">
                         <span class="w-1.5 h-1.5 rounded-full bg-brand animate-pulse"></span>
                         Local Business Growth
                     </div>
 
-                    <h1 class="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tighter leading-[0.95] mb-8 text-gradient">
+                    <h1 class="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tighter leading-[0.95] mb-8 text-gradient" id="heroTitle">
                         Smart Websites, Automation & AI<br>for Small Business.
                     </h1>
                     
@@ -132,52 +343,54 @@
                     </p>
                     
                     <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-                        <a href="mailto:contact@pocketfriend.io?subject=Requesting%20a%20Free%20Proposal" class="bg-white text-zinc-950 px-8 py-4 rounded-full font-medium text-center hover:bg-zinc-200 transition-all active:scale-[0.98]">
+                        <a href="mailto:contact@pocketfriend.io?subject=Requesting%20a%20Free%20Proposal" class="magnetic-btn bg-white text-zinc-950 px-8 py-4 rounded-full font-medium text-center hover:bg-zinc-200 transition-all active:scale-[0.98] holo-shine">
                             Get a Free Proposal
                         </a>
-                        <a href="#services" class="bg-transparent border border-white/20 text-white px-8 py-4 rounded-full font-medium text-center flex items-center justify-center gap-2 hover:bg-white/5 transition-all">
+                        <a href="#services" class="magnetic-btn bg-transparent border border-white/15 text-white px-8 py-4 rounded-full font-medium text-center flex items-center justify-center gap-2 hover:bg-white/5 transition-all holo-shine">
                             Explore Our Services
                         </a>
                     </div>
                 </div>
             
                 <div class="w-full lg:w-1/2 relative h-[500px] lg:h-[650px] z-0 reveal hidden lg:block" style="transition-delay: 0.2s;">
-                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-brand/10 blur-[120px] rounded-full pointer-events-none"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-brand/10 blur-[140px] rounded-full pointer-events-none"></div>
                     
-                    <!-- Dashboard Mockup (Repurposed for Marketing) -->
-                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] glass-panel rounded-3xl p-6 shadow-2xl border border-white/10 z-20">
-                        <div class="flex justify-between items-center mb-6 border-b border-white/5 pb-4">
-                            <div class="flex gap-2">
-                                <div class="w-3 h-3 rounded-full bg-zinc-700"></div>
-                                <div class="w-3 h-3 rounded-full bg-zinc-700"></div>
-                                <div class="w-3 h-3 rounded-full bg-zinc-700"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] glass-panel rounded-3xl p-6 shadow-2xl border border-white/[0.08] z-20 tilt-card" id="heroCard">
+                        <div class="card-glow rounded-3xl"></div>
+                        <div class="card-content">
+                            <div class="flex justify-between items-center mb-6 border-b border-white/5 pb-4">
+                                <div class="flex gap-2">
+                                    <div class="w-3 h-3 rounded-full bg-zinc-700"></div>
+                                    <div class="w-3 h-3 rounded-full bg-zinc-700"></div>
+                                    <div class="w-3 h-3 rounded-full bg-zinc-700"></div>
+                                </div>
+                                <div class="h-6 w-24 bg-brand/20 text-brand rounded-full flex items-center justify-center text-[10px] font-bold">Leads Active</div>
                             </div>
-                            <div class="h-6 w-24 bg-brand/20 text-brand rounded-full flex items-center justify-center text-[10px] font-bold">Leads Active</div>
-                        </div>
-                        
-                        <div class="grid grid-cols-3 gap-4 mb-4">
-                            <div class="bg-zinc-900/80 rounded-xl p-4 border border-white/5">
-                                <div class="text-zinc-500 text-[10px] uppercase mb-1">Local Views</div>
-                                <div class="text-white font-mono text-xl">+342%</div>
+                            
+                            <div class="grid grid-cols-3 gap-4 mb-4">
+                                <div class="bg-zinc-900/80 rounded-xl p-4 border border-white/[0.04]">
+                                    <div class="text-zinc-500 text-[10px] uppercase mb-1">Local Views</div>
+                                    <div class="text-white font-mono text-xl">+342%</div>
+                                </div>
+                                <div class="bg-zinc-900/80 rounded-xl p-4 border border-white/[0.04]">
+                                    <div class="text-zinc-500 text-[10px] uppercase mb-1">Calls</div>
+                                    <div class="text-white font-mono text-xl text-emerald-400">84</div>
+                                </div>
+                                <div class="bg-zinc-900/80 rounded-xl p-4 border border-white/[0.04]">
+                                    <div class="text-zinc-500 text-[10px] uppercase mb-1">Google Rank</div>
+                                    <div class="text-white font-mono text-xl">#1</div>
+                                </div>
                             </div>
-                            <div class="bg-zinc-900/80 rounded-xl p-4 border border-white/5">
-                                <div class="text-zinc-500 text-[10px] uppercase mb-1">Calls</div>
-                                <div class="text-white font-mono text-xl text-emerald-400">84</div>
-                            </div>
-                            <div class="bg-zinc-900/80 rounded-xl p-4 border border-white/5">
-                                <div class="text-zinc-500 text-[10px] uppercase mb-1">Google Rank</div>
-                                <div class="text-white font-mono text-xl">#1</div>
-                            </div>
-                        </div>
 
-                        <div class="bg-zinc-900/80 rounded-xl p-4 border border-white/5 h-32 flex items-end gap-2 justify-between">
-                            <div class="w-full bg-brand/20 rounded-t-sm h-[40%] hover:h-[45%] transition-all"></div>
-                            <div class="w-full bg-brand/40 rounded-t-sm h-[60%] hover:h-[65%] transition-all"></div>
-                            <div class="w-full bg-brand/60 rounded-t-sm h-[30%] hover:h-[35%] transition-all"></div>
-                            <div class="w-full bg-brand/80 rounded-t-sm h-[80%] hover:h-[85%] transition-all"></div>
-                            <div class="w-full bg-brand rounded-t-sm h-[100%]"></div>
-                            <div class="w-full bg-brand/80 rounded-t-sm h-[70%] hover:h-[75%] transition-all"></div>
-                            <div class="w-full bg-brand/60 rounded-t-sm h-[50%] hover:h-[55%] transition-all"></div>
+                            <div class="bg-zinc-900/80 rounded-xl p-4 border border-white/[0.04] h-32 flex items-end gap-2 justify-between">
+                                <div class="w-full bg-brand/20 rounded-t-sm h-[40%] hover:h-[45%] transition-all duration-300"></div>
+                                <div class="w-full bg-brand/40 rounded-t-sm h-[60%] hover:h-[65%] transition-all duration-300"></div>
+                                <div class="w-full bg-brand/60 rounded-t-sm h-[30%] hover:h-[35%] transition-all duration-300"></div>
+                                <div class="w-full bg-brand/80 rounded-t-sm h-[80%] hover:h-[85%] transition-all duration-300"></div>
+                                <div class="w-full bg-brand rounded-t-sm h-[100%]"></div>
+                                <div class="w-full bg-brand/80 rounded-t-sm h-[70%] hover:h-[75%] transition-all duration-300"></div>
+                                <div class="w-full bg-brand/60 rounded-t-sm h-[50%] hover:h-[55%] transition-all duration-300"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -185,7 +398,7 @@
         </section>
 
         <!-- Trusted By Marquee -->
-        <section class="w-full py-12 border-y border-white/5 bg-zinc-950/50 overflow-hidden relative">
+        <section class="w-full py-12 border-y border-white/[0.04] bg-zinc-950/30 overflow-hidden relative">
             <div class="max-w-7xl mx-auto px-6 md:px-12 mb-8 text-center reveal">
                 <p class="text-zinc-500 text-sm font-medium uppercase tracking-widest">Proudly Partnering With Local Businesses</p>
             </div>
@@ -194,21 +407,20 @@
                 <div class="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-zinc-950 to-transparent z-10 pointer-events-none"></div>
                 
                 <div class="animate-marquee flex gap-16 md:gap-24 items-center justify-around group-hover:[animation-play-state:paused] transition-all text-xl font-display font-bold text-zinc-500">
-                    <span class="hover:text-white transition-colors cursor-pointer">Restaurants</span>
-                    <span class="hover:text-brand transition-colors cursor-pointer">Contractors</span>
-                    <span class="hover:text-white transition-colors cursor-pointer">Salons</span>
-                    <span class="hover:text-brand transition-colors cursor-pointer">Barbershops</span>
-                    <span class="hover:text-white transition-colors cursor-pointer">Dentists</span>
-                    <span class="hover:text-brand transition-colors cursor-pointer">Real Estate</span>
-                    <span class="hover:text-white transition-colors cursor-pointer">Retail Shops</span>
-                    <!-- Duplicate -->
-                    <span class="hover:text-white transition-colors cursor-pointer">Restaurants</span>
-                    <span class="hover:text-brand transition-colors cursor-pointer">Contractors</span>
-                    <span class="hover:text-white transition-colors cursor-pointer">Salons</span>
-                    <span class="hover:text-brand transition-colors cursor-pointer">Barbershops</span>
-                    <span class="hover:text-white transition-colors cursor-pointer">Dentists</span>
-                    <span class="hover:text-brand transition-colors cursor-pointer">Real Estate</span>
-                    <span class="hover:text-white transition-colors cursor-pointer">Retail Shops</span>
+                    <span class="hover:text-white transition-colors cursor-pointer magnetic-btn">Restaurants</span>
+                    <span class="hover:text-brand transition-colors cursor-pointer magnetic-btn">Contractors</span>
+                    <span class="hover:text-white transition-colors cursor-pointer magnetic-btn">Salons</span>
+                    <span class="hover:text-brand transition-colors cursor-pointer magnetic-btn">Barbershops</span>
+                    <span class="hover:text-white transition-colors cursor-pointer magnetic-btn">Dentists</span>
+                    <span class="hover:text-brand transition-colors cursor-pointer magnetic-btn">Real Estate</span>
+                    <span class="hover:text-white transition-colors cursor-pointer magnetic-btn">Retail Shops</span>
+                    <span class="hover:text-white transition-colors cursor-pointer magnetic-btn">Restaurants</span>
+                    <span class="hover:text-brand transition-colors cursor-pointer magnetic-btn">Contractors</span>
+                    <span class="hover:text-white transition-colors cursor-pointer magnetic-btn">Salons</span>
+                    <span class="hover:text-brand transition-colors cursor-pointer magnetic-btn">Barbershops</span>
+                    <span class="hover:text-white transition-colors cursor-pointer magnetic-btn">Dentists</span>
+                    <span class="hover:text-brand transition-colors cursor-pointer magnetic-btn">Real Estate</span>
+                    <span class="hover:text-white transition-colors cursor-pointer magnetic-btn">Retail Shops</span>
                 </div>
             </div>
         </section>
@@ -217,162 +429,233 @@
         <section class="max-w-5xl mx-auto px-6 md:px-12 py-32 text-center">
             <h2 class="font-display text-4xl md:text-5xl tracking-tighter mb-8 reveal">Why Your Business Needs More Than a Basic Website.</h2>
             <p class="text-xl text-zinc-400 leading-relaxed mb-10 max-w-4xl mx-auto reveal" style="transition-delay: 0.1s;">
-                Having a website is great, but it’s only the first step. To truly grow in today’s local market, your website needs to work <em>for</em> you. It should be a 24/7 digital storefront where customers can easily find you, request quotes, book appointments, and get their questions answered instantly. At PocketFriend.io, we build digital systems that capture missed opportunities and turn casual visitors into loyal customers.
+                Having a website is great, but it's only the first step. To truly grow in today's local market, your website needs to work <em>for</em> you. It should be a 24/7 digital storefront where customers can easily find you, request quotes, book appointments, and get their questions answered instantly. At PocketFriend.io, we build digital systems that capture missed opportunities and turn casual visitors into loyal customers.
             </p>
             
             <h3 class="font-display text-3xl tracking-tighter mb-6 text-brand mt-16 reveal" style="transition-delay: 0.2s;">Practical Technology for Growing Local Businesses</h3>
             <p class="text-lg text-zinc-400 leading-relaxed mb-6 max-w-3xl mx-auto reveal" style="transition-delay: 0.3s;">
-                We believe that powerful technology shouldn’t be reserved for massive corporations. Backed by over 15 years of experience in enterprise data, cloud computing, and automation, we decided to bring these advanced tools to the businesses that form the backbone of our communities.
+                We believe that powerful technology shouldn't be reserved for massive corporations. Backed by over 15 years of experience in enterprise data, cloud computing, and automation, we decided to bring these advanced tools to the businesses that form the backbone of our communities.
             </p>
             <p class="text-lg text-zinc-400 leading-relaxed max-w-3xl mx-auto reveal" style="transition-delay: 0.4s;">
                 We help small business owners use technology without the confusion. Whether you need a modern website, automated customer workflows, simple dashboards, or smart chatbots, we build it. We focus entirely on practical results, not complicated technical language. Our ultimate goal is simple: to help you save time, look incredibly professional, and serve your customers better.
             </p>
         </section>
 
-        <!-- Services -->
-        <section id="services" class="max-w-7xl mx-auto px-6 md:px-12 py-20 border-t border-white/5">
+        <!-- Services Bento Grid -->
+        <section id="services" class="max-w-7xl mx-auto px-6 md:px-12 py-20 border-t border-white/[0.04]">
             <div class="text-center mb-20 reveal">
                 <h2 class="font-display text-4xl md:text-6xl tracking-tighter mb-6 text-gradient">Everything you need to succeed online.</h2>
                 <p class="text-zinc-400 text-lg max-w-2xl mx-auto">From beautiful websites to local SEO, we handle it all so you don't have to.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Row 1 -->
-                <div class="service-card glass-panel rounded-[2rem] p-8 reveal group animate-float hover:bg-zinc-900/80 hover:scale-105 hover:border-brand/40 hover:shadow-[0_0_30px_-5px_rgba(255,77,0,0.3)] transition-all duration-300 cursor-grab active:cursor-grabbing select-none" style="transition-delay: 0s; animation-delay: 0.5s;">
-                    <h3 class="font-display text-2xl mb-3 text-white pointer-events-none">AI Local SEO</h3>
-                    <p class="text-zinc-400 text-sm pointer-events-none">Advanced AI-driven optimization to dominate local search results and attract high-intent customers in your area.</p>
-                </div>
-                <div class="service-card glass-panel rounded-[2rem] p-8 reveal group animate-float hover:bg-zinc-900/80 hover:scale-105 hover:border-brand/40 hover:shadow-[0_0_30px_-5px_rgba(255,77,0,0.3)] transition-all duration-300 cursor-grab active:cursor-grabbing select-none" style="transition-delay: 0.1s; animation-delay: 1s;">
-                    <h3 class="font-display text-2xl mb-3 text-white pointer-events-none">AI Tele Answering</h3>
-                    <p class="text-zinc-400 text-sm pointer-events-none">Smart voice assistants that answer your business phone 24/7, route calls, and capture leads.</p>
-                </div>
-                <div class="service-card glass-panel rounded-[2rem] p-8 reveal group animate-float hover:bg-zinc-900/80 hover:scale-105 hover:border-brand/40 hover:shadow-[0_0_30px_-5px_rgba(255,77,0,0.3)] transition-all duration-300 cursor-grab active:cursor-grabbing select-none" style="transition-delay: 0.2s; animation-delay: 1.5s;">
-                    <h3 class="font-display text-2xl mb-3 text-white pointer-events-none">AI Chatbots</h3>
-                    <p class="text-zinc-400 text-sm pointer-events-none">24/7 automated assistants that answer customer questions and book appointments while you sleep.</p>
-                </div>
-                <div class="service-card glass-panel rounded-[2rem] p-8 reveal group animate-float hover:bg-zinc-900/80 hover:scale-105 hover:border-brand/40 hover:shadow-[0_0_30px_-5px_rgba(255,77,0,0.3)] transition-all duration-300 cursor-grab active:cursor-grabbing select-none" style="transition-delay: 0.3s; animation-delay: 2s;">
-                    <h3 class="font-display text-2xl mb-3 text-white pointer-events-none">Inventory Chatbots</h3>
-                    <p class="text-zinc-400 text-sm pointer-events-none">Smart tools connected to your catalog to instantly answer stock and pricing questions.</p>
+            <div class="bento-grid">
+                <div class="col-span-2 row-span-2 glass-panel rounded-[2rem] p-8 reveal tilt-card group holo-shine" style="transition-delay: 0s;">
+                    <div class="card-glow rounded-[2rem]"></div>
+                    <div class="card-content h-full flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center mb-4 text-brand text-2xl">&#128270;</div>
+                            <h3 class="font-display text-3xl mb-3 text-white">AI Local SEO</h3>
+                            <p class="text-zinc-400">Advanced AI-driven optimization to dominate local search results and attract high-intent customers in your area.</p>
+                        </div>
+                        <div class="mt-6 flex gap-2">
+                            <span class="px-3 py-1 rounded-full bg-white/5 text-zinc-500 text-xs border border-white/5">Google Maps</span>
+                            <span class="px-3 py-1 rounded-full bg-white/5 text-zinc-500 text-xs border border-white/5">Reviews</span>
+                            <span class="px-3 py-1 rounded-full bg-white/5 text-zinc-500 text-xs border border-white/5">Rankings</span>
+                        </div>
+                    </div>
                 </div>
                 
-                <!-- Row 2 -->
-                <div class="service-card glass-panel rounded-[2rem] p-8 reveal group animate-float hover:bg-zinc-900/80 hover:scale-105 hover:border-brand/40 hover:shadow-[0_0_30px_-5px_rgba(255,77,0,0.3)] transition-all duration-300 cursor-grab active:cursor-grabbing select-none" style="transition-delay: 0.1s; animation-delay: 2.5s;">
-                    <h3 class="font-display text-2xl mb-3 text-white pointer-events-none">Website Design</h3>
-                    <p class="text-zinc-400 text-sm pointer-events-none">Clean, mobile-friendly websites that make you look professional and capture local customers.</p>
-                </div>
-                <div class="service-card glass-panel rounded-[2rem] p-8 reveal group animate-float hover:bg-zinc-900/80 hover:scale-105 hover:border-brand/40 hover:shadow-[0_0_30px_-5px_rgba(255,77,0,0.3)] transition-all duration-300 cursor-grab active:cursor-grabbing select-none" style="transition-delay: 0.2s; animation-delay: 3s;">
-                    <h3 class="font-display text-2xl mb-3 text-white pointer-events-none">Google Visibility</h3>
-                    <p class="text-zinc-400 text-sm pointer-events-none">Optimize your Google Business Profile to show up higher in local searches and maps.</p>
-                </div>
-                <div class="service-card glass-panel rounded-[2rem] p-8 reveal group animate-float hover:bg-zinc-900/80 hover:scale-105 hover:border-brand/40 hover:shadow-[0_0_30px_-5px_rgba(255,77,0,0.3)] transition-all duration-300 cursor-grab active:cursor-grabbing select-none" style="transition-delay: 0.3s; animation-delay: 0.5s;">
-                    <h3 class="font-display text-2xl mb-3 text-white pointer-events-none">Forms & Leads</h3>
-                    <p class="text-zinc-400 text-sm pointer-events-none">Smart digital forms that ensure you never lose a quote request or customer inquiry again.</p>
-                </div>
-                <div class="service-card glass-panel rounded-[2rem] p-8 reveal group animate-float hover:bg-zinc-900/80 hover:scale-105 hover:border-brand/40 hover:shadow-[0_0_30px_-5px_rgba(255,77,0,0.3)] transition-all duration-300 cursor-grab active:cursor-grabbing select-none" style="transition-delay: 0.4s; animation-delay: 1s;">
-                    <h3 class="font-display text-2xl mb-3 text-white pointer-events-none">Process Automation</h3>
-                    <p class="text-zinc-400 text-sm pointer-events-none">We automate your boring administrative tasks, follow-ups, and email notifications.</p>
+                <div class="glass-panel rounded-[2rem] p-8 reveal tilt-card group holo-shine" style="transition-delay: 0.1s;">
+                    <div class="card-glow rounded-[2rem]"></div>
+                    <div class="card-content">
+                        <div class="w-10 h-10 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center mb-4 text-brand text-xl">&#128172;</div>
+                        <h3 class="font-display text-xl mb-2 text-white">AI Chatbots</h3>
+                        <p class="text-zinc-400 text-sm">24/7 automated assistants that answer questions and book appointments while you sleep.</p>
+                    </div>
                 </div>
                 
-                <!-- Row 3 -->
-                <div class="service-card glass-panel rounded-[2rem] p-8 reveal group animate-float hover:bg-zinc-900/80 hover:scale-105 hover:border-brand/40 hover:shadow-[0_0_30px_-5px_rgba(255,77,0,0.3)] transition-all duration-300 cursor-grab active:cursor-grabbing select-none" style="transition-delay: 0.2s; animation-delay: 1.5s;">
-                    <h3 class="font-display text-2xl mb-3 text-white pointer-events-none">Dashboards</h3>
-                    <p class="text-zinc-400 text-sm pointer-events-none">Simple visual dashboards showing your leads, sales, and appointments at a single glance.</p>
-                </div>
-                <div class="service-card glass-panel rounded-[2rem] p-8 reveal group animate-float hover:bg-zinc-900/80 hover:scale-105 hover:border-brand/40 hover:shadow-[0_0_30px_-5px_rgba(255,77,0,0.3)] transition-all duration-300 cursor-grab active:cursor-grabbing select-none" style="transition-delay: 0.3s; animation-delay: 2s;">
-                    <h3 class="font-display text-2xl mb-3 text-white pointer-events-none">Database & POS Setup</h3>
-                    <p class="text-zinc-400 text-sm pointer-events-none">Seamless installation and integration of modern Point of Sale systems and secure customer databases.</p>
-                </div>
-                <div class="service-card glass-panel rounded-[2rem] p-8 reveal group animate-float hover:bg-zinc-900/80 hover:scale-105 hover:border-brand/40 hover:shadow-[0_0_30px_-5px_rgba(255,77,0,0.3)] transition-all duration-300 cursor-grab active:cursor-grabbing select-none" style="transition-delay: 0.4s; animation-delay: 2.5s;">
-                    <h3 class="font-display text-2xl mb-3 text-white pointer-events-none">Data Cleanup</h3>
-                    <p class="text-zinc-400 text-sm pointer-events-none">We organize your messy spreadsheets and old service records into clean, searchable systems.</p>
-                </div>
-                <div class="service-card glass-panel rounded-[2rem] p-8 reveal group animate-float hover:bg-zinc-900/80 hover:scale-105 hover:border-brand/40 hover:shadow-[0_0_30px_-5px_rgba(255,77,0,0.3)] transition-all duration-300 cursor-grab active:cursor-grabbing select-none" style="transition-delay: 0.5s; animation-delay: 3s;">
-                    <h3 class="font-display text-2xl mb-3 text-white pointer-events-none">Custom Apps</h3>
-                    <p class="text-zinc-400 text-sm pointer-events-none">Tailor-made internal tools and booking systems built exactly for how your team operates.</p>
+                <div class="glass-panel rounded-[2rem] p-8 reveal tilt-card group holo-shine" style="transition-delay: 0.15s;">
+                    <div class="card-glow rounded-[2rem]"></div>
+                    <div class="card-content">
+                        <div class="w-10 h-10 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center mb-4 text-brand text-xl">&#128222;</div>
+                        <h3 class="font-display text-xl mb-2 text-white">AI Tele Answering</h3>
+                        <p class="text-zinc-400 text-sm">Smart voice assistants that answer your business phone 24/7 and capture leads.</p>
+                    </div>
                 </div>
                 
-                <!-- Row 4 -->
-                <div class="service-card glass-panel rounded-[2rem] p-8 reveal group animate-float hover:bg-zinc-900/80 hover:scale-105 hover:border-brand/40 hover:shadow-[0_0_30px_-5px_rgba(255,77,0,0.3)] transition-all duration-300 cursor-grab active:cursor-grabbing select-none" style="transition-delay: 0.3s; animation-delay: 0.5s;">
-                    <h3 class="font-display text-2xl mb-3 text-white pointer-events-none">Cloud Hosting</h3>
-                    <p class="text-zinc-400 text-sm pointer-events-none">Secure, fast, and fully-managed website hosting so you never have to worry about downtime.</p>
+                <div class="glass-panel rounded-[2rem] p-8 reveal tilt-card group holo-shine" style="transition-delay: 0.2s;">
+                    <div class="card-glow rounded-[2rem]"></div>
+                    <div class="card-content">
+                        <div class="w-10 h-10 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center mb-4 text-brand text-xl">&#128187;</div>
+                        <h3 class="font-display text-xl mb-2 text-white">Website Design</h3>
+                        <p class="text-zinc-400 text-sm">Clean, mobile-friendly websites that make you look professional.</p>
+                    </div>
                 </div>
-                <div class="service-card glass-panel rounded-[2rem] p-8 reveal group animate-float hover:bg-zinc-900/80 hover:scale-105 hover:border-brand/40 hover:shadow-[0_0_30px_-5px_rgba(255,77,0,0.3)] transition-all duration-300 cursor-grab active:cursor-grabbing select-none" style="transition-delay: 0.4s; animation-delay: 1s;">
-                    <h3 class="font-display text-2xl mb-3 text-white pointer-events-none">Cybersecurity Basics</h3>
-                    <p class="text-zinc-400 text-sm pointer-events-none">Practical protection to keep your business data and customer forms safe from digital threats.</p>
+                
+                <div class="glass-panel rounded-[2rem] p-8 reveal tilt-card group holo-shine" style="transition-delay: 0.25s;">
+                    <div class="card-glow rounded-[2rem]"></div>
+                    <div class="card-content">
+                        <div class="w-10 h-10 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center mb-4 text-brand text-xl">&#128200;</div>
+                        <h3 class="font-display text-xl mb-2 text-white">Google Visibility</h3>
+                        <p class="text-zinc-400 text-sm">Optimize your Google Business Profile to show up higher in local searches.</p>
+                    </div>
                 </div>
-                <div class="service-card glass-panel rounded-[2rem] p-8 reveal group animate-float hover:bg-zinc-900/80 hover:scale-105 hover:border-brand/40 hover:shadow-[0_0_30px_-5px_rgba(255,77,0,0.3)] transition-all duration-300 cursor-grab active:cursor-grabbing select-none" style="transition-delay: 0.5s; animation-delay: 1.5s;">
-                    <h3 class="font-display text-2xl mb-3 text-white pointer-events-none">Networking Setup</h3>
-                    <p class="text-zinc-400 text-sm pointer-events-none">Reliable, secure Wi-Fi and network infrastructure setup for your office or storefront.</p>
+                
+                <div class="col-span-2 glass-panel rounded-[2rem] p-8 reveal tilt-card group holo-shine" style="transition-delay: 0.3s;">
+                    <div class="card-glow rounded-[2rem]"></div>
+                    <div class="card-content flex items-center gap-6">
+                        <div class="w-14 h-14 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center text-brand text-3xl shrink-0">&#9881;</div>
+                        <div>
+                            <h3 class="font-display text-2xl mb-2 text-white">Process Automation</h3>
+                            <p class="text-zinc-400">We automate your boring administrative tasks, follow-ups, and email notifications so you can focus on what matters.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="service-card glass-panel rounded-[2rem] p-8 reveal group animate-float hover:bg-zinc-900/80 hover:scale-105 hover:border-brand/40 hover:shadow-[0_0_30px_-5px_rgba(255,77,0,0.3)] transition-all duration-300 cursor-grab active:cursor-grabbing select-none" style="transition-delay: 0.6s; animation-delay: 2s;">
-                    <h3 class="font-display text-2xl mb-3 text-white pointer-events-none">Cloud Migration</h3>
-                    <p class="text-zinc-400 text-sm pointer-events-none">Move your old manual files and outdated systems into a secure, modern cloud setup.</p>
+                
+                <div class="glass-panel rounded-[2rem] p-8 reveal tilt-card group holo-shine" style="transition-delay: 0.35s;">
+                    <div class="card-glow rounded-[2rem]"></div>
+                    <div class="card-content">
+                        <div class="w-10 h-10 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center mb-4 text-brand text-xl">&#128196;</div>
+                        <h3 class="font-display text-xl mb-2 text-white">Forms & Leads</h3>
+                        <p class="text-zinc-400 text-sm">Smart digital forms that ensure you never lose a quote request again.</p>
+                    </div>
+                </div>
+                
+                <div class="glass-panel rounded-[2rem] p-8 reveal tilt-card group holo-shine" style="transition-delay: 0.4s;">
+                    <div class="card-glow rounded-[2rem]"></div>
+                    <div class="card-content">
+                        <div class="w-10 h-10 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center mb-4 text-brand text-xl">&#128202;</div>
+                        <h3 class="font-display text-xl mb-2 text-white">Dashboards</h3>
+                        <p class="text-zinc-400 text-sm">Simple visual dashboards showing your leads, sales, and appointments.</p>
+                    </div>
+                </div>
+                
+                <div class="glass-panel rounded-[2rem] p-8 reveal tilt-card group holo-shine" style="transition-delay: 0.45s;">
+                    <div class="card-glow rounded-[2rem]"></div>
+                    <div class="card-content">
+                        <div class="w-10 h-10 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center mb-4 text-brand text-xl">&#128451;</div>
+                        <h3 class="font-display text-xl mb-2 text-white">Cloud Hosting</h3>
+                        <p class="text-zinc-400 text-sm">Secure, fast, and fully-managed website hosting with zero downtime.</p>
+                    </div>
+                </div>
+                
+                <div class="glass-panel rounded-[2rem] p-8 reveal tilt-card group holo-shine" style="transition-delay: 0.5s;">
+                    <div class="card-glow rounded-[2rem]"></div>
+                    <div class="card-content">
+                        <div class="w-10 h-10 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center mb-4 text-brand text-xl">&#128272;</div>
+                        <h3 class="font-display text-xl mb-2 text-white">Cybersecurity</h3>
+                        <p class="text-zinc-400 text-sm">Practical protection to keep your business data safe from threats.</p>
+                    </div>
+                </div>
+                
+                <div class="col-span-2 glass-panel rounded-[2rem] p-8 reveal tilt-card group holo-shine" style="transition-delay: 0.55s;">
+                    <div class="card-glow rounded-[2rem]"></div>
+                    <div class="card-content flex items-center gap-6">
+                        <div class="w-14 h-14 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center text-brand text-3xl shrink-0">&#128295;</div>
+                        <div>
+                            <h3 class="font-display text-2xl mb-2 text-white">Custom Apps & Data Cleanup</h3>
+                            <p class="text-zinc-400">Tailor-made internal tools, booking systems, and organized data from messy spreadsheets into clean, searchable systems.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- Why Choose Us -->
-        <section class="w-full py-32 border-y border-white/5 bg-zinc-900/30 overflow-hidden relative">
+        <section class="w-full py-32 border-y border-white/[0.04] bg-zinc-900/20 overflow-hidden relative">
             <div class="max-w-7xl mx-auto px-6 md:px-12 text-center mb-20 reveal">
                 <h2 class="font-display text-4xl md:text-6xl tracking-tighter mb-6">Why local businesses love us.</h2>
             </div>
             
             <div class="relative w-full overflow-hidden flex reveal">
-                <!-- Left/Right Edge Fades -->
                 <div class="absolute left-0 top-0 bottom-0 w-24 md:w-64 bg-gradient-to-r from-zinc-950 to-transparent z-10 pointer-events-none"></div>
                 <div class="absolute right-0 top-0 bottom-0 w-24 md:w-64 bg-gradient-to-l from-zinc-950 to-transparent z-10 pointer-events-none"></div>
                 
-                <div class="animate-marquee flex gap-8 items-stretch w-max group hover:[animation-play-state:paused] transition-all py-4">
-                    <!-- Set 1 -->
-                    <div class="w-[320px] md:w-[400px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors">
-                        <h3 class="font-display text-xl mb-3 text-brand">Small-Business Focused</h3>
-                        <p class="text-zinc-400 text-sm leading-relaxed">We build tools for Main Street, not Wall Street.</p>
+                <div class="animate-marquee flex gap-6 items-stretch w-max group hover:[animation-play-state:paused] transition-all py-4">
+                    <div class="w-[320px] md:w-[380px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors tilt-card">
+                        <div class="card-glow rounded-3xl"></div>
+                        <div class="card-content">
+                            <h3 class="font-display text-xl mb-3 text-brand">Small-Business Focused</h3>
+                            <p class="text-zinc-400 text-sm leading-relaxed">We build tools for Main Street, not Wall Street.</p>
+                        </div>
                     </div>
-                    <div class="w-[320px] md:w-[400px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors">
-                        <h3 class="font-display text-xl mb-3 text-brand">Plain English</h3>
-                        <p class="text-zinc-400 text-sm leading-relaxed">Simple communication. No confusing corporate tech jargon.</p>
+                    <div class="w-[320px] md:w-[380px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors tilt-card">
+                        <div class="card-glow rounded-3xl"></div>
+                        <div class="card-content">
+                            <h3 class="font-display text-xl mb-3 text-brand">Plain English</h3>
+                            <p class="text-zinc-400 text-sm leading-relaxed">Simple communication. No confusing corporate tech jargon.</p>
+                        </div>
                     </div>
-                    <div class="w-[320px] md:w-[400px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors">
-                        <h3 class="font-display text-xl mb-3 text-brand">All-in-One Solution</h3>
-                        <p class="text-zinc-400 text-sm leading-relaxed">Websites, automations, and AI tools handled under one roof.</p>
+                    <div class="w-[320px] md:w-[380px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors tilt-card">
+                        <div class="card-glow rounded-3xl"></div>
+                        <div class="card-content">
+                            <h3 class="font-display text-xl mb-3 text-brand">All-in-One Solution</h3>
+                            <p class="text-zinc-400 text-sm leading-relaxed">Websites, automations, and AI tools handled under one roof.</p>
+                        </div>
                     </div>
-                    <div class="w-[320px] md:w-[400px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors">
-                        <h3 class="font-display text-xl mb-3 text-brand">Mobile-First Design</h3>
-                        <p class="text-zinc-400 text-sm leading-relaxed">Websites that look stunning and work perfectly on smartphones.</p>
+                    <div class="w-[320px] md:w-[380px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors tilt-card">
+                        <div class="card-glow rounded-3xl"></div>
+                        <div class="card-content">
+                            <h3 class="font-display text-xl mb-3 text-brand">Mobile-First Design</h3>
+                            <p class="text-zinc-400 text-sm leading-relaxed">Websites that look stunning and work perfectly on smartphones.</p>
+                        </div>
                     </div>
-                    <div class="w-[320px] md:w-[400px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors">
-                        <h3 class="font-display text-xl mb-3 text-brand">Data Made Simple</h3>
-                        <p class="text-zinc-400 text-sm leading-relaxed">Dashboards that actually make sense of your business metrics.</p>
+                    <div class="w-[320px] md:w-[380px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors tilt-card">
+                        <div class="card-glow rounded-3xl"></div>
+                        <div class="card-content">
+                            <h3 class="font-display text-xl mb-3 text-brand">Data Made Simple</h3>
+                            <p class="text-zinc-400 text-sm leading-relaxed">Dashboards that actually make sense of your business metrics.</p>
+                        </div>
                     </div>
-                    <div class="w-[320px] md:w-[400px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors">
-                        <h3 class="font-display text-xl mb-3 text-brand">Ongoing Support</h3>
-                        <p class="text-zinc-400 text-sm leading-relaxed">A technology partner you can actually reach when you need help.</p>
+                    <div class="w-[320px] md:w-[380px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors tilt-card">
+                        <div class="card-glow rounded-3xl"></div>
+                        <div class="card-content">
+                            <h3 class="font-display text-xl mb-3 text-brand">Ongoing Support</h3>
+                            <p class="text-zinc-400 text-sm leading-relaxed">A technology partner you can actually reach when you need help.</p>
+                        </div>
                     </div>
 
-                    <!-- Set 2 (Duplicate for infinite loop) -->
-                    <div class="w-[320px] md:w-[400px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors">
-                        <h3 class="font-display text-xl mb-3 text-brand">Small-Business Focused</h3>
-                        <p class="text-zinc-400 text-sm leading-relaxed">We build tools for Main Street, not Wall Street.</p>
+                    <div class="w-[320px] md:w-[380px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors tilt-card">
+                        <div class="card-glow rounded-3xl"></div>
+                        <div class="card-content">
+                            <h3 class="font-display text-xl mb-3 text-brand">Small-Business Focused</h3>
+                            <p class="text-zinc-400 text-sm leading-relaxed">We build tools for Main Street, not Wall Street.</p>
+                        </div>
                     </div>
-                    <div class="w-[320px] md:w-[400px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors">
-                        <h3 class="font-display text-xl mb-3 text-brand">Plain English</h3>
-                        <p class="text-zinc-400 text-sm leading-relaxed">Simple communication. No confusing corporate tech jargon.</p>
+                    <div class="w-[320px] md:w-[380px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors tilt-card">
+                        <div class="card-glow rounded-3xl"></div>
+                        <div class="card-content">
+                            <h3 class="font-display text-xl mb-3 text-brand">Plain English</h3>
+                            <p class="text-zinc-400 text-sm leading-relaxed">Simple communication. No confusing corporate tech jargon.</p>
+                        </div>
                     </div>
-                    <div class="w-[320px] md:w-[400px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors">
-                        <h3 class="font-display text-xl mb-3 text-brand">All-in-One Solution</h3>
-                        <p class="text-zinc-400 text-sm leading-relaxed">Websites, automations, and AI tools handled under one roof.</p>
+                    <div class="w-[320px] md:w-[380px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors tilt-card">
+                        <div class="card-glow rounded-3xl"></div>
+                        <div class="card-content">
+                            <h3 class="font-display text-xl mb-3 text-brand">All-in-One Solution</h3>
+                            <p class="text-zinc-400 text-sm leading-relaxed">Websites, automations, and AI tools handled under one roof.</p>
+                        </div>
                     </div>
-                    <div class="w-[320px] md:w-[400px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors">
-                        <h3 class="font-display text-xl mb-3 text-brand">Mobile-First Design</h3>
-                        <p class="text-zinc-400 text-sm leading-relaxed">Websites that look stunning and work perfectly on smartphones.</p>
+                    <div class="w-[320px] md:w-[380px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors tilt-card">
+                        <div class="card-glow rounded-3xl"></div>
+                        <div class="card-content">
+                            <h3 class="font-display text-xl mb-3 text-brand">Mobile-First Design</h3>
+                            <p class="text-zinc-400 text-sm leading-relaxed">Websites that look stunning and work perfectly on smartphones.</p>
+                        </div>
                     </div>
-                    <div class="w-[320px] md:w-[400px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors">
-                        <h3 class="font-display text-xl mb-3 text-brand">Data Made Simple</h3>
-                        <p class="text-zinc-400 text-sm leading-relaxed">Dashboards that actually make sense of your business metrics.</p>
+                    <div class="w-[320px] md:w-[380px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors tilt-card">
+                        <div class="card-glow rounded-3xl"></div>
+                        <div class="card-content">
+                            <h3 class="font-display text-xl mb-3 text-brand">Data Made Simple</h3>
+                            <p class="text-zinc-400 text-sm leading-relaxed">Dashboards that actually make sense of your business metrics.</p>
+                        </div>
                     </div>
-                    <div class="w-[320px] md:w-[400px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors">
-                        <h3 class="font-display text-xl mb-3 text-brand">Ongoing Support</h3>
-                        <p class="text-zinc-400 text-sm leading-relaxed">A technology partner you can actually reach when you need help.</p>
+                    <div class="w-[320px] md:w-[380px] shrink-0 glass-panel rounded-3xl p-8 hover:border-brand/30 hover:bg-zinc-900/80 transition-colors tilt-card">
+                        <div class="card-glow rounded-3xl"></div>
+                        <div class="card-content">
+                            <h3 class="font-display text-xl mb-3 text-brand">Ongoing Support</h3>
+                            <p class="text-zinc-400 text-sm leading-relaxed">A technology partner you can actually reach when you need help.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -384,10 +667,21 @@
                 <h2 class="font-display text-4xl md:text-6xl tracking-tighter mb-24 reveal text-center">How It Works.</h2>
                 
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
-                    <div class="hidden md:block absolute top-10 left-10 right-10 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+                    <div class="hidden md:block absolute top-10 left-10 right-10 h-px">
+                        <svg class="w-full h-8 -mt-4 overflow-visible" preserveAspectRatio="none">
+                            <line x1="0" y1="4" x2="100%" y2="4" stroke="url(#lineGrad)" stroke-width="1" class="process-line" id="processLine" stroke-dasharray="1000" stroke-dashoffset="1000"/>
+                            <defs>
+                                <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="rgba(255,77,0,0)"/>
+                                    <stop offset="50%" stop-color="rgba(255,77,0,0.5)"/>
+                                    <stop offset="100%" stop-color="rgba(255,77,0,0)"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
                     
                     <div class="reveal">
-                        <div class="h-20 w-20 bg-zinc-950 border border-white/10 rounded-full flex items-center justify-center font-display text-2xl text-zinc-500 mb-6 mx-auto relative z-10 bg-zinc-900">01</div>
+                        <div class="h-20 w-20 bg-zinc-950 border border-white/10 rounded-full flex items-center justify-center font-display text-2xl text-zinc-500 mb-6 mx-auto relative z-10 bg-zinc-900 transition-all hover:border-brand/50 hover:text-brand hover:shadow-[0_0_30px_-10px_#FF4D00]">01</div>
                         <h3 class="font-display text-xl mb-3 text-center">Discovery Call</h3>
                         <p class="text-zinc-400 text-sm text-center">We learn about your business, customers, current problems, and goals.</p>
                     </div>
@@ -399,13 +693,13 @@
                     </div>
                     
                     <div class="reveal" style="transition-delay: 0.2s;">
-                        <div class="h-20 w-20 bg-zinc-950 border border-white/10 rounded-full flex items-center justify-center font-display text-2xl text-zinc-500 mb-6 mx-auto relative z-10 bg-zinc-900">03</div>
+                        <div class="h-20 w-20 bg-zinc-950 border border-white/10 rounded-full flex items-center justify-center font-display text-2xl text-zinc-500 mb-6 mx-auto relative z-10 bg-zinc-900 transition-all hover:border-brand/50 hover:text-brand hover:shadow-[0_0_30px_-10px_#FF4D00]">03</div>
                         <h3 class="font-display text-xl mb-3 text-center">Build & Review</h3>
                         <p class="text-zinc-400 text-sm text-center">We build the solution and review everything with you before it goes live.</p>
                     </div>
 
                     <div class="reveal" style="transition-delay: 0.3s;">
-                        <div class="h-20 w-20 bg-zinc-950 border border-white/10 rounded-full flex items-center justify-center font-display text-2xl text-zinc-500 mb-6 mx-auto relative z-10 bg-zinc-900">04</div>
+                        <div class="h-20 w-20 bg-zinc-950 border border-white/10 rounded-full flex items-center justify-center font-display text-2xl text-zinc-500 mb-6 mx-auto relative z-10 bg-zinc-900 transition-all hover:border-brand/50 hover:text-brand hover:shadow-[0_0_30px_-10px_#FF4D00]">04</div>
                         <h3 class="font-display text-xl mb-3 text-center">Launch & Support</h3>
                         <p class="text-zinc-400 text-sm text-center">We launch it and provide ongoing support, updates, and improvements.</p>
                     </div>
@@ -414,78 +708,102 @@
         </section>
 
         <!-- Pricing Section -->
-        <section id="pricing" class="max-w-7xl mx-auto px-6 md:px-12 py-32 border-t border-white/5">
+        <section id="pricing" class="max-w-7xl mx-auto px-6 md:px-12 py-32 border-t border-white/[0.04]">
             <div class="text-center mb-20 reveal">
                 <h2 class="font-display text-4xl md:text-6xl tracking-tighter mb-6">Simple, honest pricing.</h2>
                 <p class="text-zinc-400 text-lg max-w-2xl mx-auto">Choose a structure that fits your goals and scale as your operations grow.</p>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-                <!-- Tier 1 -->
-                <div class="glass-panel rounded-3xl p-10 reveal">
-                    <h3 class="font-display text-2xl mb-2">Starter Online Presence</h3>
-                    <div class="text-zinc-400 text-sm mb-6 min-h-[40px]">For businesses that need to look professional online.</div>
-                    <ul class="space-y-4 mb-10 text-sm text-zinc-300">
-                        <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Mobile-friendly website</li>
-                        <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Basic business pages</li>
-                        <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Google Maps & Business Profile</li>
-                        <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Contact form & launch support</li>
-                    </ul>
-                    <a href="mailto:contact@pocketfriend.io?subject=Inquiry:%20Starter%20Package" class="block text-center w-full py-4 rounded-xl border border-white/10 hover:bg-white hover:text-black transition-colors font-medium">Get Started</a>
+                <div class="glass-panel rounded-3xl p-10 reveal tilt-card holo-shine">
+                    <div class="card-glow rounded-3xl"></div>
+                    <div class="card-content">
+                        <h3 class="font-display text-2xl mb-2">Starter Online Presence</h3>
+                        <div class="text-zinc-400 text-sm mb-6 min-h-[40px]">For businesses that need to look professional online.</div>
+                        <ul class="space-y-4 mb-10 text-sm text-zinc-300">
+                            <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Mobile-friendly website</li>
+                            <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Basic business pages</li>
+                            <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Google Maps & Business Profile</li>
+                            <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Contact form & launch support</li>
+                        </ul>
+                        <a href="mailto:contact@pocketfriend.io?subject=Inquiry:%20Starter%20Package" class="magnetic-btn block text-center w-full py-4 rounded-xl border border-white/10 hover:bg-white hover:text-black transition-colors font-medium">Get Started</a>
+                    </div>
                 </div>
                 
-                <!-- Tier 2 (Highlighted) -->
-                <div class="glass-panel rounded-3xl p-10 border-brand/50 bg-brand/5 relative reveal transform md:-translate-y-4 shadow-[0_0_50px_-15px_rgba(255,77,0,0.2)]" style="transition-delay: 0.1s;">
-                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-brand text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Most Popular</div>
-                    <h3 class="font-display text-2xl mb-2 text-brand">Growth & Automation</h3>
-                    <div class="text-zinc-400 text-sm mb-6 min-h-[40px]">For businesses that want more leads and less manual work.</div>
-                    <ul class="space-y-4 mb-10 text-sm text-zinc-300">
-                        <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Website design or redesign</li>
-                        <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Quote & booking request forms</li>
-                        <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Automated email notifications</li>
-                        <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Basic dashboard & reporting</li>
-                    </ul>
-                    <a href="mailto:contact@pocketfriend.io?subject=Inquiry:%20Growth%20Package" class="block text-center w-full py-4 rounded-xl bg-brand text-white hover:bg-brand/90 transition-colors font-medium">Grow Your Business</a>
+                <div class="glass-panel rounded-3xl p-10 border-brand/40 bg-brand/[0.03] relative reveal transform md:-translate-y-6 shadow-[0_0_60px_-20px_rgba(255,77,0,0.25)] tilt-card holo-shine" style="transition-delay: 0.1s;">
+                    <div class="card-glow rounded-3xl"></div>
+                    <div class="card-content">
+                        <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-brand text-white px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider shadow-lg shadow-brand/20">Most Popular</div>
+                        <h3 class="font-display text-2xl mb-2 text-brand">Growth & Automation</h3>
+                        <div class="text-zinc-400 text-sm mb-6 min-h-[40px]">For businesses that want more leads and less manual work.</div>
+                        <ul class="space-y-4 mb-10 text-sm text-zinc-300">
+                            <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Website design or redesign</li>
+                            <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Quote & booking request forms</li>
+                            <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Automated email notifications</li>
+                            <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Basic dashboard & reporting</li>
+                        </ul>
+                        <a href="mailto:contact@pocketfriend.io?subject=Inquiry:%20Growth%20Package" class="magnetic-btn block text-center w-full py-4 rounded-xl bg-brand text-white hover:bg-brand/90 transition-colors font-medium">Grow Your Business</a>
+                    </div>
                 </div>
                 
-                <!-- Tier 3 -->
-                <div class="glass-panel rounded-3xl p-10 reveal" style="transition-delay: 0.2s;">
-                    <h3 class="font-display text-2xl mb-2">Premium Digital Operations</h3>
-                    <div class="text-zinc-400 text-sm mb-6 min-h-[40px]">For businesses that want a full technology partner.</div>
-                    <ul class="space-y-4 mb-10 text-sm text-zinc-300">
-                        <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Website, hosting & support</li>
-                        <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>AI & Inventory chatbots</li>
-                        <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Workflow automation & dashboards</li>
-                        <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Data cleanup & custom apps</li>
-                    </ul>
-                    <a href="mailto:contact@pocketfriend.io?subject=Inquiry:%20Premium%20Package" class="block text-center w-full py-4 rounded-xl border border-white/10 hover:bg-white hover:text-black transition-colors font-medium">Partner With Us</a>
+                <div class="glass-panel rounded-3xl p-10 reveal tilt-card holo-shine" style="transition-delay: 0.2s;">
+                    <div class="card-glow rounded-3xl"></div>
+                    <div class="card-content">
+                        <h3 class="font-display text-2xl mb-2">Premium Digital Operations</h3>
+                        <div class="text-zinc-400 text-sm mb-6 min-h-[40px]">For businesses that want a full technology partner.</div>
+                        <ul class="space-y-4 mb-10 text-sm text-zinc-300">
+                            <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Website, hosting & support</li>
+                            <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>AI & Inventory chatbots</li>
+                            <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Workflow automation & dashboards</li>
+                            <li class="flex items-center gap-3"><svg class="text-brand w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Data cleanup & custom apps</li>
+                        </ul>
+                        <a href="mailto:contact@pocketfriend.io?subject=Inquiry:%20Premium%20Package" class="magnetic-btn block text-center w-full py-4 rounded-xl border border-white/10 hover:bg-white hover:text-black transition-colors font-medium">Partner With Us</a>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- Testimonials -->
-        <section class="py-32 border-t border-white/5 bg-zinc-900/30">
+        <section class="py-32 border-t border-white/[0.04] bg-zinc-900/20">
             <div class="max-w-7xl mx-auto px-6 md:px-12 text-center mb-16 reveal">
                 <h2 class="font-display text-4xl md:text-5xl tracking-tighter mb-4">Trusted by local owners.</h2>
             </div>
             <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="glass-panel p-8 rounded-3xl reveal">
-                    <p class="text-zinc-400 italic mb-6">"I'm a plumber, not a computer guy. Pocketfriend made the whole process incredibly easy. My phone has been ringing twice as much since the new site went live!"</p>
-                    <div class="font-bold text-white">— Mike T., Local Plumber</div>
+                <div class="glass-panel p-8 rounded-3xl reveal tilt-card">
+                    <div class="card-glow rounded-3xl"></div>
+                    <div class="card-content">
+                        <p class="text-zinc-400 italic mb-6">"I'm a plumber, not a computer guy. Pocketfriend made the whole process incredibly easy. My phone has been ringing twice as much since the new site went live!"</p>
+                        <div class="font-bold text-white flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-brand/20 flex items-center justify-center text-brand text-sm font-display">MT</div>
+                            Mike T., Local Plumber
+                        </div>
+                    </div>
                 </div>
-                <div class="glass-panel p-8 rounded-3xl reveal" style="transition-delay: 0.1s;">
-                    <p class="text-zinc-400 italic mb-6">"Our old bakery website was a mess on mobile. The new site is absolutely beautiful, and the Google Business setup they did brings in new tourists every single weekend."</p>
-                    <div class="font-bold text-white">— Sarah L., Bakery Owner</div>
+                <div class="glass-panel p-8 rounded-3xl reveal tilt-card" style="transition-delay: 0.1s;">
+                    <div class="card-glow rounded-3xl"></div>
+                    <div class="card-content">
+                        <p class="text-zinc-400 italic mb-6">"Our old bakery website was a mess on mobile. The new site is absolutely beautiful, and the Google Business setup they did brings in new tourists every single weekend."</p>
+                        <div class="font-bold text-white flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-brand/20 flex items-center justify-center text-brand text-sm font-display">SL</div>
+                            Sarah L., Bakery Owner
+                        </div>
+                    </div>
                 </div>
-                <div class="glass-panel p-8 rounded-3xl reveal" style="transition-delay: 0.2s;">
-                    <p class="text-zinc-400 italic mb-6">"I thought a professional website would cost a fortune. The Starter Package was perfectly affordable, and they launched it perfectly on time. Highly recommended!"</p>
-                    <div class="font-bold text-white">— James R., Landscaping</div>
+                <div class="glass-panel p-8 rounded-3xl reveal tilt-card" style="transition-delay: 0.2s;">
+                    <div class="card-glow rounded-3xl"></div>
+                    <div class="card-content">
+                        <p class="text-zinc-400 italic mb-6">"I thought a professional website would cost a fortune. The Starter Package was perfectly affordable, and they launched it perfectly on time. Highly recommended!"</p>
+                        <div class="font-bold text-white flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-brand/20 flex items-center justify-center text-brand text-sm font-display">JR</div>
+                            James R., Landscaping
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- Dashboards & Insights -->
-        <section class="max-w-7xl mx-auto px-6 md:px-12 py-20 border-t border-white/5 reveal">
+        <section class="max-w-7xl mx-auto px-6 md:px-12 py-20 border-t border-white/[0.04] reveal">
             <div class="flex flex-col md:flex-row gap-16 items-center">
                 <div class="w-full md:w-1/2">
                     <h2 class="font-display text-4xl md:text-5xl tracking-tighter mb-6 text-brand">Stop flying blind. See your business clearly.</h2>
@@ -499,17 +817,20 @@
                     </ul>
                 </div>
                 <div class="w-full md:w-1/2">
-                    <div class="glass-panel p-8 rounded-3xl animate-float">
-                        <h3 class="font-display text-3xl mb-4">AI Chatbots That Understand Your Business</h3>
-                        <p class="text-zinc-400 mb-6">PocketFriend.io builds custom AI chatbots trained on your specific website, FAQs, service lists, and internal records so they can provide real, helpful answers.</p>
-                        <div class="space-y-4">
-                            <div class="bg-zinc-900/50 p-4 rounded-xl border border-white/5">
-                                <strong class="text-brand block mb-1">For Your Customers (The 24/7 Assistant):</strong>
-                                <span class="text-sm text-zinc-400">Answers common questions ("What time do you close?"), captures leads, and dramatically reduces missed inquiries while you sleep.</span>
-                            </div>
-                            <div class="bg-zinc-900/50 p-4 rounded-xl border border-white/5">
-                                <strong class="text-brand block mb-1">For Your Internal Team (The Smart Searcher):</strong>
-                                <span class="text-sm text-zinc-400">Reduces time spent digging through spreadsheets. Employees can ask "Do we have this item in warehouse 2?" and get instant answers.</span>
+                    <div class="glass-panel p-8 rounded-3xl animate-float tilt-card">
+                        <div class="card-glow rounded-3xl"></div>
+                        <div class="card-content">
+                            <h3 class="font-display text-3xl mb-4">AI Chatbots That Understand Your Business</h3>
+                            <p class="text-zinc-400 mb-6">PocketFriend.io builds custom AI chatbots trained on your specific website, FAQs, service lists, and internal records so they can provide real, helpful answers.</p>
+                            <div class="space-y-4">
+                                <div class="bg-zinc-900/50 p-4 rounded-xl border border-white/[0.04]">
+                                    <strong class="text-brand block mb-1">For Your Customers (The 24/7 Assistant):</strong>
+                                    <span class="text-sm text-zinc-400">Answers common questions ("What time do you close?"), captures leads, and dramatically reduces missed inquiries while you sleep.</span>
+                                </div>
+                                <div class="bg-zinc-900/50 p-4 rounded-xl border border-white/[0.04]">
+                                    <strong class="text-brand block mb-1">For Your Internal Team (The Smart Searcher):</strong>
+                                    <span class="text-sm text-zinc-400">Reduces time spent digging through spreadsheets. Employees can ask "Do we have this item in warehouse 2?" and get instant answers.</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -518,46 +839,71 @@
         </section>
 
         <!-- FAQ Section -->
-        <section id="faq" class="py-32 border-t border-white/5">
+        <section id="faq" class="py-32 border-t border-white/[0.04]">
             <div class="max-w-4xl mx-auto px-6 md:px-12">
                 <div class="text-center mb-16 reveal">
                     <h2 class="font-display text-4xl md:text-5xl tracking-tighter mb-6">Frequently Asked Questions</h2>
                 </div>
                 
                 <div class="space-y-4">
-                    <div class="glass-panel rounded-2xl p-6 reveal group cursor-pointer hover:bg-white/5 transition-colors">
-                        <h4 class="font-display text-xl mb-2 group-hover:text-brand transition-colors">Do I need a website if I already have Facebook or Instagram?</h4>
-                        <p class="text-zinc-400 text-sm leading-relaxed">Yes. Social media is great for attention, but a website is your permanent digital storefront. It builds ultimate trust, organizes your services clearly, and allows you to capture leads directly without social media distractions.</p>
+                    <div class="glass-panel rounded-2xl p-6 reveal group cursor-pointer hover:bg-white/[0.03] transition-colors tilt-card" onclick="this.classList.toggle('active'); this.querySelector('.faq-answer').style.maxHeight = this.classList.contains('active') ? this.querySelector('.faq-answer').scrollHeight + 'px' : '0'; this.querySelector('.faq-answer').style.opacity = this.classList.contains('active') ? '1' : '0'; this.querySelector('.faq-icon').style.transform = this.classList.contains('active') ? 'rotate(45deg)' : 'rotate(0)';">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-display text-xl group-hover:text-brand transition-colors pr-4">Do I need a website if I already have Facebook or Instagram?</h4>
+                            <span class="faq-icon text-zinc-500 text-2xl transition-transform duration-300 shrink-0">+</span>
+                        </div>
+                        <div class="faq-answer overflow-hidden transition-all duration-500 max-h-0 opacity-0">
+                            <p class="text-zinc-400 text-sm leading-relaxed pt-4">Yes. Social media is great for attention, but a website is your permanent digital storefront. It builds ultimate trust, organizes your services clearly, and allows you to capture leads directly without social media distractions.</p>
+                        </div>
                     </div>
-                    <div class="glass-panel rounded-2xl p-6 reveal group cursor-pointer hover:bg-white/5 transition-colors" style="transition-delay: 0.1s;">
-                        <h4 class="font-display text-xl mb-2 group-hover:text-brand transition-colors">Can you build an AI chatbot for my business?</h4>
-                        <p class="text-zinc-400 text-sm leading-relaxed">Yes! We build customized chatbots that can answer your specific customer questions, schedule appointments, and capture leads 24/7. They can even connect to your inventory or product list.</p>
+                    <div class="glass-panel rounded-2xl p-6 reveal group cursor-pointer hover:bg-white/[0.03] transition-colors tilt-card" style="transition-delay: 0.1s;" onclick="this.classList.toggle('active'); this.querySelector('.faq-answer').style.maxHeight = this.classList.contains('active') ? this.querySelector('.faq-answer').scrollHeight + 'px' : '0'; this.querySelector('.faq-answer').style.opacity = this.classList.contains('active') ? '1' : '0'; this.querySelector('.faq-icon').style.transform = this.classList.contains('active') ? 'rotate(45deg)' : 'rotate(0)';">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-display text-xl group-hover:text-brand transition-colors pr-4">Can you build an AI chatbot for my business?</h4>
+                            <span class="faq-icon text-zinc-500 text-2xl transition-transform duration-300 shrink-0">+</span>
+                        </div>
+                        <div class="faq-answer overflow-hidden transition-all duration-500 max-h-0 opacity-0">
+                            <p class="text-zinc-400 text-sm leading-relaxed pt-4">Yes! We build customized chatbots that can answer your specific customer questions, schedule appointments, and capture leads 24/7. They can even connect to your inventory or product list.</p>
+                        </div>
                     </div>
-                    <div class="glass-panel rounded-2xl p-6 reveal group cursor-pointer hover:bg-white/5 transition-colors" style="transition-delay: 0.2s;">
-                        <h4 class="font-display text-xl mb-2 group-hover:text-brand transition-colors">Can you help organize my spreadsheets and customer data?</h4>
-                        <p class="text-zinc-400 text-sm leading-relaxed">Yes. We specialize in taking messy, manual data and turning it into clean, organized, and secure cloud-based systems.</p>
+                    <div class="glass-panel rounded-2xl p-6 reveal group cursor-pointer hover:bg-white/[0.03] transition-colors tilt-card" style="transition-delay: 0.2s;" onclick="this.classList.toggle('active'); this.querySelector('.faq-answer').style.maxHeight = this.classList.contains('active') ? this.querySelector('.faq-answer').scrollHeight + 'px' : '0'; this.querySelector('.faq-answer').style.opacity = this.classList.contains('active') ? '1' : '0'; this.querySelector('.faq-icon').style.transform = this.classList.contains('active') ? 'rotate(45deg)' : 'rotate(0)';">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-display text-xl group-hover:text-brand transition-colors pr-4">Can you help organize my spreadsheets and customer data?</h4>
+                            <span class="faq-icon text-zinc-500 text-2xl transition-transform duration-300 shrink-0">+</span>
+                        </div>
+                        <div class="faq-answer overflow-hidden transition-all duration-500 max-h-0 opacity-0">
+                            <p class="text-zinc-400 text-sm leading-relaxed pt-4">Yes. We specialize in taking messy, manual data and turning it into clean, organized, and secure cloud-based systems.</p>
+                        </div>
                     </div>
-                    <div class="glass-panel rounded-2xl p-6 reveal group cursor-pointer hover:bg-white/5 transition-colors">
-                        <h4 class="font-display text-xl mb-2 group-hover:text-brand transition-colors">Can you build custom tools for my business?</h4>
-                        <p class="text-zinc-400 text-sm leading-relaxed">If you need an internal portal, a unique booking system, or a specific task tracker, we can build custom applications tailored exactly to how you work.</p>
+                    <div class="glass-panel rounded-2xl p-6 reveal group cursor-pointer hover:bg-white/[0.03] transition-colors tilt-card" onclick="this.classList.toggle('active'); this.querySelector('.faq-answer').style.maxHeight = this.classList.contains('active') ? this.querySelector('.faq-answer').scrollHeight + 'px' : '0'; this.querySelector('.faq-answer').style.opacity = this.classList.contains('active') ? '1' : '0'; this.querySelector('.faq-icon').style.transform = this.classList.contains('active') ? 'rotate(45deg)' : 'rotate(0)';">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-display text-xl group-hover:text-brand transition-colors pr-4">Can you build custom tools for my business?</h4>
+                            <span class="faq-icon text-zinc-500 text-2xl transition-transform duration-300 shrink-0">+</span>
+                        </div>
+                        <div class="faq-answer overflow-hidden transition-all duration-500 max-h-0 opacity-0">
+                            <p class="text-zinc-400 text-sm leading-relaxed pt-4">If you need an internal portal, a unique booking system, or a specific task tracker, we can build custom applications tailored exactly to how you work.</p>
+                        </div>
                     </div>
-                    <div class="glass-panel rounded-2xl p-6 reveal group cursor-pointer hover:bg-white/5 transition-colors" style="transition-delay: 0.1s;">
-                        <h4 class="font-display text-xl mb-2 group-hover:text-brand transition-colors">Is everything mobile-friendly?</h4>
-                        <p class="text-zinc-400 text-sm leading-relaxed">100%. More than half of your customers will visit your site on a phone, so we design everything to look and function perfectly on mobile devices.</p>
+                    <div class="glass-panel rounded-2xl p-6 reveal group cursor-pointer hover:bg-white/[0.03] transition-colors tilt-card" style="transition-delay: 0.1s;" onclick="this.classList.toggle('active'); this.querySelector('.faq-answer').style.maxHeight = this.classList.contains('active') ? this.querySelector('.faq-answer').scrollHeight + 'px' : '0'; this.querySelector('.faq-answer').style.opacity = this.classList.contains('active') ? '1' : '0'; this.querySelector('.faq-icon').style.transform = this.classList.contains('active') ? 'rotate(45deg)' : 'rotate(0)';">
+                        <div class="flex justify-between items-start">
+                            <h4 class="font-display text-xl group-hover:text-brand transition-colors pr-4">Is everything mobile-friendly?</h4>
+                            <span class="faq-icon text-zinc-500 text-2xl transition-transform duration-300 shrink-0">+</span>
+                        </div>
+                        <div class="faq-answer overflow-hidden transition-all duration-500 max-h-0 opacity-0">
+                            <p class="text-zinc-400 text-sm leading-relaxed pt-4">100%. More than half of your customers will visit your site on a phone, so we design everything to look and function perfectly on mobile devices.</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- CTA Section -->
-        <section id="contact" class="max-w-4xl mx-auto px-6 py-32 text-center reveal border-t border-white/5">
+        <section id="contact" class="max-w-4xl mx-auto px-6 py-32 text-center reveal border-t border-white/[0.04]">
             <h2 class="font-display text-5xl md:text-7xl tracking-tighter mb-8">Ready to Make Technology Work For You?</h2>
             <p class="text-xl text-zinc-400 mb-12 max-w-2xl mx-auto">Your business deserves more than just a basic website. PocketFriend.io can help you create a professional online presence, automate your daily administrative work, answer your customers faster, and finally make technology feel easy.</p>
             <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <a href="mailto:contact@pocketfriend.io" class="inline-flex justify-center items-center gap-3 bg-brand text-white px-10 py-5 rounded-full font-bold text-lg hover:bg-brand/90 transition-all active:scale-[0.98]">
+                <a href="mailto:contact@pocketfriend.io" class="magnetic-btn inline-flex justify-center items-center gap-3 bg-brand text-white px-10 py-5 rounded-full font-bold text-lg hover:bg-brand/90 transition-all active:scale-[0.98] holo-shine">
                     Get Your Free Proposal
                 </a>
-                <a href="https://wa.me/17868609286" target="_blank" class="inline-flex justify-center items-center gap-3 bg-transparent border border-white/20 text-white px-10 py-5 rounded-full font-bold text-lg hover:bg-white/5 transition-all">
+                <a href="https://wa.me/17868609286" target="_blank" class="magnetic-btn inline-flex justify-center items-center gap-3 bg-transparent border border-white/15 text-white px-10 py-5 rounded-full font-bold text-lg hover:bg-white/5 transition-all holo-shine">
                     Talk to an Expert
                 </a>
             </div>
@@ -566,7 +912,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="border-t border-white/5 bg-zinc-950 pt-20 pb-10">
+    <footer class="border-t border-white/[0.04] bg-zinc-950 pt-20 pb-10 relative z-10">
         <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
             <div class="md:col-span-5">
                 <div class="flex items-center gap-3 mb-6">
@@ -585,168 +931,296 @@
             <div class="md:col-span-2 md:col-start-8">
                 <h4 class="text-white font-medium mb-6 tracking-wide">Platform</h4>
                 <ul class="flex flex-col gap-4 text-zinc-400 text-sm">
-                    <li><a href="#services" class="hover:text-white transition-colors">Services</a></li>
-                    <li><a href="#process" class="hover:text-white transition-colors">Process</a></li>
-                    <li><a href="#pricing" class="hover:text-white transition-colors">Pricing</a></li>
+                    <li><a href="#services" class="hover:text-white transition-colors link-hover">Services</a></li>
+                    <li><a href="#process" class="hover:text-white transition-colors link-hover">Process</a></li>
+                    <li><a href="#pricing" class="hover:text-white transition-colors link-hover">Pricing</a></li>
                 </ul>
             </div>
             
             <div class="md:col-span-2">
                 <h4 class="text-white font-medium mb-6 tracking-wide">Company</h4>
                 <ul class="flex flex-col gap-4 text-zinc-400 text-sm">
-                    <li><a href="about.html" class="hover:text-white transition-colors">About Us</a></li>
-                    <li><a href="contact.html" class="hover:text-white transition-colors">Contact</a></li>
+                    <li><a href="about.html" class="hover:text-white transition-colors link-hover">About Us</a></li>
+                    <li><a href="contact.html" class="hover:text-white transition-colors link-hover">Contact</a></li>
                 </ul>
             </div>
         </div>
         
-        <div class="max-w-7xl mx-auto px-6 border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-zinc-500 text-xs tracking-wider">
-            <span>© 2026 POCKETFRIEND. ALL RIGHTS RESERVED.</span>
+        <div class="max-w-7xl mx-auto px-6 border-t border-white/[0.04] pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-zinc-500 text-xs tracking-wider">
+            <span>&copy; 2026 POCKETFRIEND. ALL RIGHTS RESERVED.</span>
             <div class="flex gap-8">
-                <a href="#" class="hover:text-white transition-colors">FACEBOOK</a>
-                <a href="#" class="hover:text-white transition-colors">INSTAGRAM</a>
+                <a href="#" class="hover:text-white transition-colors link-hover">FACEBOOK</a>
+                <a href="#" class="hover:text-white transition-colors link-hover">INSTAGRAM</a>
             </div>
         </div>
     </footer>
 
-    <!-- Intersection Observer -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const observer = new IntersectionObserver((entries) => {
+    (function() {
+        // Bright Pointer
+        const brightPointer = document.getElementById('brightPointer');
+        let mouseX = 0, mouseY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            brightPointer.style.left = mouseX + 'px';
+            brightPointer.style.top = mouseY + 'px';
+            document.getElementById('spotlight').style.setProperty('--mouse-x', mouseX + 'px');
+            document.getElementById('spotlight').style.setProperty('--mouse-y', mouseY + 'px');
+        });
+        
+        // Magnetic Buttons
+        document.querySelectorAll('.magnetic-btn').forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+            });
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transform = 'translate(0, 0)';
+            });
+        });
+        
+        // 3D Tilt Cards
+        document.querySelectorAll('.tilt-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width;
+                const y = (e.clientY - rect.top) / rect.height;
+                const rotateX = (y - 0.5) * -15;
+                const rotateY = (x - 0.5) * 15;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                card.style.setProperty('--gx', (x * 100) + '%');
+                card.style.setProperty('--gy', (y * 100) + '%');
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+            });
+        });
+        
+        // Mesh Gradient Canvas
+        const canvas = document.getElementById('mesh-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        const orbs = [
+            { x: 0.3, y: 0.3, r: 0.4, color: 'rgba(255, 77, 0, 0.03)', dx: 0.0003, dy: 0.0002 },
+            { x: 0.7, y: 0.6, r: 0.5, color: 'rgba(255, 100, 50, 0.02)', dx: -0.0002, dy: 0.0003 },
+            { x: 0.5, y: 0.8, r: 0.35, color: 'rgba(200, 60, 20, 0.025)', dx: 0.0004, dy: -0.0001 },
+            { x: 0.2, y: 0.7, r: 0.3, color: 'rgba(255, 77, 0, 0.02)', dx: -0.0003, dy: -0.0002 },
+        ];
+        
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        
+        let frame = 0;
+        function drawMesh() {
+            ctx.fillStyle = '#050505';
+            ctx.fillRect(0, 0, width, height);
+            
+            orbs.forEach(orb => {
+                orb.x += orb.dx;
+                orb.y += orb.dy;
+                if (orb.x < -0.2 || orb.x > 1.2) orb.dx *= -1;
+                if (orb.y < -0.2 || orb.y > 1.2) orb.dy *= -1;
+                
+                const gradient = ctx.createRadialGradient(
+                    orb.x * width, orb.y * height, 0,
+                    orb.x * width, orb.y * height, orb.r * Math.min(width, height)
+                );
+                gradient.addColorStop(0, orb.color);
+                gradient.addColorStop(1, 'transparent');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, width, height);
+            });
+            
+            frame++;
+            requestAnimationFrame(drawMesh);
+        }
+        drawMesh();
+        
+        // Intersection Observer for reveals
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    if (entry.target.querySelector('.process-line')) {
+                        entry.target.querySelector('.process-line').classList.add('active');
+                    }
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        
+        // Process line observer
+        const processSection = document.getElementById('process');
+        if (processSection) {
+            const lineObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                    } else {
-                        // Remove class when scrolling past to trigger animation again
-                        entry.target.classList.remove('active');
+                        document.getElementById('processLine').classList.add('active');
                     }
                 });
-            }, { threshold: 0.1 });
-
-            document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+            }, { threshold: 0.3 });
+            lineObserver.observe(processSection);
+        }
+        
+        // Header scroll effect
+        const header = document.getElementById('mainHeader');
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.scrollY;
+            if (currentScroll > 100) {
+                header.style.background = 'rgba(5,5,5,0.85)';
+                header.style.backdropFilter = 'blur(30px)';
+            } else {
+                header.style.background = 'rgba(5,5,5,0.6)';
+                header.style.backdropFilter = 'blur(24px)';
+            }
+            lastScroll = currentScroll;
         });
-
-        // Interactive Code Particle Click Effect
-        const codeSnippets = ['</>', '{}', 'div', '=>', 'import', 'async', 'return', '200 OK', '[]', 'function()', '++'];
+        
+        // Click particles
+        const codeSnippets = ['</>', '{}', 'div', '=>', 'import', 'async', 'return', '200 OK', '[]', 'fn()', '++'];
         document.addEventListener('click', (e) => {
-            // Spawn 5-8 particles per click
             const numParticles = Math.floor(Math.random() * 4) + 5;
-            
             for (let i = 0; i < numParticles; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'code-particle';
                 particle.textContent = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
-                
-                // Set starting position to exactly where the cursor is
                 particle.style.left = (e.clientX - 10) + 'px';
                 particle.style.top = (e.clientY - 10) + 'px';
-                
-                // Random physics calculations
                 const angle = Math.random() * Math.PI * 2;
-                const velocity = 50 + Math.random() * 100; // Scatter distance
+                const velocity = 50 + Math.random() * 100;
                 const tx = Math.cos(angle) * velocity;
-                const ty = (Math.sin(angle) * velocity) + (Math.random() * 100 + 50); // Extra downward gravity
-                const rot = (Math.random() - 0.5) * 360; // Random rotation
-                
-                // Pass variables to CSS keyframes
+                const ty = (Math.sin(angle) * velocity) + (Math.random() * 60 + 30);
+                const rot = (Math.random() - 0.5) * 360;
                 particle.style.setProperty('--tx', `${tx}px`);
                 particle.style.setProperty('--ty', `${ty}px`);
                 particle.style.setProperty('--rot', `${rot}deg`);
-                
                 document.body.appendChild(particle);
-                
-                // Cleanup element from DOM after animation completes
-                setTimeout(() => {
-                    particle.remove();
-                }, 1000);
+                setTimeout(() => particle.remove(), 700);
             }
         });
-
-        // DNA Code Trail Pointer
-        let mouseX = 0, mouseY = 0;
+        
+        // DNA Code Trail Pointer (Improved Triple Helix)
         let dnaTick = 0;
-        const dnaChars = ['0', '1', '{', '}', '</>', 'A', 'C', 'T', 'G'];
+        const dnaChars = ['0','1','{','}','<','>','/',';',':','=','+','*','&','|','^','~','%','$','#','@','!','?','(',')','[',']','.',',','-','_','`','\\','"','\''];
+        const dnaColors = ['#FF4D00', '#ff8c42', '#ff6b1a', '#ff5500', '#ffa366'];
 
-        function spawnDNAParticle(x, y, phase) {
+        function spawnDNAParticle(x, y, phase, strandIndex) {
             const p = document.createElement('div');
             p.textContent = dnaChars[Math.floor(Math.random() * dnaChars.length)];
-            p.className = 'fixed pointer-events-none z-[999997] text-brand font-mono text-[10px] font-bold opacity-80 transition-all duration-1000 ease-out -translate-x-1/2 -translate-y-1/2';
+            p.className = 'fixed pointer-events-none z-[999997] font-mono text-[11px] font-bold opacity-90 transition-all duration-[1200ms] ease-out';
+            p.style.color = dnaColors[strandIndex % dnaColors.length];
+            p.style.textShadow = `0 0 8px ${dnaColors[strandIndex % dnaColors.length]}66, 0 0 16px ${dnaColors[strandIndex % dnaColors.length]}33`;
             
-            // Calculate double-helix orbit position
-            const offsetX = Math.sin(phase) * 15;
-            const offsetY = Math.cos(phase) * 15;
+            const offsetX = Math.sin(phase) * (18 + strandIndex * 6);
+            const offsetY = Math.cos(phase) * (18 + strandIndex * 6);
             
             p.style.left = (x + offsetX) + 'px';
             p.style.top = (y + offsetY) + 'px';
+            p.style.transform = 'translate(-50%, -50%)';
             
             document.body.appendChild(p);
             
-            // Animate falling away and fading
             requestAnimationFrame(() => {
-                p.style.transform = `translate(-50%, calc(-50% + 30px)) scale(0.5) rotate(${Math.random() * 90}deg)`;
+                p.style.transform = `translate(calc(-50% + ${Math.sin(phase)*20}px), calc(-50% + ${40 + Math.random()*40}px)) scale(0.4) rotate(${Math.random()*180}deg)`;
                 p.style.opacity = '0';
             });
             
-            setTimeout(() => p.remove(), 1000);
+            setTimeout(() => p.remove(), 1200);
         }
 
+        let dnaMouseX = 0, dnaMouseY = 0, dnaFrame = 0;
         document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-
-            // Spawn DNA Trail
-            dnaTick += 0.3;
-            if (Math.random() > 0.2) { // Throttle slightly for performance
-                spawnDNAParticle(mouseX, mouseY, dnaTick); // Strand 1
-                spawnDNAParticle(mouseX, mouseY, dnaTick + Math.PI); // Strand 2 (opposite side)
+            dnaMouseX = e.clientX;
+            dnaMouseY = e.clientY;
+        });
+        function dnaLoop() {
+            dnaFrame++;
+            if (dnaFrame % 2 === 0) {
+                dnaTick += 0.35;
+                spawnDNAParticle(dnaMouseX, dnaMouseY, dnaTick, 0);
+                spawnDNAParticle(dnaMouseX, dnaMouseY, dnaTick + Math.PI * 0.67, 1);
+                spawnDNAParticle(dnaMouseX, dnaMouseY, dnaTick + Math.PI * 1.33, 2);
             }
-        });
+            requestAnimationFrame(dnaLoop);
+        }
+        dnaLoop();
 
-        // Draggable Service Cards Physics & Double Click
-        document.querySelectorAll('.service-card').forEach(card => {
-            let isDragging = false;
-            let startX, startY;
-            let translateX = 0, translateY = 0;
-
-            card.addEventListener('mousedown', (e) => {
-                isDragging = true;
-                startX = e.clientX - translateX;
-                startY = e.clientY - translateY;
-                card.style.transition = 'none'; // remove transition for direct drag
-                card.classList.remove('animate-float'); // pause float
-                card.style.zIndex = 100; // bring to front
-            });
-
-            window.addEventListener('mousemove', (e) => {
-                if (!isDragging) return;
-                e.preventDefault();
-                translateX = e.clientX - startX;
-                translateY = e.clientY - startY;
-                // Add a dynamic slight rotation based on X movement
-                card.style.transform = `translate(${translateX}px, ${translateY}px) scale(1.05) rotate(${translateX * 0.05}deg)`;
-            });
-
-            window.addEventListener('mouseup', () => {
-                if (!isDragging) return;
-                isDragging = false;
-                // Springy snap back
-                card.style.transition = 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
-                card.style.transform = `translate(0px, 0px) scale(1) rotate(0deg)`;
-                translateX = 0;
-                translateY = 0;
-                setTimeout(() => {
-                    card.classList.add('animate-float');
-                    card.style.transition = '';
-                    card.style.zIndex = '';
-                }, 600);
-            });
-
-            // Double click to email
-            card.addEventListener('dblclick', () => {
-                const title = card.querySelector('h3').innerText;
-                window.location.href = `mailto:contact@pocketfriend.io?subject=Requesting%20Service:%20${encodeURIComponent(title)}`;
-            });
-        });
+        // Text Scramble Effect for Hero Title
+        class TextScramble {
+            constructor(el) {
+                this.el = el;
+                this.originalHTML = el.innerHTML;
+                this.chars = '!<>-_\\/[]{}=+*^?#________';
+                this.update = this.update.bind(this);
+            }
+            setText(newText) {
+                const oldText = this.el.innerText;
+                const length = Math.max(oldText.length, newText.length);
+                const promise = new Promise((resolve) => this.resolve = resolve);
+                this.queue = [];
+                for (let i = 0; i < length; i++) {
+                    const from = oldText[i] || '';
+                    const to = newText[i] || '';
+                    const start = Math.floor(Math.random() * 40);
+                    const end = start + Math.floor(Math.random() * 40);
+                    this.queue.push({ from, to, start, end });
+                }
+                cancelAnimationFrame(this.frameRequest);
+                this.frame = 0;
+                this.update();
+                return promise;
+            }
+            update() {
+                let output = '';
+                let complete = 0;
+                for (let i = 0, n = this.queue.length; i < n; i++) {
+                    let { from, to, start, end, char } = this.queue[i];
+                    if (this.frame >= end) {
+                        complete++;
+                        output += to;
+                    } else if (this.frame >= start) {
+                        if (!char || Math.random() < 0.28) {
+                            char = this.randomChar();
+                            this.queue[i].char = char;
+                        }
+                        output += `<span class="text-brand">${char}</span>`;
+                    } else {
+                        output += from;
+                    }
+                }
+                this.el.innerHTML = output;
+                if (complete === this.queue.length) {
+                    this.el.innerHTML = this.originalHTML;
+                    this.resolve();
+                } else {
+                    this.frameRequest = requestAnimationFrame(this.update);
+                    this.frame++;
+                }
+            }
+            randomChar() {
+                return this.chars[Math.floor(Math.random() * this.chars.length)];
+            }
+        }
+        
+        // Trigger scramble on load
+        const heroTitle = document.getElementById('heroTitle');
+        if (heroTitle) {
+            const originalText = heroTitle.innerText;
+            const fx = new TextScramble(heroTitle);
+            setTimeout(() => fx.setText(originalText), 500);
+        }
+        
+    })();
     </script>
 </body>
 </html>

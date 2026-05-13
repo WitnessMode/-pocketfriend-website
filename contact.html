@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us - Pocketfriend</title>
-    
     <link rel="icon" href="./assets/logo-icon.png">
     
     <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&f[]=cabinet-grotesk@900,800,700,500,400&display=swap" rel="stylesheet">
@@ -18,7 +17,7 @@
                         display: ['Cabinet Grotesk', 'sans-serif'],
                     },
                     colors: {
-                        zinc: { 950: '#09090b', 900: '#18181b', 800: '#27272a', 400: '#a1a1aa' },
+                        zinc: { 950: '#050505', 900: '#0a0a0a', 800: '#141414', 400: '#a1a1aa' },
                         brand: '#FF4D00',
                     }
                 }
@@ -26,35 +25,134 @@
         }
     </script>
     <style>
-        body { background-color: #09090b; color: #ffffff; -webkit-font-smoothing: antialiased; }
-        .glass-panel {
-            background: rgba(24, 24, 27, 0.3);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        *, *::before, *::after { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { 
+            background-color: #050505; 
+            color: #ffffff; 
+            -webkit-font-smoothing: antialiased; 
+            overflow-x: hidden;
+            cursor: none;
         }
+        
+        /* Bright Pointer */
+        .bright-pointer {
+            position: fixed;
+            top: 0; left: 0;
+            width: 10px; height: 10px;
+            background: #ffffff;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 999999;
+            transform: translate(-50%, -50%);
+            box-shadow:
+                0 0 8px 2px rgba(255, 77, 0, 0.9),
+                0 0 24px 6px rgba(255, 77, 0, 0.5),
+                0 0 48px 14px rgba(255, 77, 0, 0.2);
+        }
+
+        
+        /* Noise Overlay */
+        .noise-overlay {
+            position: fixed; inset: 0;
+            z-index: 99999;
+            pointer-events: none;
+            opacity: 0.035;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 256px 256px;
+        }
+        
+        /* Mesh Gradient Canvas */
+        #mesh-canvas {
+            position: fixed; inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        /* Spotlight Effect */
+        .spotlight {
+            position: fixed; inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,77,0,0.06), transparent 40%);
+        }
+        
+        /* Glass Panel v2 */
+        .glass-panel {
+            background: rgba(10, 10, 10, 0.4);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 8px 32px rgba(0,0,0,0.3);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-panel:hover {
+            border-color: rgba(255, 77, 0, 0.2);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 8px 32px rgba(0,0,0,0.4), 0 0 40px -10px rgba(255,77,0,0.15);
+        }
+        
         .text-gradient {
             background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+        
         .reveal { 
             opacity: 0; 
-            transform: translateY(40px) scale(0.96); 
+            transform: translateY(40px) scale(0.97); 
             filter: blur(12px); 
-            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1); 
+            transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1); 
+            /* will-change removed for better performance */
         }
         .reveal.active { 
             opacity: 1; 
             transform: translateY(0) scale(1); 
             filter: blur(0); 
         }
-        @keyframes subtle-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -10px; } }
-        .animate-float { animation: subtle-float 8s ease-in-out infinite; }
-        .animate-float-delayed { animation: subtle-float 8s ease-in-out 4s infinite; }
+        
+        @keyframes subtle-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -12px; } }
+        .animate-float { animation: subtle-float 7s ease-in-out infinite; }
         @keyframes gradient-shift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        .animate-gradient { animation: gradient-shift 4s ease infinite; }
+        
+        /* Magnetic Button */
+        .magnetic-btn {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .magnetic-btn::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: inherit;
+            background: linear-gradient(135deg, rgba(255,77,0,0.4), rgba(255,140,66,0.2), rgba(255,77,0,0.4));
+            background-size: 200% 200%;
+            animation: gradient-shift 3s ease infinite;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: -1;
+            filter: blur(8px);
+        }
+        .magnetic-btn:hover::before { opacity: 1; }
+        
+        /* 3D Tilt Card */
+        .tilt-card {
+            transform-style: preserve-3d;
+            transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .tilt-card .card-glow {
+            position: absolute; inset: 0;
+            border-radius: inherit;
+            opacity: 0;
+            transition: opacity 0.3s;
+            background: radial-gradient(400px circle at var(--gx, 50%) var(--gy, 50%), rgba(255,77,0,0.15), transparent 60%);
+            pointer-events: none;
+        }
+        .tilt-card:hover .card-glow { opacity: 1; }
+        .tilt-card .card-content { transform: translateZ(30px); }
         
         @keyframes code-fall {
             0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
@@ -68,57 +166,89 @@
             font-size: 14px;
             font-weight: 700;
             color: #FF4D00;
-            animation: code-fall 1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            animation: code-fall 0.7s cubic-bezier(0.25, 1, 0.5, 1) forwards;
             text-shadow: 0 0 10px rgba(255, 77, 0, 0.5);
         }
         
         /* Form inputs styling */
         .form-input {
             width: 100%;
-            background: rgba(24, 24, 27, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(10, 10, 10, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 0.75rem;
             padding: 1rem 1.25rem;
             color: white;
             outline: none;
             transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
         }
         .form-input:focus {
             border-color: #FF4D00;
-            box-shadow: 0 0 15px rgba(255, 77, 0, 0.2);
-            background: rgba(24, 24, 27, 0.8);
+            box-shadow: 0 0 20px rgba(255, 77, 0, 0.15);
+            background: rgba(10, 10, 10, 0.8);
+        }
+        .form-input::placeholder { color: rgba(255,255,255,0.3); }
+        
+        .link-hover { position: relative; }
+        .link-hover::after {
+            content: ''; position: absolute;
+            bottom: -2px; left: 0;
+            width: 0; height: 1px;
+            background: #FF4D00;
+            transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .link-hover:hover::after { width: 100%; }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #FF4D00; border-radius: 3px; }
+        
+        @media (pointer: coarse) {
+            body { cursor: auto; }
+            .bright-pointer { display: none; }
         }
     </style>
 </head>
 <body class="selection:bg-brand selection:text-white min-h-[100dvh] flex flex-col relative bg-zinc-950">
 
+    <!-- Bright Pointer -->
+    <div class="bright-pointer" id="brightPointer"></div>
+
+    
+    <!-- Noise Overlay -->
+    <div class="noise-overlay"></div>
+    
+    <!-- Mesh Gradient Background -->
+    <canvas id="mesh-canvas"></canvas>
+    
+    <!-- Spotlight -->
+    <div class="spotlight" id="spotlight"></div>
+
     <!-- Header -->
-    <header class="fixed top-0 left-0 right-0 z-50 bg-zinc-950/80 backdrop-blur-md border-b border-white/5 py-4 px-6 md:px-12 transition-all">
+    <header class="fixed top-0 left-0 right-0 z-50 bg-zinc-950/60 backdrop-blur-xl border-b border-white/[0.04] py-4 px-6 md:px-12 transition-all" id="mainHeader">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <a href="index.html" class="flex items-center gap-3 group">
-                <img src="./assets/logo-icon.png" alt="Pocketfriend Icon" class="h-10 w-auto bg-white p-1.5 rounded-lg transition-transform group-hover:scale-[0.98]">
+            <a href="index.html" class="flex items-center gap-3 group magnetic-btn">
+                <img src="./assets/logo-icon.png" alt="Pocketfriend Icon" class="h-10 w-auto bg-white p-1.5 rounded-xl transition-transform group-hover:scale-[0.98]">
+                <span class="font-display text-xl font-bold text-white hidden sm:block">Pocketfriend</span>
             </a>
             <nav class="hidden md:flex gap-10 items-center font-medium text-sm">
-                <a href="index.html#services" class="text-zinc-400 hover:text-white transition-colors">Services</a>
-                <a href="index.html#process" class="text-zinc-400 hover:text-white transition-colors">Process</a>
-                <a href="about.html" class="text-zinc-400 hover:text-white transition-colors">About Us</a>
-                <a href="contact.html" class="text-white hover:text-white transition-colors">Contact</a>
+                <a href="index.html#services" class="text-zinc-400 hover:text-white transition-colors link-hover magnetic-btn">Services</a>
+                <a href="index.html#process" class="text-zinc-400 hover:text-white transition-colors link-hover magnetic-btn">Process</a>
+                <a href="about.html" class="text-zinc-400 hover:text-white transition-colors link-hover magnetic-btn">About Us</a>
+                <a href="contact.html" class="text-white transition-colors link-hover magnetic-btn">Contact</a>
             </nav>
             <div class="flex items-center gap-6">
-                <a href="contact.html" class="bg-brand text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-opacity-90 transition-all active:scale-[0.98]">Get Free Proposal</a>
+                <a href="contact.html" class="magnetic-btn bg-brand text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-opacity-90 transition-all active:scale-[0.98]">Get Free Proposal</a>
             </div>
         </div>
     </header>
 
-    <main class="pt-[100px] flex-grow relative overflow-hidden">
-        <!-- Background Decor -->
-        <div class="absolute top-1/4 right-0 w-[600px] h-[600px] bg-brand/10 blur-[120px] rounded-full pointer-events-none z-0"></div>
-
+    <main class="pt-[100px] flex-grow relative z-10">
         <section class="max-w-7xl mx-auto px-6 py-24 md:py-32 relative z-10 flex flex-col lg:flex-row gap-16">
             
             <!-- Left Info Side -->
             <div class="w-full lg:w-5/12 text-left">
-                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-brand/30 bg-brand/10 text-brand text-xs font-bold tracking-widest uppercase mb-6 reveal">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-brand/20 bg-brand/5 text-brand text-xs font-bold tracking-widest uppercase mb-6 reveal backdrop-blur-sm">
                     <span class="w-1.5 h-1.5 rounded-full bg-brand animate-pulse"></span>
                     Get in Touch
                 </div>
@@ -130,11 +260,24 @@
                 </p>
 
                 <div class="flex flex-col gap-6 reveal" style="transition-delay: 0.3s;">
-                    <div class="glass-panel p-6 rounded-2xl flex items-start gap-4 animate-float">
-                        <div class="text-brand text-2xl mt-1">✉</div>
-                        <div>
-                            <h4 class="text-white font-medium mb-1">Email Us Directly</h4>
-                            <a href="mailto:contact@pocketfriend.io" class="text-zinc-400 hover:text-brand transition-colors text-sm">contact@pocketfriend.io</a>
+                    <div class="glass-panel p-6 rounded-2xl flex items-start gap-4 animate-float tilt-card">
+                        <div class="card-glow rounded-2xl"></div>
+                        <div class="card-content flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-brand/10 border border-brand/20 flex items-center justify-center text-brand text-xl shrink-0">&#9993;</div>
+                            <div>
+                                <h4 class="text-white font-medium mb-1">Email Us Directly</h4>
+                                <a href="mailto:contact@pocketfriend.io" class="text-zinc-400 hover:text-brand transition-colors text-sm">contact@pocketfriend.io</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-6 rounded-2xl flex items-start gap-4 animate-float tilt-card" style="animation-delay: 1s;">
+                        <div class="card-glow rounded-2xl"></div>
+                        <div class="card-content flex items-start gap-4">
+                            <div class="w-10 h-10 rounded-lg bg-brand/10 border border-brand/20 flex items-center justify-center text-brand text-xl shrink-0">&#128222;</div>
+                            <div>
+                                <h4 class="text-white font-medium mb-1">Call or WhatsApp</h4>
+                                <a href="https://wa.me/17868609286" target="_blank" class="text-zinc-400 hover:text-brand transition-colors text-sm">(786) 860-9286</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -142,46 +285,49 @@
 
             <!-- Right Form Side -->
             <div class="w-full lg:w-7/12 reveal" style="transition-delay: 0.4s;">
-                <div class="glass-panel p-8 md:p-10 rounded-[2rem]">
-                    <form action="mailto:contact@pocketfriend.io" method="POST" enctype="text/plain" class="flex flex-col gap-6">
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="flex flex-col gap-2">
-                                <label for="name" class="text-sm font-medium text-zinc-300">Your Name</label>
-                                <input type="text" id="name" name="Name" required class="form-input" placeholder="John Doe">
+                <div class="glass-panel p-8 md:p-10 rounded-[2rem] tilt-card">
+                    <div class="card-glow rounded-[2rem]"></div>
+                    <div class="card-content">
+                        <form action="mailto:contact@pocketfriend.io" method="POST" enctype="text/plain" class="flex flex-col gap-6">
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="flex flex-col gap-2">
+                                    <label for="name" class="text-sm font-medium text-zinc-300">Your Name</label>
+                                    <input type="text" id="name" name="Name" required class="form-input" placeholder="John Doe">
+                                </div>
+                                <div class="flex flex-col gap-2">
+                                    <label for="business" class="text-sm font-medium text-zinc-300">Business Name</label>
+                                    <input type="text" id="business" name="Business Name" class="form-input" placeholder="Pocketfriend LLC">
+                                </div>
                             </div>
+
                             <div class="flex flex-col gap-2">
-                                <label for="business" class="text-sm font-medium text-zinc-300">Business Name</label>
-                                <input type="text" id="business" name="Business Name" class="form-input" placeholder="Pocketfriend LLC">
+                                <label for="email" class="text-sm font-medium text-zinc-300">Email Address</label>
+                                <input type="email" id="email" name="Email" required class="form-input" placeholder="john@example.com">
                             </div>
-                        </div>
 
-                        <div class="flex flex-col gap-2">
-                            <label for="email" class="text-sm font-medium text-zinc-300">Email Address</label>
-                            <input type="email" id="email" name="Email" required class="form-input" placeholder="john@example.com">
-                        </div>
+                            <div class="flex flex-col gap-2">
+                                <label for="service" class="text-sm font-medium text-zinc-300">What are you interested in?</label>
+                                <select id="service" name="Interested Service" class="form-input appearance-none cursor-pointer">
+                                    <option value="Website Design">Website Design</option>
+                                    <option value="AI Chatbots & Assistants">AI Chatbots & Assistants</option>
+                                    <option value="Process Automation">Process Automation</option>
+                                    <option value="Local SEO & Google Visibility">Local SEO & Google Visibility</option>
+                                    <option value="Database & POS Setup">Database & POS Setup</option>
+                                    <option value="Other / Full Package">Other / Full Package</option>
+                                </select>
+                            </div>
 
-                        <div class="flex flex-col gap-2">
-                            <label for="service" class="text-sm font-medium text-zinc-300">What are you interested in?</label>
-                            <select id="service" name="Interested Service" class="form-input appearance-none">
-                                <option value="Website Design">Website Design</option>
-                                <option value="AI Chatbots & Assistants">AI Chatbots & Assistants</option>
-                                <option value="Process Automation">Process Automation</option>
-                                <option value="Local SEO & Google Visibility">Local SEO & Google Visibility</option>
-                                <option value="Database & POS Setup">Database & POS Setup</option>
-                                <option value="Other / Full Package">Other / Full Package</option>
-                            </select>
-                        </div>
+                            <div class="flex flex-col gap-2">
+                                <label for="message" class="text-sm font-medium text-zinc-300">How can we help you grow?</label>
+                                <textarea id="message" name="Message" rows="4" required class="form-input resize-none" placeholder="Tell us about your current challenges..."></textarea>
+                            </div>
 
-                        <div class="flex flex-col gap-2">
-                            <label for="message" class="text-sm font-medium text-zinc-300">How can we help you grow?</label>
-                            <textarea id="message" name="Message" rows="4" required class="form-input resize-none" placeholder="Tell us about your current challenges..."></textarea>
-                        </div>
-
-                        <button type="submit" class="mt-4 bg-brand text-white px-8 py-4 rounded-xl font-medium hover:bg-opacity-90 transition-all active:scale-[0.98] w-full shadow-[0_0_20px_-5px_rgba(255,77,0,0.4)]">
-                            Send Request
-                        </button>
-                    </form>
+                            <button type="submit" class="mt-4 magnetic-btn bg-brand text-white px-8 py-4 rounded-xl font-medium hover:bg-opacity-90 transition-all active:scale-[0.98] w-full shadow-[0_0_30px_-10px_rgba(255,77,0,0.4)]">
+                                Send Request
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
 
@@ -189,64 +335,151 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-zinc-950 pt-20 pb-10 border-t border-white/5 relative z-10">
+    <footer class="border-t border-white/[0.04] bg-zinc-950 pt-20 pb-10 relative z-10">
         <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-12 mb-16">
-            <div class="md:col-span-4">
-                <a href="index.html" class="flex items-center gap-3 mb-6">
-                    <img src="./assets/logo-icon.png" alt="Pocketfriend Logo" class="h-8 w-auto bg-white p-1 rounded-md">
-                    <span class="font-display text-xl font-bold tracking-tight">Pocketfriend</span>
-                </a>
-                <p class="text-zinc-400 text-sm mb-6 max-w-sm">
-                    Bringing smart websites, automation, and practical AI to local businesses.
+            <div class="md:col-span-5">
+                <div class="flex items-center gap-3 mb-6">
+                    <img src="./assets/logo-icon.png" alt="Pocketfriend Icon" class="h-8 w-auto bg-white p-1 rounded">
+                    <span class="text-white font-display font-bold text-xl">Pocketfriend</span>
+                </div>
+                <p class="text-zinc-400 text-sm max-w-xs leading-relaxed mb-8">
+                    Your local digital growth partner. We build professional websites and marketing systems for small businesses.
                 </p>
-                <a href="mailto:contact@pocketfriend.io" class="text-white hover:text-brand transition-colors font-medium">contact@pocketfriend.io</a>
+                <div class="flex flex-col gap-3 text-zinc-300 text-sm font-medium">
+                    <a href="mailto:contact@pocketfriend.io" class="hover:text-white transition-colors flex items-center gap-3 group"><svg class="text-brand group-hover:scale-110 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg> contact@pocketfriend.io</a>
+                    <a href="https://wa.me/17868609286" target="_blank" class="hover:text-white transition-colors flex items-center gap-3 group"><svg class="text-brand group-hover:scale-110 transition-transform" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg> (786) 860-9286 (Call or WhatsApp)</a>
+                </div>
             </div>
             
             <div class="md:col-span-2 md:col-start-8">
                 <h4 class="text-white font-medium mb-6 tracking-wide">Platform</h4>
                 <ul class="flex flex-col gap-4 text-zinc-400 text-sm">
-                    <li><a href="index.html#services" class="hover:text-white transition-colors">Services</a></li>
-                    <li><a href="index.html#process" class="hover:text-white transition-colors">Process</a></li>
-                    <li><a href="index.html#pricing" class="hover:text-white transition-colors">Pricing</a></li>
+                    <li><a href="index.html#services" class="hover:text-white transition-colors link-hover">Services</a></li>
+                    <li><a href="index.html#process" class="hover:text-white transition-colors link-hover">Process</a></li>
+                    <li><a href="index.html#pricing" class="hover:text-white transition-colors link-hover">Pricing</a></li>
                 </ul>
             </div>
             
             <div class="md:col-span-2">
                 <h4 class="text-white font-medium mb-6 tracking-wide">Company</h4>
                 <ul class="flex flex-col gap-4 text-zinc-400 text-sm">
-                    <li><a href="about.html" class="hover:text-white transition-colors">About Us</a></li>
-                    <li><a href="contact.html" class="hover:text-white transition-colors text-white">Contact</a></li>
+                    <li><a href="about.html" class="hover:text-white transition-colors link-hover">About Us</a></li>
+                    <li><a href="contact.html" class="hover:text-white transition-colors link-hover">Contact</a></li>
                 </ul>
             </div>
         </div>
         
-        <div class="max-w-7xl mx-auto px-6 border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-zinc-500 text-xs tracking-wider">
-            <span>© 2026 POCKETFRIEND. ALL RIGHTS RESERVED.</span>
+        <div class="max-w-7xl mx-auto px-6 border-t border-white/[0.04] pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-zinc-500 text-xs tracking-wider">
+            <span>&copy; 2026 POCKETFRIEND. ALL RIGHTS RESERVED.</span>
             <div class="flex gap-8">
-                <a href="#" class="hover:text-white transition-colors">FACEBOOK</a>
-                <a href="#" class="hover:text-white transition-colors">INSTAGRAM</a>
+                <a href="#" class="hover:text-white transition-colors link-hover">FACEBOOK</a>
+                <a href="#" class="hover:text-white transition-colors link-hover">INSTAGRAM</a>
             </div>
         </div>
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                    }
-                });
-            }, { threshold: 0.1 });
-            document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+    (function() {
+        // Bright Pointer
+        const brightPointer = document.getElementById('brightPointer');
+        let mouseX = 0, mouseY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            brightPointer.style.left = mouseX + 'px';
+            brightPointer.style.top = mouseY + 'px';
+            document.getElementById('spotlight').style.setProperty('--mouse-x', mouseX + 'px');
+            document.getElementById('spotlight').style.setProperty('--mouse-y', mouseY + 'px');
         });
-
-        // Interactive Code Particle Click Effect
-        const codeSnippets = ['</>', '{}', 'div', '=>', 'import', 'async', 'return', '200 OK', '[]', 'function()', '++'];
+        
+        // Magnetic Buttons
+        document.querySelectorAll('.magnetic-btn').forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+            });
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transform = 'translate(0, 0)';
+            });
+        });
+        
+        // 3D Tilt Cards
+        document.querySelectorAll('.tilt-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width;
+                const y = (e.clientY - rect.top) / rect.height;
+                const rotateX = (y - 0.5) * -15;
+                const rotateY = (x - 0.5) * 15;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                card.style.setProperty('--gx', (x * 100) + '%');
+                card.style.setProperty('--gy', (y * 100) + '%');
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+            });
+        });
+        
+        // Mesh Gradient Canvas
+        const canvas = document.getElementById('mesh-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        const orbs = [
+            { x: 0.3, y: 0.3, r: 0.4, color: 'rgba(255, 77, 0, 0.03)', dx: 0.0003, dy: 0.0002 },
+            { x: 0.7, y: 0.6, r: 0.5, color: 'rgba(255, 100, 50, 0.02)', dx: -0.0002, dy: 0.0003 },
+            { x: 0.5, y: 0.8, r: 0.35, color: 'rgba(200, 60, 20, 0.025)', dx: 0.0004, dy: -0.0001 },
+        ];
+        
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        
+        function drawMesh() {
+            ctx.fillStyle = '#050505';
+            ctx.fillRect(0, 0, width, height);
+            orbs.forEach(orb => {
+                orb.x += orb.dx; orb.y += orb.dy;
+                if (orb.x < -0.2 || orb.x > 1.2) orb.dx *= -1;
+                if (orb.y < -0.2 || orb.y > 1.2) orb.dy *= -1;
+                const gradient = ctx.createRadialGradient(orb.x * width, orb.y * height, 0, orb.x * width, orb.y * height, orb.r * Math.min(width, height));
+                gradient.addColorStop(0, orb.color);
+                gradient.addColorStop(1, 'transparent');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, width, height);
+            });
+            requestAnimationFrame(drawMesh);
+        }
+        drawMesh();
+        
+        // Intersection Observer
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        
+        // Header scroll effect
+        const header = document.getElementById('mainHeader');
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.scrollY;
+            if (currentScroll > 100) {
+                header.style.background = 'rgba(5,5,5,0.85)';
+                header.style.backdropFilter = 'blur(30px)';
+            } else {
+                header.style.background = 'rgba(5,5,5,0.6)';
+                header.style.backdropFilter = 'blur(24px)';
+            }
+        });
+        
+        // Click particles
+        const codeSnippets = ['</>', '{}', 'div', '=>', 'import', 'async', 'return', '200 OK', '[]', 'fn()', '++'];
         document.addEventListener('click', (e) => {
-            // Prevent particles on form inputs to keep UX clean
             if (e.target.tagName.toLowerCase() === 'input' || e.target.tagName.toLowerCase() === 'textarea' || e.target.tagName.toLowerCase() === 'select') return;
-            
             const numParticles = Math.floor(Math.random() * 4) + 5;
             for (let i = 0; i < numParticles; i++) {
                 const particle = document.createElement('div');
@@ -257,46 +490,62 @@
                 const angle = Math.random() * Math.PI * 2;
                 const velocity = 50 + Math.random() * 100;
                 const tx = Math.cos(angle) * velocity;
-                const ty = (Math.sin(angle) * velocity) + (Math.random() * 100 + 50);
+                const ty = (Math.sin(angle) * velocity) + (Math.random() * 60 + 30);
                 const rot = (Math.random() - 0.5) * 360;
                 particle.style.setProperty('--tx', `${tx}px`);
                 particle.style.setProperty('--ty', `${ty}px`);
                 particle.style.setProperty('--rot', `${rot}deg`);
                 document.body.appendChild(particle);
-                setTimeout(() => particle.remove(), 1000);
+                setTimeout(() => particle.remove(), 700);
             }
         });
 
-        // DNA Code Trail Pointer
-        let mouseX = 0, mouseY = 0;
+        // DNA Code Trail Pointer (Improved Triple Helix)
         let dnaTick = 0;
-        const dnaChars = ['0', '1', '{', '}', '</>', 'A', 'C', 'T', 'G'];
+        const dnaChars = ['0','1','{','}','<','>','/',';',':','=','+','*','&','|','^','~','%','$','#','@','!','?','(',')','[',']','.',',','-','_','`','\\','"','\''];
+        const dnaColors = ['#FF4D00', '#ff8c42', '#ff6b1a', '#ff5500', '#ffa366'];
 
-        function spawnDNAParticle(x, y, phase) {
+        function spawnDNAParticle(x, y, phase, strandIndex) {
             const p = document.createElement('div');
             p.textContent = dnaChars[Math.floor(Math.random() * dnaChars.length)];
-            p.className = 'fixed pointer-events-none z-[999997] text-brand font-mono text-[10px] font-bold opacity-80 transition-all duration-1000 ease-out -translate-x-1/2 -translate-y-1/2';
-            const offsetX = Math.sin(phase) * 15;
-            const offsetY = Math.cos(phase) * 15;
+            p.className = 'fixed pointer-events-none z-[999997] font-mono text-[11px] font-bold opacity-90 transition-all duration-[1200ms] ease-out';
+            p.style.color = dnaColors[strandIndex % dnaColors.length];
+            p.style.textShadow = `0 0 8px ${dnaColors[strandIndex % dnaColors.length]}66, 0 0 16px ${dnaColors[strandIndex % dnaColors.length]}33`;
+            
+            const offsetX = Math.sin(phase) * (18 + strandIndex * 6);
+            const offsetY = Math.cos(phase) * (18 + strandIndex * 6);
+            
             p.style.left = (x + offsetX) + 'px';
             p.style.top = (y + offsetY) + 'px';
+            p.style.transform = 'translate(-50%, -50%)';
+            
             document.body.appendChild(p);
+            
             requestAnimationFrame(() => {
-                p.style.transform = `translate(-50%, calc(-50% + 30px)) scale(0.5) rotate(${Math.random() * 90}deg)`;
+                p.style.transform = `translate(calc(-50% + ${Math.sin(phase)*20}px), calc(-50% + ${40 + Math.random()*40}px)) scale(0.4) rotate(${Math.random()*180}deg)`;
                 p.style.opacity = '0';
             });
-            setTimeout(() => p.remove(), 1000);
+            
+            setTimeout(() => p.remove(), 1200);
         }
 
+        let dnaMouseX = 0, dnaMouseY = 0, dnaFrame = 0;
         document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            dnaTick += 0.3;
-            if (Math.random() > 0.2) {
-                spawnDNAParticle(mouseX, mouseY, dnaTick);
-                spawnDNAParticle(mouseX, mouseY, dnaTick + Math.PI);
-            }
+            dnaMouseX = e.clientX;
+            dnaMouseY = e.clientY;
         });
+        function dnaLoop() {
+            dnaFrame++;
+            if (dnaFrame % 2 === 0) {
+                dnaTick += 0.35;
+                spawnDNAParticle(dnaMouseX, dnaMouseY, dnaTick, 0);
+                spawnDNAParticle(dnaMouseX, dnaMouseY, dnaTick + Math.PI * 0.67, 1);
+                spawnDNAParticle(dnaMouseX, dnaMouseY, dnaTick + Math.PI * 1.33, 2);
+            }
+            requestAnimationFrame(dnaLoop);
+        }
+        dnaLoop();
+    })();
     </script>
 </body>
 </html>
