@@ -89,10 +89,13 @@
             border: 1px solid rgba(255, 255, 255, 0.06);
             box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 8px 32px rgba(0,0,0,0.3);
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
         .glass-panel:hover {
-            border-color: rgba(255, 77, 0, 0.2);
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 8px 32px rgba(0,0,0,0.4), 0 0 40px -10px rgba(255,77,0,0.15);
+            border-color: rgba(255, 77, 0, 0.35);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 12px 40px rgba(0,0,0,0.5), 0 0 50px -8px rgba(255,77,0,0.25);
         }
         
         /* Text Gradient */
@@ -161,7 +164,12 @@
         /* 3D Tilt Card */
         .tilt-card {
             transform-style: preserve-3d;
-            transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1);
+            transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .tilt-card:active {
+            transform: scale(0.97) !important;
         }
         .tilt-card .card-glow {
             position: absolute;
@@ -169,12 +177,16 @@
             border-radius: inherit;
             opacity: 0;
             transition: opacity 0.3s;
-            background: radial-gradient(400px circle at var(--gx, 50%) var(--gy, 50%), rgba(255,77,0,0.15), transparent 60%);
+            background: radial-gradient(500px circle at var(--gx, 50%) var(--gy, 50%), rgba(255,77,0,0.2), transparent 55%);
             pointer-events: none;
         }
         .tilt-card:hover .card-glow { opacity: 1; }
         .tilt-card .card-content {
             transform: translateZ(30px);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: flex-start;
         }
         
         /* Text Scramble */
@@ -183,15 +195,16 @@
         /* Bento Grid */
         .bento-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: 1fr;
+            gap: 1.25rem;
+            align-items: stretch;
         }
         @media (max-width: 1024px) {
             .bento-grid { grid-template-columns: repeat(2, 1fr); }
         }
         @media (max-width: 640px) {
             .bento-grid { grid-template-columns: 1fr; }
-            .bento-grid > * { grid-column: span 1 !important; grid-row: span 1 !important; }
         }
         
         /* Process Connector */
@@ -224,6 +237,14 @@
             transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1);
         }
         
+        /* Line clamp for equal card text */
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
         /* Holographic Shine */
         @keyframes shine {
             0% { transform: translateX(-100%) rotate(25deg); }
@@ -246,6 +267,13 @@
             animation: shine 0.8s ease forwards;
         }
         
+        .faq-open .faq-answer {
+            max-height: 500px !important;
+            opacity: 1 !important;
+        }
+        .faq-open .faq-icon {
+            transform: rotate(45deg);
+        }
         /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #050505; }
@@ -449,112 +477,124 @@
             </div>
 
             <div class="bento-grid">
-                <div class="col-span-2 row-span-2 glass-panel rounded-[2rem] p-8 reveal tilt-card group holo-shine" style="transition-delay: 0s;">
+                <div class="glass-panel rounded-[2rem] p-8 reveal tilt-card group holo-shine" style="transition-delay: 0.0s;">
                     <div class="card-glow rounded-[2rem]"></div>
-                    <div class="card-content h-full flex flex-col justify-between">
-                        <div>
-                            <div class="w-12 h-12 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center mb-4 text-brand text-2xl">&#128270;</div>
-                            <h3 class="font-display text-3xl mb-3 text-white">AI Local SEO</h3>
-                            <p class="text-zinc-400">Advanced AI-driven optimization to dominate local search results and attract high-intent customers in your area.</p>
-                        </div>
-                        <div class="mt-6 flex gap-2">
-                            <span class="px-3 py-1 rounded-full bg-white/5 text-zinc-500 text-xs border border-white/5">Google Maps</span>
-                            <span class="px-3 py-1 rounded-full bg-white/5 text-zinc-500 text-xs border border-white/5">Reviews</span>
-                            <span class="px-3 py-1 rounded-full bg-white/5 text-zinc-500 text-xs border border-white/5">Rankings</span>
+                    <div class="card-content">
+                        <h3 class="font-display text-xl mb-3 text-white">AI Local SEO</h3>
+                        <p class="text-zinc-400 text-sm line-clamp-3">Advanced AI-driven optimization to dominate local search results and attract high-intent customers in your area.</p>
+                        <div class="mt-auto pt-5 flex items-center gap-2 text-brand text-xs font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <span>Learn more</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
                         </div>
                     </div>
                 </div>
-                
+                <div class="glass-panel rounded-[2rem] p-8 reveal tilt-card group holo-shine" style="transition-delay: 0.05s;">
+                    <div class="card-glow rounded-[2rem]"></div>
+                    <div class="card-content">
+                        <h3 class="font-display text-xl mb-3 text-white">AI Chatbots</h3>
+                        <p class="text-zinc-400 text-sm line-clamp-3">24/7 automated assistants that answer questions and book appointments while you sleep.</p>
+                        <div class="mt-auto pt-5 flex items-center gap-2 text-brand text-xs font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <span>Learn more</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+                        </div>
+                    </div>
+                </div>
                 <div class="glass-panel rounded-[2rem] p-8 reveal tilt-card group holo-shine" style="transition-delay: 0.1s;">
                     <div class="card-glow rounded-[2rem]"></div>
                     <div class="card-content">
-                        <div class="w-10 h-10 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center mb-4 text-brand text-xl">&#128172;</div>
-                        <h3 class="font-display text-xl mb-2 text-white">AI Chatbots</h3>
-                        <p class="text-zinc-400 text-sm">24/7 automated assistants that answer questions and book appointments while you sleep.</p>
-                    </div>
-                </div>
-                
-                <div class="glass-panel rounded-[2rem] p-8 reveal tilt-card group holo-shine" style="transition-delay: 0.15s;">
-                    <div class="card-glow rounded-[2rem]"></div>
-                    <div class="card-content">
-                        <div class="w-10 h-10 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center mb-4 text-brand text-xl">&#128222;</div>
-                        <h3 class="font-display text-xl mb-2 text-white">AI Tele Answering</h3>
-                        <p class="text-zinc-400 text-sm">Smart voice assistants that answer your business phone 24/7 and capture leads.</p>
-                    </div>
-                </div>
-                
-                <div class="glass-panel rounded-[2rem] p-8 reveal tilt-card group holo-shine" style="transition-delay: 0.2s;">
-                    <div class="card-glow rounded-[2rem]"></div>
-                    <div class="card-content">
-                        <div class="w-10 h-10 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center mb-4 text-brand text-xl">&#128187;</div>
-                        <h3 class="font-display text-xl mb-2 text-white">Website Design</h3>
-                        <p class="text-zinc-400 text-sm">Clean, mobile-friendly websites that make you look professional.</p>
-                    </div>
-                </div>
-                
-                <div class="glass-panel rounded-[2rem] p-8 reveal tilt-card group holo-shine" style="transition-delay: 0.25s;">
-                    <div class="card-glow rounded-[2rem]"></div>
-                    <div class="card-content">
-                        <div class="w-10 h-10 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center mb-4 text-brand text-xl">&#128200;</div>
-                        <h3 class="font-display text-xl mb-2 text-white">Google Visibility</h3>
-                        <p class="text-zinc-400 text-sm">Optimize your Google Business Profile to show up higher in local searches.</p>
-                    </div>
-                </div>
-                
-                <div class="col-span-2 glass-panel rounded-[2rem] p-8 reveal tilt-card group holo-shine" style="transition-delay: 0.3s;">
-                    <div class="card-glow rounded-[2rem]"></div>
-                    <div class="card-content flex items-center gap-6">
-                        <div class="w-14 h-14 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center text-brand text-3xl shrink-0">&#9881;</div>
-                        <div>
-                            <h3 class="font-display text-2xl mb-2 text-white">Process Automation</h3>
-                            <p class="text-zinc-400">We automate your boring administrative tasks, follow-ups, and email notifications so you can focus on what matters.</p>
+                        <h3 class="font-display text-xl mb-3 text-white">AI Tele Answering</h3>
+                        <p class="text-zinc-400 text-sm line-clamp-3">Smart voice assistants that answer your business phone 24/7 and capture leads.</p>
+                        <div class="mt-auto pt-5 flex items-center gap-2 text-brand text-xs font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <span>Learn more</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
                         </div>
                     </div>
                 </div>
-                
-                <div class="glass-panel rounded-[2rem] p-8 reveal tilt-card group holo-shine" style="transition-delay: 0.35s;">
+                <div class="glass-panel rounded-[2rem] p-8 reveal tilt-card group holo-shine" style="transition-delay: 0.15000000000000002s;">
                     <div class="card-glow rounded-[2rem]"></div>
                     <div class="card-content">
-                        <div class="w-10 h-10 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center mb-4 text-brand text-xl">&#128196;</div>
-                        <h3 class="font-display text-xl mb-2 text-white">Forms & Leads</h3>
-                        <p class="text-zinc-400 text-sm">Smart digital forms that ensure you never lose a quote request again.</p>
+                        <h3 class="font-display text-xl mb-3 text-white">Website Design</h3>
+                        <p class="text-zinc-400 text-sm line-clamp-3">Clean, mobile-friendly websites that make you look professional and capture local customers.</p>
+                        <div class="mt-auto pt-5 flex items-center gap-2 text-brand text-xs font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <span>Learn more</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+                        </div>
                     </div>
                 </div>
-                
+                <div class="glass-panel rounded-[2rem] p-8 reveal tilt-card group holo-shine" style="transition-delay: 0.2s;">
+                    <div class="card-glow rounded-[2rem]"></div>
+                    <div class="card-content">
+                        <h3 class="font-display text-xl mb-3 text-white">Google Visibility</h3>
+                        <p class="text-zinc-400 text-sm line-clamp-3">Optimize your Google Business Profile to show up higher in local searches and maps.</p>
+                        <div class="mt-auto pt-5 flex items-center gap-2 text-brand text-xs font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <span>Learn more</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-panel rounded-[2rem] p-8 reveal tilt-card group holo-shine" style="transition-delay: 0.25s;">
+                    <div class="card-glow rounded-[2rem]"></div>
+                    <div class="card-content">
+                        <h3 class="font-display text-xl mb-3 text-white">Process Automation</h3>
+                        <p class="text-zinc-400 text-sm line-clamp-3">We automate your boring administrative tasks, follow-ups, and email notifications.</p>
+                        <div class="mt-auto pt-5 flex items-center gap-2 text-brand text-xs font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <span>Learn more</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-panel rounded-[2rem] p-8 reveal tilt-card group holo-shine" style="transition-delay: 0.30000000000000004s;">
+                    <div class="card-glow rounded-[2rem]"></div>
+                    <div class="card-content">
+                        <h3 class="font-display text-xl mb-3 text-white">Forms & Leads</h3>
+                        <p class="text-zinc-400 text-sm line-clamp-3">Smart digital forms that ensure you never lose a quote request or customer inquiry again.</p>
+                        <div class="mt-auto pt-5 flex items-center gap-2 text-brand text-xs font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <span>Learn more</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-panel rounded-[2rem] p-8 reveal tilt-card group holo-shine" style="transition-delay: 0.35000000000000003s;">
+                    <div class="card-glow rounded-[2rem]"></div>
+                    <div class="card-content">
+                        <h3 class="font-display text-xl mb-3 text-white">Dashboards</h3>
+                        <p class="text-zinc-400 text-sm line-clamp-3">Simple visual dashboards showing your leads, sales, and appointments at a single glance.</p>
+                        <div class="mt-auto pt-5 flex items-center gap-2 text-brand text-xs font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <span>Learn more</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+                        </div>
+                    </div>
+                </div>
                 <div class="glass-panel rounded-[2rem] p-8 reveal tilt-card group holo-shine" style="transition-delay: 0.4s;">
                     <div class="card-glow rounded-[2rem]"></div>
                     <div class="card-content">
-                        <div class="w-10 h-10 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center mb-4 text-brand text-xl">&#128202;</div>
-                        <h3 class="font-display text-xl mb-2 text-white">Dashboards</h3>
-                        <p class="text-zinc-400 text-sm">Simple visual dashboards showing your leads, sales, and appointments.</p>
+                        <h3 class="font-display text-xl mb-3 text-white">Cloud Hosting</h3>
+                        <p class="text-zinc-400 text-sm line-clamp-3">Secure, fast, and fully-managed website hosting so you never have to worry about downtime.</p>
+                        <div class="mt-auto pt-5 flex items-center gap-2 text-brand text-xs font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <span>Learn more</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+                        </div>
                     </div>
                 </div>
-                
                 <div class="glass-panel rounded-[2rem] p-8 reveal tilt-card group holo-shine" style="transition-delay: 0.45s;">
                     <div class="card-glow rounded-[2rem]"></div>
                     <div class="card-content">
-                        <div class="w-10 h-10 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center mb-4 text-brand text-xl">&#128451;</div>
-                        <h3 class="font-display text-xl mb-2 text-white">Cloud Hosting</h3>
-                        <p class="text-zinc-400 text-sm">Secure, fast, and fully-managed website hosting with zero downtime.</p>
+                        <h3 class="font-display text-xl mb-3 text-white">Cybersecurity</h3>
+                        <p class="text-zinc-400 text-sm line-clamp-3">Practical protection to keep your business data and customer forms safe from digital threats.</p>
+                        <div class="mt-auto pt-5 flex items-center gap-2 text-brand text-xs font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <span>Learn more</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+                        </div>
                     </div>
                 </div>
-                
                 <div class="glass-panel rounded-[2rem] p-8 reveal tilt-card group holo-shine" style="transition-delay: 0.5s;">
                     <div class="card-glow rounded-[2rem]"></div>
                     <div class="card-content">
-                        <div class="w-10 h-10 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center mb-4 text-brand text-xl">&#128272;</div>
-                        <h3 class="font-display text-xl mb-2 text-white">Cybersecurity</h3>
-                        <p class="text-zinc-400 text-sm">Practical protection to keep your business data safe from threats.</p>
-                    </div>
-                </div>
-                
-                <div class="col-span-2 glass-panel rounded-[2rem] p-8 reveal tilt-card group holo-shine" style="transition-delay: 0.55s;">
-                    <div class="card-glow rounded-[2rem]"></div>
-                    <div class="card-content flex items-center gap-6">
-                        <div class="w-14 h-14 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center text-brand text-3xl shrink-0">&#128295;</div>
-                        <div>
-                            <h3 class="font-display text-2xl mb-2 text-white">Custom Apps & Data Cleanup</h3>
-                            <p class="text-zinc-400">Tailor-made internal tools, booking systems, and organized data from messy spreadsheets into clean, searchable systems.</p>
+                        <h3 class="font-display text-xl mb-3 text-white">Custom Apps & Data Cleanup</h3>
+                        <p class="text-zinc-400 text-sm line-clamp-3">Tailor-made internal tools and organized data from messy spreadsheets into clean systems.</p>
+                        <div class="mt-auto pt-5 flex items-center gap-2 text-brand text-xs font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <span>Learn more</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
                         </div>
                     </div>
                 </div>
@@ -846,7 +886,7 @@
                 </div>
                 
                 <div class="space-y-4">
-                    <div class="glass-panel rounded-2xl p-6 reveal group cursor-pointer hover:bg-white/[0.03] transition-colors tilt-card" onclick="this.classList.toggle('active'); this.querySelector('.faq-answer').style.maxHeight = this.classList.contains('active') ? this.querySelector('.faq-answer').scrollHeight + 'px' : '0'; this.querySelector('.faq-answer').style.opacity = this.classList.contains('active') ? '1' : '0'; this.querySelector('.faq-icon').style.transform = this.classList.contains('active') ? 'rotate(45deg)' : 'rotate(0)';">
+                    <div class="glass-panel rounded-2xl p-6 reveal group cursor-pointer hover:bg-white/[0.03] transition-colors tilt-card" onclick="this.classList.toggle('faq-open'); this.querySelector('.faq-answer').style.maxHeight = this.classList.contains('faq-open') ? this.querySelector('.faq-answer').scrollHeight + 'px' : '0'; this.querySelector('.faq-answer').style.opacity = this.classList.contains('faq-open') ? '1' : '0'; this.querySelector('.faq-icon').style.transform = this.classList.contains('faq-open') ? 'rotate(45deg)' : 'rotate(0)';">
                         <div class="flex justify-between items-start">
                             <h4 class="font-display text-xl group-hover:text-brand transition-colors pr-4">Do I need a website if I already have Facebook or Instagram?</h4>
                             <span class="faq-icon text-zinc-500 text-2xl transition-transform duration-300 shrink-0">+</span>
@@ -855,7 +895,7 @@
                             <p class="text-zinc-400 text-sm leading-relaxed pt-4">Yes. Social media is great for attention, but a website is your permanent digital storefront. It builds ultimate trust, organizes your services clearly, and allows you to capture leads directly without social media distractions.</p>
                         </div>
                     </div>
-                    <div class="glass-panel rounded-2xl p-6 reveal group cursor-pointer hover:bg-white/[0.03] transition-colors tilt-card" style="transition-delay: 0.1s;" onclick="this.classList.toggle('active'); this.querySelector('.faq-answer').style.maxHeight = this.classList.contains('active') ? this.querySelector('.faq-answer').scrollHeight + 'px' : '0'; this.querySelector('.faq-answer').style.opacity = this.classList.contains('active') ? '1' : '0'; this.querySelector('.faq-icon').style.transform = this.classList.contains('active') ? 'rotate(45deg)' : 'rotate(0)';">
+                    <div class="glass-panel rounded-2xl p-6 reveal group cursor-pointer hover:bg-white/[0.03] transition-colors tilt-card" style="transition-delay: 0.1s;" onclick="this.classList.toggle('faq-open'); this.querySelector('.faq-answer').style.maxHeight = this.classList.contains('faq-open') ? this.querySelector('.faq-answer').scrollHeight + 'px' : '0'; this.querySelector('.faq-answer').style.opacity = this.classList.contains('faq-open') ? '1' : '0'; this.querySelector('.faq-icon').style.transform = this.classList.contains('faq-open') ? 'rotate(45deg)' : 'rotate(0)';">
                         <div class="flex justify-between items-start">
                             <h4 class="font-display text-xl group-hover:text-brand transition-colors pr-4">Can you build an AI chatbot for my business?</h4>
                             <span class="faq-icon text-zinc-500 text-2xl transition-transform duration-300 shrink-0">+</span>
@@ -864,7 +904,7 @@
                             <p class="text-zinc-400 text-sm leading-relaxed pt-4">Yes! We build customized chatbots that can answer your specific customer questions, schedule appointments, and capture leads 24/7. They can even connect to your inventory or product list.</p>
                         </div>
                     </div>
-                    <div class="glass-panel rounded-2xl p-6 reveal group cursor-pointer hover:bg-white/[0.03] transition-colors tilt-card" style="transition-delay: 0.2s;" onclick="this.classList.toggle('active'); this.querySelector('.faq-answer').style.maxHeight = this.classList.contains('active') ? this.querySelector('.faq-answer').scrollHeight + 'px' : '0'; this.querySelector('.faq-answer').style.opacity = this.classList.contains('active') ? '1' : '0'; this.querySelector('.faq-icon').style.transform = this.classList.contains('active') ? 'rotate(45deg)' : 'rotate(0)';">
+                    <div class="glass-panel rounded-2xl p-6 reveal group cursor-pointer hover:bg-white/[0.03] transition-colors tilt-card" style="transition-delay: 0.2s;" onclick="this.classList.toggle('faq-open'); this.querySelector('.faq-answer').style.maxHeight = this.classList.contains('faq-open') ? this.querySelector('.faq-answer').scrollHeight + 'px' : '0'; this.querySelector('.faq-answer').style.opacity = this.classList.contains('faq-open') ? '1' : '0'; this.querySelector('.faq-icon').style.transform = this.classList.contains('faq-open') ? 'rotate(45deg)' : 'rotate(0)';">
                         <div class="flex justify-between items-start">
                             <h4 class="font-display text-xl group-hover:text-brand transition-colors pr-4">Can you help organize my spreadsheets and customer data?</h4>
                             <span class="faq-icon text-zinc-500 text-2xl transition-transform duration-300 shrink-0">+</span>
@@ -873,7 +913,7 @@
                             <p class="text-zinc-400 text-sm leading-relaxed pt-4">Yes. We specialize in taking messy, manual data and turning it into clean, organized, and secure cloud-based systems.</p>
                         </div>
                     </div>
-                    <div class="glass-panel rounded-2xl p-6 reveal group cursor-pointer hover:bg-white/[0.03] transition-colors tilt-card" onclick="this.classList.toggle('active'); this.querySelector('.faq-answer').style.maxHeight = this.classList.contains('active') ? this.querySelector('.faq-answer').scrollHeight + 'px' : '0'; this.querySelector('.faq-answer').style.opacity = this.classList.contains('active') ? '1' : '0'; this.querySelector('.faq-icon').style.transform = this.classList.contains('active') ? 'rotate(45deg)' : 'rotate(0)';">
+                    <div class="glass-panel rounded-2xl p-6 reveal group cursor-pointer hover:bg-white/[0.03] transition-colors tilt-card" onclick="this.classList.toggle('faq-open'); this.querySelector('.faq-answer').style.maxHeight = this.classList.contains('faq-open') ? this.querySelector('.faq-answer').scrollHeight + 'px' : '0'; this.querySelector('.faq-answer').style.opacity = this.classList.contains('faq-open') ? '1' : '0'; this.querySelector('.faq-icon').style.transform = this.classList.contains('faq-open') ? 'rotate(45deg)' : 'rotate(0)';">
                         <div class="flex justify-between items-start">
                             <h4 class="font-display text-xl group-hover:text-brand transition-colors pr-4">Can you build custom tools for my business?</h4>
                             <span class="faq-icon text-zinc-500 text-2xl transition-transform duration-300 shrink-0">+</span>
@@ -882,7 +922,7 @@
                             <p class="text-zinc-400 text-sm leading-relaxed pt-4">If you need an internal portal, a unique booking system, or a specific task tracker, we can build custom applications tailored exactly to how you work.</p>
                         </div>
                     </div>
-                    <div class="glass-panel rounded-2xl p-6 reveal group cursor-pointer hover:bg-white/[0.03] transition-colors tilt-card" style="transition-delay: 0.1s;" onclick="this.classList.toggle('active'); this.querySelector('.faq-answer').style.maxHeight = this.classList.contains('active') ? this.querySelector('.faq-answer').scrollHeight + 'px' : '0'; this.querySelector('.faq-answer').style.opacity = this.classList.contains('active') ? '1' : '0'; this.querySelector('.faq-icon').style.transform = this.classList.contains('active') ? 'rotate(45deg)' : 'rotate(0)';">
+                    <div class="glass-panel rounded-2xl p-6 reveal group cursor-pointer hover:bg-white/[0.03] transition-colors tilt-card" style="transition-delay: 0.1s;" onclick="this.classList.toggle('faq-open'); this.querySelector('.faq-answer').style.maxHeight = this.classList.contains('faq-open') ? this.querySelector('.faq-answer').scrollHeight + 'px' : '0'; this.querySelector('.faq-answer').style.opacity = this.classList.contains('faq-open') ? '1' : '0'; this.querySelector('.faq-icon').style.transform = this.classList.contains('faq-open') ? 'rotate(45deg)' : 'rotate(0)';">
                         <div class="flex justify-between items-start">
                             <h4 class="font-display text-xl group-hover:text-brand transition-colors pr-4">Is everything mobile-friendly?</h4>
                             <span class="faq-icon text-zinc-500 text-2xl transition-transform duration-300 shrink-0">+</span>
@@ -989,9 +1029,9 @@
                 const rect = card.getBoundingClientRect();
                 const x = (e.clientX - rect.left) / rect.width;
                 const y = (e.clientY - rect.top) / rect.height;
-                const rotateX = (y - 0.5) * -15;
-                const rotateY = (x - 0.5) * 15;
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                const rotateX = (y - 0.5) * -20;
+                const rotateY = (x - 0.5) * 20;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.03, 1.03, 1.03)`;
                 card.style.setProperty('--gx', (x * 100) + '%');
                 card.style.setProperty('--gy', (y * 100) + '%');
             });
