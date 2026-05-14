@@ -303,7 +303,9 @@
 <body class="selection:bg-brand selection:text-white min-h-[100dvh] relative bg-zinc-950">
 
     <!-- Tubes Interactive Background -->
-    <canvas id="tubes-canvas" class="fixed inset-0 w-full h-full pointer-events-none" style="z-index: 0; touch-action: none;"></canvas>
+    <div id="tubes-wrapper" class="fixed inset-0 w-screen h-screen overflow-hidden pointer-events-none" style="z-index: 0;">
+        <canvas id="tubes-canvas" class="w-full h-full block" style="touch-action: none;"></canvas>
+    </div>
     
     <!-- Noise Overlay -->
     <div class="noise-overlay pointer-events-none"></div>
@@ -1128,30 +1130,58 @@
         });
         
         // Interactive Tubes Background
-        import('https://cdn.jsdelivr.net/npm/threejs-components@0.0.19/build/cursors/tubes1.min.js').then(module => {
-            const TubesCursor = module.default;
+        window.addEventListener('load', () => {
             const canvas = document.getElementById('tubes-canvas');
             if (canvas) {
-                const app = TubesCursor(canvas, {
-                    tubes: {
-                        colors: ["#FF4D00", "#FF8C42", "#FF6B00"],
-                        lights: {
-                            intensity: 200,
-                            colors: ["#FF4D00", "#FF8C42", "#FF6B00", "#FFA500"]
+                // Force initial dimensions to prevent WebGPU 0x0 texture validation errors
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                
+                import('https://cdn.jsdelivr.net/npm/threejs-components@0.0.19/build/cursors/tubes1.min.js').then(module => {
+                    const TubesCursor = module.default;
+                    const app = TubesCursor(canvas, {
+                        tubes: {
+                            colors: ["#FF4D00", "#FF8C42", "#FF6B00"],
+                            lights: {
+                                intensity: 200,
+                                colors: ["#FF4D00", "#FF8C42", "#FF6B00", "#FFA500"]
+                            }
                         }
-                    }
-                });
+                    });
 
-                document.addEventListener('click', (e) => {
-                    // Only randomize colors when clicking non-interactive elements
-                    if (e.target.tagName !== 'A' && e.target.tagName !== 'BUTTON' && !e.target.closest('a') && !e.target.closest('button')) {
-                        const randomColors = () => new Array(3).fill(0).map(() => "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0'));
-                        app.tubes.setColors(randomColors());
-                        app.tubes.setLightsColors([...randomColors(), "#FF4D00"]);
-                    }
-                });
+                    document.addEventListener('click', (e) => {
+                        // Only randomize colors when clicking non-interactive elements
+                        if (e.target.tagName !== 'A' && e.target.tagName !== 'BUTTON' && !e.target.closest('a') && !e.target.closest('button')) {
+                            const randomColors = () => new Array(3).fill(0).map(() => "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0'));
+                            app.tubes.setColors(randomColors());
+                            app.tubes.setLightsColors([...randomColors(), "#FF4D00"]);
+                        }
+                    });
+
+                    // Forward mouse and pointer events to the canvas
+                    // because it sits behind the main content which intercepts them
+                    window.addEventListener('pointermove', (e) => {
+                        if (e.target.id !== 'tubes-canvas') {
+                            canvas.dispatchEvent(new PointerEvent('pointermove', {
+                                clientX: e.clientX,
+                                clientY: e.clientY,
+                                bubbles: true,
+                                pointerType: e.pointerType
+                            }));
+                        }
+                    });
+                    window.addEventListener('mousemove', (e) => {
+                        if (e.target.id !== 'tubes-canvas') {
+                            canvas.dispatchEvent(new MouseEvent('mousemove', {
+                                clientX: e.clientX,
+                                clientY: e.clientY,
+                                bubbles: true
+                            }));
+                        }
+                    });
+                }).catch(err => console.error("Failed to load TubesCursor:", err));
             }
-        }).catch(err => console.error("Failed to load TubesCursor:", err));
+        });
 
         // Text Scramble Effect for Hero Title
         class TextScramble {
