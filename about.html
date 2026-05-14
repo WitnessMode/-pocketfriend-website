@@ -32,7 +32,6 @@
             color: #ffffff; 
             -webkit-font-smoothing: antialiased; 
             overflow-x: hidden;
-            cursor: none;
         }
         
         /* Bright Pointer */
@@ -338,17 +337,26 @@
 
     <script>
     (function() {
-        // Bright Pointer
+        // Bright Pointer & Spotlight Optimization
         const brightPointer = document.getElementById('brightPointer');
+        const spotlight = document.getElementById('spotlight');
         let mouseX = 0, mouseY = 0;
+        let isMoving = false;
         
         document.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
-            brightPointer.style.left = mouseX + 'px';
-            brightPointer.style.top = mouseY + 'px';
-            document.getElementById('spotlight').style.setProperty('--mouse-x', mouseX + 'px');
-            document.getElementById('spotlight').style.setProperty('--mouse-y', mouseY + 'px');
+            if (!isMoving) {
+                isMoving = true;
+                requestAnimationFrame(() => {
+                    if (brightPointer) brightPointer.style.transform = `translate3d(calc(${mouseX}px - 50%), calc(${mouseY}px - 50%), 0)`;
+                    if (spotlight) {
+                        spotlight.style.setProperty('--mouse-x', mouseX + 'px');
+                        spotlight.style.setProperty('--mouse-y', mouseY + 'px');
+                    }
+                    isMoving = false;
+                });
+            }
         });
         
         // Magnetic Buttons
