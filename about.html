@@ -194,15 +194,11 @@
 </head>
 <body class="selection:bg-brand selection:text-white min-h-[100dvh] flex flex-col relative bg-zinc-950">
 
-    <!-- Bright Pointer -->
-    <div class="bright-pointer" id="brightPointer"></div>
-
+    <!-- Tubes Interactive Background -->
+    <canvas id="tubes-canvas" class="fixed inset-0 w-full h-full pointer-events-none" style="z-index: 0; touch-action: none;"></canvas>
     
     <!-- Noise Overlay -->
-    <div class="noise-overlay"></div>
-    
-    <!-- Mesh Gradient Background -->
-    <canvas id="mesh-canvas"></canvas>
+    <div class="noise-overlay pointer-events-none"></div>
     
     <!-- Spotlight -->
     <div class="spotlight" id="spotlight"></div>
@@ -382,39 +378,7 @@
             });
         });
         
-        // Mesh Gradient Canvas
-        const canvas = document.getElementById('mesh-canvas');
-        const ctx = canvas.getContext('2d');
-        let width, height;
-        const orbs = [
-            { x: 0.3, y: 0.3, r: 0.4, color: 'rgba(255, 77, 0, 0.03)', dx: 0.0003, dy: 0.0002 },
-            { x: 0.7, y: 0.6, r: 0.5, color: 'rgba(255, 100, 50, 0.02)', dx: -0.0002, dy: 0.0003 },
-            { x: 0.5, y: 0.8, r: 0.35, color: 'rgba(200, 60, 20, 0.025)', dx: 0.0004, dy: -0.0001 },
-        ];
-        
-        function resizeCanvas() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-        
-        function drawMesh() {
-            ctx.fillStyle = '#050505';
-            ctx.fillRect(0, 0, width, height);
-            orbs.forEach(orb => {
-                orb.x += orb.dx; orb.y += orb.dy;
-                if (orb.x < -0.2 || orb.x > 1.2) orb.dx *= -1;
-                if (orb.y < -0.2 || orb.y > 1.2) orb.dy *= -1;
-                const gradient = ctx.createRadialGradient(orb.x * width, orb.y * height, 0, orb.x * width, orb.y * height, orb.r * Math.min(width, height));
-                gradient.addColorStop(0, orb.color);
-                gradient.addColorStop(1, 'transparent');
-                ctx.fillStyle = gradient;
-                ctx.fillRect(0, 0, width, height);
-            });
-            requestAnimationFrame(drawMesh);
-        }
-        drawMesh();
+
         
         // Intersection Observer
         const observer = new IntersectionObserver((entries) => {
@@ -458,51 +422,30 @@
             }
         });
 
-        // DNA Code Trail Pointer (Improved Triple Helix)
-        let dnaTick = 0;
-        const dnaChars = ['0','1','{','}','<','>','/',';',':','=','+','*','&','|','^','~','%','$','#','@','!','?','(',')','[',']','.',',','-','_','`','\\','"','\''];
-        const dnaColors = ['#FF4D00', '#ff8c42', '#ff6b1a', '#ff5500', '#ffa366'];
+        // Interactive Tubes Background
+        import('https://cdn.jsdelivr.net/npm/threejs-components@0.0.19/build/cursors/tubes1.min.js').then(module => {
+            const TubesCursor = module.default;
+            const canvas = document.getElementById('tubes-canvas');
+            if (canvas) {
+                const app = TubesCursor(canvas, {
+                    tubes: {
+                        colors: ["#FF4D00", "#FF8C42", "#FF6B00"],
+                        lights: {
+                            intensity: 200,
+                            colors: ["#FF4D00", "#FF8C42", "#FF6B00", "#FFA500"]
+                        }
+                    }
+                });
 
-        function spawnDNAParticle(x, y, phase, strandIndex) {
-            const p = document.createElement('div');
-            p.textContent = dnaChars[Math.floor(Math.random() * dnaChars.length)];
-            p.className = 'fixed pointer-events-none z-[999997] font-mono text-[11px] font-bold opacity-90 transition-all duration-[1200ms] ease-out';
-            p.style.color = dnaColors[strandIndex % dnaColors.length];
-            p.style.textShadow = `0 0 8px ${dnaColors[strandIndex % dnaColors.length]}66, 0 0 16px ${dnaColors[strandIndex % dnaColors.length]}33`;
-            
-            const offsetX = Math.sin(phase) * (18 + strandIndex * 6);
-            const offsetY = Math.cos(phase) * (18 + strandIndex * 6);
-            
-            p.style.left = (x + offsetX) + 'px';
-            p.style.top = (y + offsetY) + 'px';
-            p.style.transform = 'translate(-50%, -50%)';
-            
-            document.body.appendChild(p);
-            
-            requestAnimationFrame(() => {
-                p.style.transform = `translate(calc(-50% + ${Math.sin(phase)*20}px), calc(-50% + ${40 + Math.random()*40}px)) scale(0.4) rotate(${Math.random()*180}deg)`;
-                p.style.opacity = '0';
-            });
-            
-            setTimeout(() => p.remove(), 1200);
-        }
-
-        let dnaMouseX = 0, dnaMouseY = 0, dnaFrame = 0;
-        document.addEventListener('mousemove', (e) => {
-            dnaMouseX = e.clientX;
-            dnaMouseY = e.clientY;
-        });
-        function dnaLoop() {
-            dnaFrame++;
-            if (dnaFrame % 2 === 0) {
-                dnaTick += 0.35;
-                spawnDNAParticle(dnaMouseX, dnaMouseY, dnaTick, 0);
-                spawnDNAParticle(dnaMouseX, dnaMouseY, dnaTick + Math.PI * 0.67, 1);
-                spawnDNAParticle(dnaMouseX, dnaMouseY, dnaTick + Math.PI * 1.33, 2);
+                document.addEventListener('click', (e) => {
+                    if (e.target.tagName !== 'A' && e.target.tagName !== 'BUTTON' && !e.target.closest('a') && !e.target.closest('button')) {
+                        const randomColors = () => new Array(3).fill(0).map(() => "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0'));
+                        app.tubes.setColors(randomColors());
+                        app.tubes.setLightsColors([...randomColors(), "#FF4D00"]);
+                    }
+                });
             }
-            requestAnimationFrame(dnaLoop);
-        }
-        dnaLoop();
+        }).catch(err => console.error("Failed to load TubesCursor:", err));
     })();
     </script>
 </body>
