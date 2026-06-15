@@ -25,8 +25,19 @@
         }
     </script>
     <style>
+        :root {
+            --phoenix-primary: #00E9FF;
+            --phoenix-secondary: #1FA2FF;
+            --phoenix-glow: #C9FCFF;
+        }
+
         *, *::before, *::after { box-sizing: border-box; }
         html { scroll-behavior: smooth; }
+        /* Lenis smooth scroll */
+        html.lenis, html.lenis body { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+        .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+        .lenis.lenis-stopped { overflow: hidden; }
         body { 
             background-color: #050505; 
             color: #ffffff; 
@@ -38,16 +49,35 @@
         .bright-pointer {
             position: fixed;
             top: 0; left: 0;
-            width: 10px; height: 10px;
+            width: 8px; height: 8px;
             background: #ffffff;
             border-radius: 50%;
             pointer-events: none;
             z-index: 999999;
             transform: translate(-50%, -50%);
+            opacity: 0;
+            will-change: transform;
+            transition: opacity 160ms ease;
             box-shadow:
-                0 0 8px 2px rgba(255, 77, 0, 0.9),
-                0 0 24px 6px rgba(255, 77, 0, 0.5),
-                0 0 48px 14px rgba(255, 77, 0, 0.2);
+                0 0 6px 1px color-mix(in srgb, var(--phoenix-primary) 55%, transparent),
+                0 0 16px 4px color-mix(in srgb, var(--phoenix-primary) 26%, transparent),
+                0 0 34px 10px color-mix(in srgb, var(--phoenix-secondary) 11%, transparent);
+        }
+        .bright-pointer.is-visible { opacity: 1; }
+
+        /* Scroll-progress bar (Motion-driven) */
+        #scroll-progress {
+            position: fixed;
+            top: 0; left: 0;
+            height: 3px;
+            width: 100%;
+            transform: scaleX(0);
+            transform-origin: 0 50%;
+            background: linear-gradient(90deg, var(--phoenix-primary), var(--phoenix-secondary), var(--phoenix-glow));
+            box-shadow: 0 0 12px -2px var(--phoenix-primary);
+            z-index: 1000000;
+            pointer-events: none;
+            will-change: transform;
         }
 
         
@@ -55,7 +85,7 @@
         .noise-overlay {
             position: fixed;
             inset: 0;
-            z-index: 99999;
+            z-index: 4;
             pointer-events: none;
             opacity: 0.035;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
@@ -63,22 +93,99 @@
             background-size: 256px 256px;
         }
         
-        /* Mesh Gradient Canvas */
-        #mesh-canvas {
+        /* Cinematic WebGL Scene */
+        .cinematic-scene {
             position: fixed;
             inset: 0;
             z-index: 0;
             pointer-events: none;
+            overflow: hidden;
+            background:
+                linear-gradient(180deg, rgba(5, 5, 5, 0.08), rgba(5, 5, 5, 0.5)),
+                url("./assets/phoenix-mountain-poster-v2.webp") center / cover no-repeat;
+        }
+        #phoenix-canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+        }
+        .webgl-ready #phoenix-canvas {
+            opacity: 1;
+        }
+        .scene-vignette {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 68% 45%, transparent 0 20%, rgba(5, 5, 5, 0.12) 54%, rgba(5, 5, 5, 0.72) 100%),
+                linear-gradient(90deg, rgba(5, 5, 5, 0.78) 0%, rgba(5, 5, 5, 0.34) 44%, rgba(5, 5, 5, 0.08) 78%);
+        }
+        .scene-haze {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(5, 5, 5, 0.12), transparent 22%, transparent 76%, rgba(5, 5, 5, 0.72));
+            mix-blend-mode: multiply;
+        }
+        /* Interactive tubes cursor — original mouse animation, screen-blended over the scene */
+        .tubes-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            pointer-events: none;
+            mix-blend-mode: screen;
+            opacity: 0.55;
+        }
+        @media (pointer: coarse) {
+            .tubes-canvas { display: none; }
+        }
+        /* Phoenix finale flash — masks the cross-fade to the still mountain image */
+        .finale-flash {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0;
+            mix-blend-mode: screen;
+            background:
+                radial-gradient(circle at 50% 44%,
+                    rgba(255, 248, 230, 1) 0%,
+                    rgba(255, 175, 80, 0.92) 32%,
+                    rgba(255, 96, 24, 0.45) 64%,
+                    rgba(255, 70, 0, 0.08) 100%);
         }
         
-        /* Spotlight Effect */
+        /* Spotlight Effect — phoenix light that follows the cursor */
         .spotlight {
             position: fixed;
             inset: 0;
-            z-index: 1;
+            z-index: 5;
             pointer-events: none;
-            background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,77,0,0.06), transparent 40%);
+            opacity: 0;
+            will-change: background;
+            transition: opacity 240ms ease;
+            mix-blend-mode: screen;
+            background:
+                radial-gradient(
+                    110px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                    color-mix(in srgb, var(--phoenix-glow) 38%, transparent) 0%,
+                    color-mix(in srgb, var(--phoenix-primary) 20%, transparent) 46%,
+                    transparent 76%
+                ),
+                radial-gradient(
+                    340px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                    color-mix(in srgb, var(--phoenix-glow) 14%, transparent) 0%,
+                    color-mix(in srgb, var(--phoenix-secondary) 10%, transparent) 44%,
+                    transparent 72%
+                ),
+                radial-gradient(
+                    720px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                    color-mix(in srgb, var(--phoenix-secondary) 8%, transparent) 0%,
+                    color-mix(in srgb, var(--phoenix-primary) 5%, transparent) 40%,
+                    transparent 70%
+                );
         }
+        .spotlight.is-visible { opacity: 1; }
         
         /* Glass Panel v2 */
         .glass-panel {
@@ -295,16 +402,40 @@
         /* Hide cursor on touch devices */
         @media (pointer: coarse) {
             body { cursor: auto; }
-            .bright-pointer { display: none; }
+            .bright-pointer,
+            .spotlight { display: none; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            #phoenix-canvas { display: none; }
+            .bright-pointer,
+            .spotlight { display: none; }
+            .animate-float,
+            .animate-float-delayed,
+            .animate-marquee,
+            .text-gradient-brand {
+                animation: none !important;
+            }
+            .reveal {
+                opacity: 1;
+                transform: none;
+                filter: none;
+                transition: none;
+            }
         }
     </style>
 </head>
 <body class="selection:bg-brand selection:text-white min-h-[100dvh] relative bg-zinc-950">
+    <div id="scroll-progress" aria-hidden="true"></div>
     <div id="brightPointer" class="bright-pointer"></div>
 
-    <!-- Tubes Interactive Background -->
-    <div id="tubes-wrapper" class="fixed inset-0 w-screen h-screen overflow-hidden pointer-events-none" style="z-index: 0;">
-        <canvas id="tubes-canvas" class="w-full h-full block" style="touch-action: none;"></canvas>
+    <!-- Cinematic Phoenix Flight -->
+    <div id="phoenix-scene" class="cinematic-scene" aria-hidden="true">
+        <canvas id="phoenix-canvas"></canvas>
+        <div class="scene-vignette"></div>
+        <div class="scene-haze"></div>
+        <canvas id="tubes-canvas" class="tubes-canvas"></canvas>
+        <div class="finale-flash"></div>
     </div>
     
     <!-- Noise Overlay -->
@@ -336,11 +467,8 @@
         <!-- Hero Section -->
         <section class="relative w-full min-h-[95dvh] flex items-center overflow-hidden border-b border-white/[0.04]">
             <div class="absolute inset-0 w-full h-full z-0 pointer-events-none">
-                <video autoplay loop muted playsinline class="w-full h-full object-cover opacity-40 mix-blend-screen scale-105">
-                    <source src="https://framerusercontent.com/assets/81jBBLb0cn8oKOtt6HP64mDIoSk.mp4" type="video/mp4">
-                </video>
-                <div class="absolute inset-0 bg-gradient-to-b from-zinc-950/60 via-transparent to-zinc-950"></div>
-                <div class="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/60 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-b from-zinc-950/35 via-transparent to-zinc-950/80"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-zinc-950/90 via-zinc-950/55 to-transparent"></div>
             </div>
 
             <div class="max-w-7xl mx-auto px-6 md:px-12 w-full flex flex-col lg:flex-row items-center justify-between gap-16 py-20 relative z-10">
@@ -391,7 +519,7 @@
                                     <div class="text-zinc-500 text-[10px] font-bold uppercase tracking-widest">Site Traffic</div>
                                     <div class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs group-hover:scale-110 group-hover:-translate-y-1 transition-transform">&#8593;</div>
                                 </div>
-                                <div class="text-white font-display text-4xl mb-2 group-hover:text-brand transition-colors">24.5k</div>
+                                <div class="text-white font-display text-4xl mb-2 group-hover:text-brand transition-colors" data-countup="24.5" data-suffix="k">24.5k</div>
                                 <div class="text-emerald-400 text-xs font-medium mb-6">+342% this month</div>
                                 <div class="flex items-end gap-1.5 h-16">
                                     <div class="w-full bg-brand/20 rounded-sm h-[30%] group-hover:h-[40%] transition-all duration-300 delay-75"></div>
@@ -437,7 +565,7 @@
                                         </div>
                                     </div>
                                     <div class="text-right">
-                                        <div class="text-white font-display text-2xl group-hover:text-brand transition-colors">84 Leads</div>
+                                        <div class="text-white font-display text-2xl group-hover:text-brand transition-colors" data-countup="84" data-suffix=" Leads">84 Leads</div>
                                         <div class="text-zinc-500 text-[10px] uppercase tracking-wider">This Week</div>
                                     </div>
                                 </div>
@@ -826,10 +954,12 @@
                     </div>
                 </div>
                 
-                <div class="glass-panel rounded-3xl p-10 border-brand/40 bg-brand/[0.03] relative reveal transform md:-translate-y-6 shadow-[0_0_60px_-20px_rgba(255,77,0,0.25)] tilt-card holo-shine" style="transition-delay: 0.1s;">
+                <div class="relative reveal" style="transition-delay: 0.1s;">
+                  <div class="relative md:-translate-y-6">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 z-20 bg-brand text-white px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider shadow-lg shadow-brand/20 whitespace-nowrap pointer-events-none">Most Popular</div>
+                    <div class="glass-panel rounded-3xl p-10 pt-12 border-brand/40 bg-brand/[0.03] shadow-[0_0_60px_-20px_rgba(255,77,0,0.25)] tilt-card holo-shine">
                     <div class="card-glow rounded-3xl"></div>
                     <div class="card-content">
-                        <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-brand text-white px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider shadow-lg shadow-brand/20">Most Popular</div>
                         <h3 class="font-display text-2xl mb-2 text-brand">Growth & Automation</h3>
                         <div class="text-zinc-400 text-sm mb-6 min-h-[40px]">For businesses that want more leads and less manual work.</div>
                         <ul class="space-y-4 mb-10 text-sm text-zinc-300">
@@ -840,8 +970,10 @@
                         </ul>
                         <a href="mailto:contact@pocketfriend.io?subject=Inquiry:%20Growth%20Package" class="magnetic-btn block text-center w-full py-4 rounded-xl bg-brand text-white hover:bg-brand/90 transition-colors font-medium">Grow Your Business</a>
                     </div>
+                    </div>
+                  </div>
                 </div>
-                
+
                 <div class="glass-panel rounded-3xl p-10 reveal tilt-card holo-shine" style="transition-delay: 0.2s;">
                     <div class="card-glow rounded-3xl"></div>
                     <div class="card-content">
@@ -1053,27 +1185,59 @@
 
     <script>
     (function() {
-        // Bright Pointer & Spotlight Optimization
+        // Bright pointer with a larger, smoothly trailing phoenix light.
         const brightPointer = document.getElementById('brightPointer');
         const spotlight = document.getElementById('spotlight');
-        let mouseX = 0, mouseY = 0;
-        let isMoving = false;
-        
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            if (!isMoving) {
-                isMoving = true;
-                requestAnimationFrame(() => {
-                    if (brightPointer) brightPointer.style.transform = `translate3d(calc(${mouseX}px - 50%), calc(${mouseY}px - 50%), 0)`;
-                    if (spotlight) {
-                        spotlight.style.setProperty('--mouse-x', mouseX + 'px');
-                        spotlight.style.setProperty('--mouse-y', mouseY + 'px');
-                    }
-                    isMoving = false;
-                });
-            }
-        });
+        const finePointer = window.matchMedia('(pointer: fine)').matches;
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (brightPointer && spotlight && finePointer && !reducedMotion) {
+            let targetX = window.innerWidth / 2;
+            let targetY = window.innerHeight / 2;
+            let trailX = targetX;
+            let trailY = targetY;
+            let animationFrame = 0;
+            let hasPointerLocation = false;
+
+            const renderPointer = () => {
+                trailX += (targetX - trailX) * 0.19;
+                trailY += (targetY - trailY) * 0.19;
+                spotlight.style.setProperty('--mouse-x', `${trailX}px`);
+                spotlight.style.setProperty('--mouse-y', `${trailY}px`);
+
+                if (Math.abs(targetX - trailX) > 0.1 || Math.abs(targetY - trailY) > 0.1) {
+                    animationFrame = requestAnimationFrame(renderPointer);
+                } else {
+                    animationFrame = 0;
+                }
+            };
+
+            document.addEventListener('pointermove', (event) => {
+                if (event.pointerType === 'touch') return;
+
+                targetX = event.clientX;
+                targetY = event.clientY;
+                hasPointerLocation = true;
+                brightPointer.style.transform = `translate3d(${targetX}px, ${targetY}px, 0) translate(-50%, -50%)`;
+                brightPointer.classList.add('is-visible');
+                spotlight.classList.add('is-visible');
+
+                if (!animationFrame) {
+                    animationFrame = requestAnimationFrame(renderPointer);
+                }
+            }, { passive: true });
+
+            document.documentElement.addEventListener('mouseleave', () => {
+                brightPointer.classList.remove('is-visible');
+                spotlight.classList.remove('is-visible');
+            });
+
+            document.documentElement.addEventListener('mouseenter', () => {
+                if (!hasPointerLocation) return;
+                brightPointer.classList.add('is-visible');
+                spotlight.classList.add('is-visible');
+            });
+        }
         
         // Magnetic Buttons
         document.querySelectorAll('.magnetic-btn').forEach(btn => {
@@ -1172,60 +1336,6 @@
             }
         });
         
-        // Interactive Tubes Background
-        window.addEventListener('load', () => {
-            const canvas = document.getElementById('tubes-canvas');
-            if (canvas) {
-                // Force initial dimensions to prevent WebGPU 0x0 texture validation errors
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-                
-                import('https://cdn.jsdelivr.net/npm/threejs-components@0.0.19/build/cursors/tubes1.min.js').then(module => {
-                    const TubesCursor = module.default;
-                    const app = TubesCursor(canvas, {
-                        tubes: {
-                            colors: ["#FF4D00", "#FF8C42", "#FF6B00"],
-                            lights: {
-                                intensity: 200,
-                                colors: ["#FF4D00", "#FF8C42", "#FF6B00", "#FFA500"]
-                            }
-                        }
-                    });
-
-                    document.addEventListener('click', (e) => {
-                        // Only randomize colors when clicking non-interactive elements
-                        if (e.target.tagName !== 'A' && e.target.tagName !== 'BUTTON' && !e.target.closest('a') && !e.target.closest('button')) {
-                            const randomColors = () => new Array(3).fill(0).map(() => "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0'));
-                            app.tubes.setColors(randomColors());
-                            app.tubes.setLightsColors([...randomColors(), "#FF4D00"]);
-                        }
-                    });
-
-                    // Forward mouse and pointer events to the canvas
-                    // because it sits behind the main content which intercepts them
-                    window.addEventListener('pointermove', (e) => {
-                        if (e.target.id !== 'tubes-canvas') {
-                            canvas.dispatchEvent(new PointerEvent('pointermove', {
-                                clientX: e.clientX,
-                                clientY: e.clientY,
-                                bubbles: true,
-                                pointerType: e.pointerType
-                            }));
-                        }
-                    });
-                    window.addEventListener('mousemove', (e) => {
-                        if (e.target.id !== 'tubes-canvas') {
-                            canvas.dispatchEvent(new MouseEvent('mousemove', {
-                                clientX: e.clientX,
-                                clientY: e.clientY,
-                                bubbles: true
-                            }));
-                        }
-                    });
-                }).catch(err => console.error("Failed to load TubesCursor:", err));
-            }
-        });
-
         // Text Scramble Effect for Hero Title
         class TextScramble {
             constructor(el) {
@@ -1242,24 +1352,25 @@
                 for (let i = 0; i < length; i++) {
                     const from = oldText[i] || '';
                     const to = newText[i] || '';
-                    const start = Math.floor(Math.random() * 40);
-                    const end = start + Math.floor(Math.random() * 40);
+                    const start = Math.random() * 320;
+                    const end = start + 240 + Math.random() * 360;
                     this.queue.push({ from, to, start, end });
                 }
                 cancelAnimationFrame(this.frameRequest);
-                this.frame = 0;
-                this.update();
+                this.startTime = performance.now();
+                this.update(this.startTime);
                 return promise;
             }
-            update() {
+            update(time = performance.now()) {
+                const elapsed = time - this.startTime;
                 let output = '';
                 let complete = 0;
                 for (let i = 0, n = this.queue.length; i < n; i++) {
                     let { from, to, start, end, char } = this.queue[i];
-                    if (this.frame >= end) {
+                    if (elapsed >= end) {
                         complete++;
                         output += to;
-                    } else if (this.frame >= start) {
+                    } else if (elapsed >= start) {
                         if (!char || Math.random() < 0.28) {
                             char = this.randomChar();
                             this.queue[i].char = char;
@@ -1275,7 +1386,6 @@
                     this.resolve();
                 } else {
                     this.frameRequest = requestAnimationFrame(this.update);
-                    this.frame++;
                 }
             }
             randomChar() {
@@ -1285,13 +1395,181 @@
         
         // Trigger scramble on load
         const heroTitle = document.getElementById('heroTitle');
-        if (heroTitle) {
+        const allowHeroScramble = window.matchMedia('(min-width: 700px) and (pointer: fine)').matches;
+        if (heroTitle && allowHeroScramble) {
             const originalText = heroTitle.innerText;
             const fx = new TextScramble(heroTitle);
             setTimeout(() => fx.setText(originalText), 500);
         }
         
     })();
+    </script>
+    <script type="module">
+        const canvas = document.getElementById('phoenix-canvas');
+        const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const isDataSaver = navigator.connection?.saveData === true;
+        const isCompactViewport = window.matchMedia('(max-width: 699px)').matches;
+
+        if (canvas && !isReducedMotion && !isDataSaver) {
+            document.documentElement.classList.add('webgl-ready');
+            import('./assets/js/phoenix-scene.js')
+                .then(({ initPhoenixScene }) => {
+                    const phoenixScene = initPhoenixScene({
+                        canvas,
+                        modelUrl: './assets/models/phoenix-eagle.glb',
+                        modelSize: isCompactViewport ? 7 : 8.5,
+                        birdScale: isCompactViewport ? 0.58 : 1.15,
+                        modelRotation: [Math.PI / 2, 0, 0],
+                        flapAmplitude: 0.18,
+                        flapSpeed: 2.65,
+                        useModelAnimation: true,
+                        animationSpeed: 0.82,
+                        maxDpr: isCompactViewport ? 1.2 : 1.35,
+                        parallaxStrength: 0.45,
+                        onReady: () => document.documentElement.classList.add('webgl-ready')
+                    });
+                    window.phoenixScene = phoenixScene;
+                })
+                .catch((error) => {
+                    console.warn('Phoenix WebGL scene unavailable; using poster fallback.', error);
+                });
+        }
+
+        const interactiveSelector = 'a, button, input, textarea, select, label, [role="button"], #faq .tilt-card';
+        document.addEventListener('click', (event) => {
+            if (event.target.closest(interactiveSelector)) return;
+            window.dispatchEvent(new CustomEvent('phoenix:palette-cycle'));
+        });
+
+        // Neon cursor schemes — each complements its scene palette; cycled on click.
+        window.NEON_CURSOR = [
+            { primary: '#00E9FF', secondary: '#1FA2FF', glow: '#C9FCFF', tubes: ['#00E9FF', '#1FA2FF', '#16FFE0'], lights: ['#00E9FF', '#1FA2FF', '#9B5CFF', '#16FFE0'] },
+            { primary: '#FF2BD6', secondary: '#FF5CA8', glow: '#FFC8EE', tubes: ['#FF2BD6', '#FF5CA8', '#FF8A4D'], lights: ['#FF2BD6', '#FF5CA8', '#FFC23D', '#FF8A4D'] },
+            { primary: '#8BFF00', secondary: '#00FFA3', glow: '#DDFFB3', tubes: ['#8BFF00', '#00FFA3', '#B6FF3D'], lights: ['#8BFF00', '#00FFA3', '#00E9FF', '#B6FF3D'] },
+            { primary: '#B026FF', secondary: '#FF3DCB', glow: '#EBC2FF', tubes: ['#B026FF', '#FF3DCB', '#5C7CFF'], lights: ['#B026FF', '#FF3DCB', '#5C7CFF', '#00E9FF'] },
+        ];
+        window.addEventListener('phoenix:palette-changed', () => {
+            const i = (window.phoenixScene && window.phoenixScene.paletteIndex) || 0;
+            const s = window.NEON_CURSOR[i % window.NEON_CURSOR.length];
+            const root = document.documentElement;
+            root.style.setProperty('--phoenix-primary', s.primary);
+            root.style.setProperty('--phoenix-secondary', s.secondary);
+            root.style.setProperty('--phoenix-glow', s.glow);
+        });
+    </script>
+    <script>
+    // Interactive Tubes cursor — the original mouse animation, restored as a
+    // screen-blended layer over the phoenix scene (desktop pointers only).
+    (function () {
+        const canvas = document.getElementById('tubes-canvas');
+        const finePointer = window.matchMedia('(pointer: fine)').matches;
+        const compact = window.matchMedia('(max-width: 699px)').matches;
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!canvas || !finePointer || compact || reducedMotion) {
+            if (canvas) canvas.style.display = 'none';
+            return;
+        }
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        import('https://cdn.jsdelivr.net/npm/threejs-components@0.0.19/build/cursors/tubes1.min.js')
+            .then((module) => {
+                const TubesCursor = module.default;
+                const app = TubesCursor(canvas, {
+                    tubes: {
+                        colors: ['#00E9FF', '#1FA2FF', '#16FFE0'],
+                        lights: {
+                            intensity: 105,
+                            colors: ['#00E9FF', '#1FA2FF', '#9B5CFF', '#16FFE0']
+                        }
+                    }
+                });
+                window.tubesCursor = app;
+
+                // Cycle the tube colours through the neon schemes on each palette click.
+                window.addEventListener('phoenix:palette-changed', () => {
+                    const schemes = window.NEON_CURSOR;
+                    if (!schemes || !app.tubes || !app.tubes.setColors) return;
+                    const i = (window.phoenixScene && window.phoenixScene.paletteIndex) || 0;
+                    const s = schemes[i % schemes.length];
+                    app.tubes.setColors(s.tubes);
+                    app.tubes.setLightsColors(s.lights);
+                });
+
+                // Canvas is pointer-events:none behind the content, so forward moves to it.
+                window.addEventListener('pointermove', (e) => {
+                    canvas.dispatchEvent(new PointerEvent('pointermove', {
+                        clientX: e.clientX, clientY: e.clientY, bubbles: true,
+                        pointerType: e.pointerType || 'mouse'
+                    }));
+                    canvas.dispatchEvent(new MouseEvent('mousemove', {
+                        clientX: e.clientX, clientY: e.clientY, bubbles: true
+                    }));
+                }, { passive: true });
+            })
+            .catch((err) => console.error('Failed to load TubesCursor:', err));
+    })();
+    </script>
+    <script type="module">
+    // Lenis — inertial smooth scrolling (also smooths the scroll-driven scene).
+    try {
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!reduce) {
+            const { default: Lenis } = await import('https://cdn.jsdelivr.net/npm/lenis@1/+esm');
+            const lenis = new Lenis({ lerp: 0.072, smoothWheel: true, wheelMultiplier: 0.95 });
+            window.lenis = lenis;
+            const raf = (time) => { lenis.raf(time); requestAnimationFrame(raf); };
+            requestAnimationFrame(raf);
+            // Route in-page anchor links through Lenis for a smooth glide.
+            document.querySelectorAll('a[href^="#"]').forEach((a) => {
+                a.addEventListener('click', (e) => {
+                    const id = a.getAttribute('href');
+                    if (!id || id.length < 2) return;
+                    const target = document.querySelector(id);
+                    if (target) { e.preventDefault(); lenis.scrollTo(target, { offset: -80 }); }
+                });
+            });
+        }
+    } catch (err) {
+        console.error('Lenis failed to load:', err);
+    }
+    </script>
+    <script type="module">
+    // Advanced motion & immersive micro-interactions — Motion (motion.dev)
+    try {
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const { scroll, animate, inView } = await import('https://cdn.jsdelivr.net/npm/motion@latest/+esm');
+
+        // Scroll-progress bar, driven by the (Lenis-smoothed) page scroll.
+        const bar = document.getElementById('scroll-progress');
+        if (bar) scroll((p) => { bar.style.transform = 'scaleX(' + p + ')'; });
+
+        if (!reduce) {
+            // Parallax — section headings drift gently as they pass through the viewport.
+            document.querySelectorAll('section h2').forEach((h) => {
+                scroll(
+                    (p) => { h.style.transform = 'translateY(' + ((0.5 - p) * 46) + 'px)'; },
+                    { target: h, offset: ['start end', 'end start'] }
+                );
+            });
+
+            // Count-up — stat numbers animate up the first time they scroll into view.
+            document.querySelectorAll('[data-countup]').forEach((el) => {
+                const raw = el.dataset.countup;
+                const target = parseFloat(raw);
+                const suffix = el.dataset.suffix || '';
+                const decimals = (raw.split('.')[1] || '').length;
+                inView(el, () => {
+                    animate(0, target, {
+                        duration: 1.6,
+                        ease: [0.16, 1, 0.3, 1],
+                        onUpdate: (v) => { el.textContent = v.toFixed(decimals) + suffix; },
+                    });
+                }, { amount: 0.6 });
+            });
+        }
+    } catch (e) {
+        console.error('Motion init failed:', e);
+    }
     </script>
 </body>
 </html>

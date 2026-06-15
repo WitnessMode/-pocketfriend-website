@@ -1,0 +1,8 @@
+# Keep the live deploy lean — these aren't needed at runtime
+assets/references/
+scripts/
+*.md
+.git
+.gitignore
+.vercelignore
+.claude

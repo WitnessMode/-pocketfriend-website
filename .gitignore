@@ -1,1 +1,15 @@
 .vercel
+
+# Dependencies
+node_modules/
+
+# Dev / capture artifacts
+_caps/
+*.bak
+
+# Large AI source/reference art — regenerable, kept locally, not committed
+assets/references/
+
+# OS
+.DS_Store
+Thumbs.db
