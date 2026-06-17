@@ -427,6 +427,89 @@
                 transition: none;
             }
         }
+
+        /* ===== Selected Work carousel ===== */
+        .pf { position: relative; }
+        .pf-stage {
+            position: relative; width: 100%; aspect-ratio: 16 / 10;
+            border-radius: 1.75rem; overflow: hidden; background: #0a0a0a;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 40px 120px -40px rgba(0,0,0,0.85);
+            outline: none;
+        }
+        @media (min-width: 768px) { .pf-stage { aspect-ratio: 2 / 1; } }
+        .pf-slide {
+            position: absolute; inset: 0; opacity: 0; visibility: hidden;
+            transform: scale(1.06);
+            transition: opacity 0.9s cubic-bezier(0.4,0,0.2,1), visibility 0.9s;
+        }
+        .pf-slide.is-active {
+            opacity: 1; visibility: visible; transform: scale(1);
+            transition: opacity 0.9s cubic-bezier(0.4,0,0.2,1), transform 1.2s cubic-bezier(0.4,0,0.2,1);
+        }
+        .pf-img, .pf-vid { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; background: #0a0a0a; }
+        .pf-fallback {
+            width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+            background: radial-gradient(130% 130% at 28% 18%, var(--a), var(--b) 72%); position: relative;
+        }
+        .pf-fallback::after {
+            content: ""; position: absolute; inset: 0;
+            background: radial-gradient(55% 55% at 72% 82%, rgba(255,77,0,0.16), transparent 70%);
+        }
+        .pf-fallback-name {
+            font-family: 'Cabinet Grotesk', sans-serif; font-size: clamp(2rem, 6vw, 4.5rem);
+            font-weight: 800; letter-spacing: -0.03em; color: rgba(255,255,255,0.94);
+            position: relative; z-index: 1; text-shadow: 0 2px 30px rgba(0,0,0,0.5);
+        }
+        .pf-caption {
+            position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+            padding: 3rem 2rem 1.75rem; display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.35) 55%, transparent 100%);
+            pointer-events: none;
+        }
+        .pf-status {
+            display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.7rem; font-weight: 700;
+            letter-spacing: 0.12em; text-transform: uppercase; color: #d4d4d8; margin-bottom: 0.4rem;
+        }
+        .pf-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 8px #22c55e; }
+        .pf-title { font-family: 'Cabinet Grotesk', sans-serif; font-size: clamp(1.4rem, 3vw, 2.25rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.05; }
+        .pf-domain { display: block; font-size: 0.85rem; color: #a1a1aa; margin-top: 0.4rem; }
+        .pf-visit {
+            pointer-events: auto; display: inline-flex; align-items: center; gap: 0.4rem;
+            background: #fff; color: #0a0a0a; padding: 0.7rem 1.35rem; border-radius: 999px;
+            font-size: 0.9rem; font-weight: 600; white-space: nowrap; transition: transform 0.2s, background 0.2s, color 0.2s;
+        }
+        .pf-visit:hover { transform: translateY(-2px); background: #FF4D00; color: #fff; }
+        .pf-visit span { transition: transform 0.2s; }
+        .pf-visit:hover span { transform: translate(2px,-2px); }
+        .pf-arrow {
+            position: absolute; top: 50%; transform: translateY(-50%); width: 3rem; height: 3rem; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; background: rgba(10,10,10,0.5);
+            -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.12);
+            color: #fff; font-size: 1.5rem; line-height: 1; cursor: pointer; z-index: 3; opacity: 0;
+            transition: background 0.2s, transform 0.2s, border-color 0.2s, opacity 0.2s;
+        }
+        .pf-stage:hover .pf-arrow, .pf-stage:focus-within .pf-arrow { opacity: 1; }
+        .pf-prev { left: 1rem; } .pf-next { right: 1rem; }
+        .pf-arrow:hover { background: #FF4D00; border-color: #FF4D00; transform: translateY(-50%) scale(1.08); }
+        .pf-progress { position: absolute; left: 0; bottom: 0; height: 3px; width: 100%; background: rgba(255,255,255,0.1); z-index: 3; }
+        .pf-progress span { display: block; height: 100%; width: 0; background: #FF4D00; box-shadow: 0 0 12px #FF4D00; }
+        .pf-thumbs { position: relative; display: flex; gap: 0.75rem; margin-top: 1.25rem; overflow-x: auto; padding-bottom: 0.25rem; scrollbar-width: none; }
+        .pf-thumbs::-webkit-scrollbar { display: none; }
+        .pf-thumb {
+            position: relative; flex: 0 0 auto; width: 6.5rem; height: 4rem; border-radius: 0.75rem; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1); cursor: pointer; opacity: 0.5; background: #111; padding: 0;
+            transition: opacity 0.25s, border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+        }
+        .pf-thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
+        .pf-thumb-fb { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-family: 'Cabinet Grotesk', sans-serif; font-size: 0.62rem; font-weight: 700; color: #fff; text-align: center; padding: 0 0.25rem; }
+        .pf-thumb:hover { opacity: 0.85; transform: translateY(-2px); }
+        .pf-thumb.is-active { opacity: 1; border-color: #FF4D00; box-shadow: 0 0 0 1px #FF4D00, 0 8px 24px -8px rgba(255,77,0,0.5); }
+        @media (max-width: 640px) {
+            .pf-caption { padding: 2rem 1.25rem 1.25rem; }
+            .pf-arrow { opacity: 1; width: 2.5rem; height: 2.5rem; font-size: 1.25rem; }
+            .pf-thumb { width: 5rem; height: 3.2rem; }
+        }
     </style>
 </head>
 <body class="selection:bg-brand selection:text-white min-h-[100dvh] relative bg-zinc-950">
@@ -458,6 +541,7 @@
             <nav class="hidden md:flex gap-10 items-center font-medium text-sm">
                 <a href="#services" class="text-zinc-400 hover:text-white transition-colors link-hover magnetic-btn">Services</a>
                 <a href="#process" class="text-zinc-400 hover:text-white transition-colors link-hover magnetic-btn">Process</a>
+                <a href="#work" class="text-zinc-400 hover:text-white transition-colors link-hover magnetic-btn">Work</a>
                 <a href="#pricing" class="text-zinc-400 hover:text-white transition-colors link-hover magnetic-btn">Packages</a>
                 <a href="#faq" class="text-zinc-400 hover:text-white transition-colors link-hover magnetic-btn">FAQ</a>
             </nav>
@@ -931,6 +1015,68 @@
                         <h3 class="font-display text-xl mb-3 text-center">Launch & Support</h3>
                         <p class="text-zinc-400 text-sm text-center">We launch it and provide ongoing support, updates, and improvements.</p>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Selected Work -->
+        <section id="work" class="py-32 relative overflow-hidden border-t border-white/[0.04]">
+            <div class="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+                <div class="text-center mb-14 reveal">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-brand/20 bg-brand/5 text-brand text-xs font-bold tracking-widest uppercase mb-6">
+                        <span class="w-1.5 h-1.5 rounded-full bg-brand animate-pulse"></span>
+                        Selected Work
+                    </div>
+                    <h2 class="font-display text-4xl md:text-6xl tracking-tighter mb-6">Sites we've <span class="font-serif italic font-normal">brought to life</span>.</h2>
+                    <p class="text-zinc-400 text-lg max-w-2xl mx-auto">A few recent builds — premium, fast, and made to convert. Tap any to explore it live.</p>
+                </div>
+
+                <div class="pf reveal" id="pf">
+                    <div class="pf-stage" id="pfStage" tabindex="0" aria-roledescription="carousel" aria-label="Selected work">
+                        <article class="pf-slide is-active" data-name="Turmasaya" data-domain="turmasaya.vercel.app" data-url="https://turmasaya.vercel.app">
+                            <video class="pf-vid" poster="./assets/portfolio/turmasaya.webp" muted loop playsinline preload="none" width="960" height="600">
+                                <source src="./assets/portfolio/turmasaya.webm" type="video/webm">
+                            </video>
+                        </article>
+                        <article class="pf-slide" data-name="Orobrick" data-domain="orobrick.com" data-url="https://orobrick.com">
+                            <video class="pf-vid" poster="./assets/portfolio/orobrick.webp" muted loop playsinline preload="none" width="960" height="600">
+                                <source src="./assets/portfolio/orobrick.webm" type="video/webm">
+                            </video>
+                        </article>
+                        <article class="pf-slide" data-name="PocketFriend Connect" data-domain="pocketfriend-connect.vercel.app" data-url="https://pocketfriend-connect.vercel.app">
+                            <video class="pf-vid" poster="./assets/portfolio/pocketfriend-connect.webp" muted loop playsinline preload="none" width="960" height="600">
+                                <source src="./assets/portfolio/pocketfriend-connect.webm" type="video/webm">
+                            </video>
+                        </article>
+                        <article class="pf-slide" data-name="Pocketfriend.io" data-domain="pocketfriend.io" data-url="https://pocketfriend.io">
+                            <video class="pf-vid" poster="./assets/portfolio/pocketfriend-io.webp" muted loop playsinline preload="none" width="960" height="600">
+                                <source src="./assets/portfolio/pocketfriend-io.webm" type="video/webm">
+                            </video>
+                        </article>
+                        <article class="pf-slide" data-name="CakeUWish" data-domain="cakeuwish.vercel.app" data-url="https://cakeuwish.vercel.app">
+                            <video class="pf-vid" poster="./assets/portfolio/cakeuwish.webp" muted loop playsinline preload="none" width="960" height="600">
+                                <source src="./assets/portfolio/cakeuwish.webm" type="video/webm">
+                            </video>
+                        </article>
+                        <article class="pf-slide" data-name="WayRest" data-domain="wayrest-fawn.vercel.app" data-url="https://wayrest-fawn.vercel.app">
+                            <div class="pf-fallback" style="--a:#1b2a32; --b:#070f13;"><span class="pf-fallback-name">WayRest</span></div>
+                        </article>
+
+                        <div class="pf-caption">
+                            <div class="pf-caption-text">
+                                <span class="pf-status"><span class="pf-dot"></span> Live site</span>
+                                <h3 class="pf-title" id="pfTitle">Turmasaya</h3>
+                                <span class="pf-domain" id="pfDomain">turmasaya.vercel.app</span>
+                            </div>
+                            <a class="pf-visit" id="pfVisit" href="https://turmasaya.vercel.app" target="_blank" rel="noopener">Visit&nbsp;site <span aria-hidden="true">↗</span></a>
+                        </div>
+
+                        <button class="pf-arrow pf-prev" id="pfPrev" type="button" aria-label="Previous project">‹</button>
+                        <button class="pf-arrow pf-next" id="pfNext" type="button" aria-label="Next project">›</button>
+                        <div class="pf-progress"><span id="pfProgress"></span></div>
+                    </div>
+
+                    <div class="pf-thumbs" id="pfThumbs" aria-label="Project thumbnails"></div>
                 </div>
             </div>
         </section>
@@ -1574,6 +1720,112 @@
     } catch (e) {
         console.error('Motion init failed:', e);
     }
+    </script>
+
+    <!-- Selected Work carousel -->
+    <script>
+    (function () {
+        const stage = document.getElementById('pfStage');
+        if (!stage) return;
+        const slides = Array.from(stage.querySelectorAll('.pf-slide'));
+        if (!slides.length) return;
+        const thumbsWrap = document.getElementById('pfThumbs');
+        const titleEl = document.getElementById('pfTitle');
+        const domainEl = document.getElementById('pfDomain');
+        const visitEl = document.getElementById('pfVisit');
+        const progressEl = document.getElementById('pfProgress');
+        const DURATION = 8500;
+        let index = 0, timer = null, running = false;
+
+        slides.forEach(function (slide, i) {
+            const t = document.createElement('button');
+            t.type = 'button';
+            t.className = 'pf-thumb' + (i === 0 ? ' is-active' : '');
+            t.setAttribute('aria-label', 'Show ' + slide.dataset.name);
+            const media = slide.querySelector('.pf-img, .pf-vid');
+            if (media) {
+                const ti = document.createElement('img');
+                ti.src = media.getAttribute('src') || media.getAttribute('poster'); ti.alt = ''; ti.loading = 'lazy';
+                t.appendChild(ti);
+            } else {
+                const fb = slide.querySelector('.pf-fallback');
+                const d = document.createElement('div');
+                d.className = 'pf-thumb-fb';
+                d.textContent = slide.dataset.name;
+                if (fb) {
+                    d.style.setProperty('--a', fb.style.getPropertyValue('--a'));
+                    d.style.setProperty('--b', fb.style.getPropertyValue('--b'));
+                    d.style.background = 'linear-gradient(135deg, var(--a), var(--b))';
+                }
+                t.appendChild(d);
+            }
+            t.addEventListener('click', function () { go(i); restart(); });
+            thumbsWrap.appendChild(t);
+        });
+        const thumbs = Array.from(thumbsWrap.children);
+
+        function centerThumb(i) {
+            const t = thumbs[i]; if (!t) return;
+            const target = t.offsetLeft - (thumbsWrap.clientWidth - t.clientWidth) / 2;
+            thumbsWrap.scrollTo({ left: Math.max(0, target), behavior: 'smooth' });
+        }
+        function updateVideos() {
+            slides.forEach(function (s, n) {
+                const v = s.querySelector('.pf-vid'); if (!v) return;
+                if (n === index && running) { v.play().catch(function () {}); } else { v.pause(); }
+            });
+        }
+        function go(i) {
+            index = (i + slides.length) % slides.length;
+            slides.forEach(function (s, n) { s.classList.toggle('is-active', n === index); });
+            thumbs.forEach(function (t, n) { t.classList.toggle('is-active', n === index); });
+            const s = slides[index];
+            titleEl.textContent = s.dataset.name;
+            domainEl.textContent = s.dataset.domain;
+            visitEl.href = s.dataset.url;
+            visitEl.setAttribute('aria-label', 'Visit ' + s.dataset.name);
+            centerThumb(index);
+            updateVideos();
+        }
+        function next() { go(index + 1); }
+        function prev() { go(index - 1); }
+
+        function runProgress() {
+            if (!progressEl) return;
+            progressEl.style.transition = 'none';
+            progressEl.style.width = '0%';
+            void progressEl.offsetWidth;
+            progressEl.style.transition = 'width ' + DURATION + 'ms linear';
+            progressEl.style.width = '100%';
+        }
+        function clearTimer() { if (timer) { clearInterval(timer); timer = null; } }
+        function freezeProgress() { if (progressEl) { const w = getComputedStyle(progressEl).width; progressEl.style.transition = 'none'; progressEl.style.width = w; } }
+        function start() { running = true; clearTimer(); runProgress(); updateVideos(); timer = setInterval(function () { next(); runProgress(); }, DURATION); }
+        function pauseAdvance() { clearTimer(); freezeProgress(); }
+        function stop() { running = false; clearTimer(); updateVideos(); freezeProgress(); }
+        function restart() { start(); }
+
+        document.getElementById('pfNext').addEventListener('click', function () { next(); restart(); });
+        document.getElementById('pfPrev').addEventListener('click', function () { prev(); restart(); });
+        stage.addEventListener('click', function (e) {
+            if (e.target.closest('.pf-arrow') || e.target.closest('.pf-visit')) return;
+            window.open(slides[index].dataset.url, '_blank', 'noopener');
+        });
+        stage.addEventListener('mouseenter', pauseAdvance);
+        stage.addEventListener('mouseleave', start);
+        stage.addEventListener('keydown', function (e) {
+            if (e.key === 'ArrowRight') { next(); restart(); }
+            else if (e.key === 'ArrowLeft') { prev(); restart(); }
+            else if (e.key === 'Enter') { window.open(slides[index].dataset.url, '_blank', 'noopener'); }
+        });
+
+        if ('IntersectionObserver' in window) {
+            const io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (en) { if (en.isIntersecting) start(); else stop(); });
+            }, { threshold: 0.25 });
+            io.observe(stage);
+        } else { start(); }
+    })();
     </script>
 </body>
 </html>
