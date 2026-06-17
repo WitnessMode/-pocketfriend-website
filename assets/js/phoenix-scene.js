@@ -714,7 +714,7 @@ export function initPhoenixScene(options = {}) {
   renderer.setClearColor(0x000000, 0);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = Number(options.exposure) || 1.18;
+  renderer.toneMappingExposure = Number(options.exposure) || 1.26;
 
   const scene = new THREE.Scene();
   scene.fog = new THREE.FogExp2(currentPalette.fog, compactScene ? 0.014 : 0.0118);
@@ -734,7 +734,7 @@ export function initPhoenixScene(options = {}) {
   const hemisphereLight = new THREE.HemisphereLight(
     currentPalette.ambient,
     currentPalette.mountainFar,
-    1.72,
+    2.1,
   );
   scene.add(hemisphereLight);
 
@@ -743,7 +743,7 @@ export function initPhoenixScene(options = {}) {
   sunLight.target.position.set(0, 5, -66);
   scene.add(sunLight, sunLight.target);
 
-  const fillLight = new THREE.DirectionalLight(currentPalette.ambient, 1.25);
+  const fillLight = new THREE.DirectionalLight(currentPalette.ambient, 1.9);
   fillLight.position.set(32, 18, -18);
   fillLight.target.position.set(0, 8, -58);
   scene.add(fillLight, fillLight.target);
@@ -1305,11 +1305,12 @@ export function initPhoenixScene(options = {}) {
     // Cinematic aerial chase — orbit to one shoulder and above the eagle so its
     // head and profile stay in frame, never a flat straight-down-the-back shot.
     cameraSide.crossVectors(worldUp, birdTangent).normalize();
-    const camDist = compactScene ? 14 : 17;
-    const camLift = compactScene ? 9 : 12;
-    // orbit ~0.9-1.35 rad off the tail axis: mostly to the side, a little behind.
+    const camDist = compactScene ? 11 : 13;
+    const camLift = compactScene ? 4.5 : 6;
+    // orbit ~1.3-1.6 rad: nearly abeam so the eagle's full side profile — head,
+    // beak and wing silhouette — stays readable, not a small top-down blob.
     const orbit =
-      1.12 +
+      1.42 +
       Math.sin(pathProgress * Math.PI * 1.5) * 0.12 +
       (reducedMotion ? 0 : Math.sin(elapsedSeconds * 0.11) * 0.1);
     cameraPosition
@@ -1340,12 +1341,16 @@ export function initPhoenixScene(options = {}) {
     }
     camera.position.copy(smoothCamPos).add(parallaxOffset);
 
-    // Aim at the eagle's head — a touch ahead of centre and slightly up.
+    // Aim at the eagle's head — a touch ahead of centre and slightly up. At the
+    // landing view (low scroll) drop the aim point so the eagle rides high in the
+    // frame, clear of the hero text/stat tiles, easing to the centred chase once
+    // the flight begins.
+    const landingFrame = 1 - clamp01(pathProgress / 0.14);
     desiredLookAt
       .copy(birdBase)
       .addScaledVector(birdTangent, 2.6)
       .add(lookAtLift);
-    desiredLookAt.y += 0.8;
+    desiredLookAt.y += 0.8 - landingFrame * 6.0;
     if (reducedMotion) {
       cameraLookAt.copy(desiredLookAt);
     } else {

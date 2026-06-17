@@ -7,6 +7,9 @@
     <link rel="icon" href="./assets/logo-icon.png">
     
     <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&f[]=cabinet-grotesk@900,800,700,500,400&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -15,6 +18,7 @@
                     fontFamily: {
                         sans: ['Satoshi', 'sans-serif'],
                         display: ['Cabinet Grotesk', 'sans-serif'],
+                        serif: ['Instrument Serif', 'ui-serif', 'serif'],
                     },
                     colors: {
                         zinc: { 950: '#050505', 900: '#0a0a0a', 800: '#141414', 400: '#a1a1aa' },
@@ -489,7 +493,7 @@
                     </div>
 
                     <h1 class="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tighter leading-[0.95] mb-8 text-gradient" id="heroTitle">
-                        Smart Websites, Automation & AI<br>for Small Business.
+                        Smart Websites, <span class="font-serif italic font-normal tracking-tight">Automation &amp; AI</span><br>for Small Business.
                     </h1>
                     
                     <p class="text-lg md:text-xl text-zinc-400 leading-relaxed max-w-[45ch] mb-10 font-sans font-light">
@@ -1125,7 +1129,7 @@
 
         <!-- CTA Section -->
         <section id="contact" class="max-w-4xl mx-auto px-6 py-32 text-center reveal border-t border-white/[0.04]">
-            <h2 class="font-display text-5xl md:text-7xl tracking-tighter mb-8">Ready to Make Technology Work For You?</h2>
+            <h2 class="font-display text-5xl md:text-7xl tracking-tighter mb-8">Ready to Make <span class="font-serif italic font-normal">Technology</span> Work For You?</h2>
             <p class="text-xl text-zinc-400 mb-12 max-w-2xl mx-auto">Your business deserves more than just a basic website. PocketFriend.io can help you create a professional online presence, automate your daily administrative work, answer your customers faster, and finally make technology feel easy.</p>
             <div class="flex flex-col sm:flex-row justify-center gap-4">
                 <a href="mailto:contact@pocketfriend.io" class="magnetic-btn inline-flex justify-center items-center gap-3 bg-brand text-white px-10 py-5 rounded-full font-bold text-lg hover:bg-brand/90 transition-all active:scale-[0.98] holo-shine">
@@ -1418,7 +1422,7 @@
                         canvas,
                         modelUrl: './assets/models/phoenix-eagle.glb',
                         modelSize: isCompactViewport ? 7 : 8.5,
-                        birdScale: isCompactViewport ? 0.58 : 1.15,
+                        birdScale: isCompactViewport ? 0.74 : 1.5,
                         modelRotation: [Math.PI / 2, 0, 0],
                         flapAmplitude: 0.18,
                         flapSpeed: 2.65,
