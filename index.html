@@ -431,23 +431,23 @@
         /* ===== Selected Work carousel ===== */
         .pf { position: relative; }
         .pf-stage {
-            position: relative; width: 100%; aspect-ratio: 16 / 10;
-            border-radius: 1.75rem; overflow: hidden; background: #0a0a0a;
-            border: 1px solid rgba(255,255,255,0.08);
-            box-shadow: 0 40px 120px -40px rgba(0,0,0,0.85);
-            outline: none;
+            position: relative; width: 100%; aspect-ratio: 2 / 1;
+            perspective: 1700px; perspective-origin: 50% 47%;
+            overflow: visible; outline: none; touch-action: pan-y;
         }
-        @media (min-width: 768px) { .pf-stage { aspect-ratio: 2 / 1; } }
+        @media (max-width: 767px) { .pf-stage { aspect-ratio: 5 / 4; perspective: 1100px; } }
+        .pf-track { position: absolute; inset: 0; transform-style: preserve-3d; }
         .pf-slide {
-            position: absolute; inset: 0; opacity: 0; visibility: hidden;
-            transform: scale(1.06);
-            transition: opacity 0.9s cubic-bezier(0.4,0,0.2,1), visibility 0.9s;
+            position: absolute; top: 50%; left: 50%; width: 64%; aspect-ratio: 16 / 10;
+            border-radius: 1rem; overflow: hidden; background: #0a0a0a;
+            box-shadow: 0 30px 80px -28px rgba(0,0,0,0.9);
+            backface-visibility: hidden; -webkit-backface-visibility: hidden;
+            transform: translate(-50%, -50%);
+            will-change: transform, opacity, filter; cursor: pointer; user-select: none; -webkit-user-select: none;
         }
-        .pf-slide.is-active {
-            opacity: 1; visibility: visible; transform: scale(1);
-            transition: opacity 0.9s cubic-bezier(0.4,0,0.2,1), transform 1.2s cubic-bezier(0.4,0,0.2,1);
-        }
-        .pf-img, .pf-vid { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; background: #0a0a0a; }
+        @media (max-width: 767px) { .pf-slide { width: 80%; } }
+        .pf-slide::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08); pointer-events: none; }
+        .pf-img, .pf-vid { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; background: #0a0a0a; pointer-events: none; }
         .pf-fallback {
             width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
             background: radial-gradient(130% 130% at 28% 18%, var(--a), var(--b) 72%); position: relative;
@@ -462,18 +462,18 @@
             position: relative; z-index: 1; text-shadow: 0 2px 30px rgba(0,0,0,0.5);
         }
         .pf-caption {
-            position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
-            padding: 3rem 2rem 1.75rem; display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem;
-            background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.35) 55%, transparent 100%);
-            pointer-events: none;
+            position: absolute; left: 0; right: 0; bottom: 1%; z-index: 200;
+            display: flex; flex-direction: column; align-items: center; gap: 0.7rem; text-align: center;
+            pointer-events: none; text-shadow: 0 2px 18px rgba(0,0,0,0.75);
         }
+        .pf-caption-text { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; }
         .pf-status {
             display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.7rem; font-weight: 700;
-            letter-spacing: 0.12em; text-transform: uppercase; color: #d4d4d8; margin-bottom: 0.4rem;
+            letter-spacing: 0.12em; text-transform: uppercase; color: #d4d4d8;
         }
         .pf-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 8px #22c55e; }
         .pf-title { font-family: 'Cabinet Grotesk', sans-serif; font-size: clamp(1.4rem, 3vw, 2.25rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.05; }
-        .pf-domain { display: block; font-size: 0.85rem; color: #a1a1aa; margin-top: 0.4rem; }
+        .pf-domain { display: block; font-size: 0.85rem; color: #b8b8c0; }
         .pf-visit {
             pointer-events: auto; display: inline-flex; align-items: center; gap: 0.4rem;
             background: #fff; color: #0a0a0a; padding: 0.7rem 1.35rem; border-radius: 999px;
@@ -483,16 +483,16 @@
         .pf-visit span { transition: transform 0.2s; }
         .pf-visit:hover span { transform: translate(2px,-2px); }
         .pf-arrow {
-            position: absolute; top: 50%; transform: translateY(-50%); width: 3rem; height: 3rem; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; background: rgba(10,10,10,0.5);
-            -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.12);
-            color: #fff; font-size: 1.5rem; line-height: 1; cursor: pointer; z-index: 3; opacity: 0;
+            position: absolute; top: 44%; transform: translateY(-50%); width: 3rem; height: 3rem; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; background: rgba(10,10,10,0.55);
+            -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.14);
+            color: #fff; font-size: 1.5rem; line-height: 1; cursor: pointer; z-index: 200; opacity: 0;
             transition: background 0.2s, transform 0.2s, border-color 0.2s, opacity 0.2s;
         }
         .pf-stage:hover .pf-arrow, .pf-stage:focus-within .pf-arrow { opacity: 1; }
-        .pf-prev { left: 1rem; } .pf-next { right: 1rem; }
+        .pf-prev { left: clamp(1rem, 3vw, 3rem); } .pf-next { right: clamp(1rem, 3vw, 3rem); }
         .pf-arrow:hover { background: #FF4D00; border-color: #FF4D00; transform: translateY(-50%) scale(1.08); }
-        .pf-progress { position: absolute; left: 0; bottom: 0; height: 3px; width: 100%; background: rgba(255,255,255,0.1); z-index: 3; }
+        .pf-progress { position: absolute; left: 0; bottom: -2px; height: 3px; width: 100%; background: rgba(255,255,255,0.08); z-index: 200; }
         .pf-progress span { display: block; height: 100%; width: 0; background: #FF4D00; box-shadow: 0 0 12px #FF4D00; }
         .pf-thumbs { position: relative; display: flex; gap: 0.75rem; margin-top: 1.25rem; overflow-x: auto; padding-bottom: 0.25rem; scrollbar-width: none; }
         .pf-thumbs::-webkit-scrollbar { display: none; }
@@ -506,7 +506,6 @@
         .pf-thumb:hover { opacity: 0.85; transform: translateY(-2px); }
         .pf-thumb.is-active { opacity: 1; border-color: #FF4D00; box-shadow: 0 0 0 1px #FF4D00, 0 8px 24px -8px rgba(255,77,0,0.5); }
         @media (max-width: 640px) {
-            .pf-caption { padding: 2rem 1.25rem 1.25rem; }
             .pf-arrow { opacity: 1; width: 2.5rem; height: 2.5rem; font-size: 1.25rem; }
             .pf-thumb { width: 5rem; height: 3.2rem; }
         }
@@ -1033,7 +1032,8 @@
 
                 <div class="pf reveal" id="pf">
                     <div class="pf-stage" id="pfStage" tabindex="0" aria-roledescription="carousel" aria-label="Selected work">
-                        <article class="pf-slide is-active" data-name="Turmasaya" data-domain="turmasaya.vercel.app" data-url="https://turmasaya.vercel.app">
+                        <div class="pf-track" id="pfTrack">
+                        <article class="pf-slide" data-name="Turmasaya" data-domain="turmasaya.vercel.app" data-url="https://turmasaya.vercel.app">
                             <video class="pf-vid" poster="./assets/portfolio/turmasaya.webp" muted loop playsinline preload="none" width="960" height="600">
                                 <source src="./assets/portfolio/turmasaya.webm" type="video/webm">
                             </video>
@@ -1061,6 +1061,7 @@
                         <article class="pf-slide" data-name="WayRest" data-domain="wayrest-fawn.vercel.app" data-url="https://wayrest-fawn.vercel.app">
                             <div class="pf-fallback" style="--a:#1b2a32; --b:#070f13;"><span class="pf-fallback-name">WayRest</span></div>
                         </article>
+                        </div><!-- /pf-track -->
 
                         <div class="pf-caption">
                             <div class="pf-caption-text">
@@ -1722,20 +1723,22 @@
     }
     </script>
 
-    <!-- Selected Work carousel -->
+    <!-- Selected Work carousel — 3D cover-flow cylinder (drag / swipe / wheel / auto-rotate) -->
     <script>
     (function () {
         const stage = document.getElementById('pfStage');
         if (!stage) return;
-        const slides = Array.from(stage.querySelectorAll('.pf-slide'));
-        if (!slides.length) return;
+        const track = document.getElementById('pfTrack') || stage;
+        const slides = Array.from(track.querySelectorAll('.pf-slide'));
+        const N = slides.length;
+        if (!N) return;
         const thumbsWrap = document.getElementById('pfThumbs');
         const titleEl = document.getElementById('pfTitle');
         const domainEl = document.getElementById('pfDomain');
         const visitEl = document.getElementById('pfVisit');
         const progressEl = document.getElementById('pfProgress');
-        const DURATION = 8500;
-        let index = 0, timer = null, running = false;
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const AUTO = 3800;
 
         slides.forEach(function (slide, i) {
             const t = document.createElement('button');
@@ -1752,79 +1755,137 @@
                 const d = document.createElement('div');
                 d.className = 'pf-thumb-fb';
                 d.textContent = slide.dataset.name;
-                if (fb) {
-                    d.style.setProperty('--a', fb.style.getPropertyValue('--a'));
-                    d.style.setProperty('--b', fb.style.getPropertyValue('--b'));
-                    d.style.background = 'linear-gradient(135deg, var(--a), var(--b))';
-                }
+                if (fb) { d.style.setProperty('--a', fb.style.getPropertyValue('--a')); d.style.setProperty('--b', fb.style.getPropertyValue('--b')); d.style.background = 'linear-gradient(135deg, var(--a), var(--b))'; }
                 t.appendChild(d);
             }
-            t.addEventListener('click', function () { go(i); restart(); });
+            t.addEventListener('click', function () { focusCard(i); restartAuto(); });
             thumbsWrap.appendChild(t);
         });
         const thumbs = Array.from(thumbsWrap.children);
 
-        function centerThumb(i) {
-            const t = thumbs[i]; if (!t) return;
-            const target = t.offsetLeft - (thumbsWrap.clientWidth - t.clientWidth) / 2;
-            thumbsWrap.scrollTo({ left: Math.max(0, target), behavior: 'smooth' });
-        }
-        function updateVideos() {
-            slides.forEach(function (s, n) {
-                const v = s.querySelector('.pf-vid'); if (!v) return;
-                if (n === index && running) { v.play().catch(function () {}); } else { v.pause(); }
-            });
-        }
-        function go(i) {
-            index = (i + slides.length) % slides.length;
-            slides.forEach(function (s, n) { s.classList.toggle('is-active', n === index); });
-            thumbs.forEach(function (t, n) { t.classList.toggle('is-active', n === index); });
-            const s = slides[index];
-            titleEl.textContent = s.dataset.name;
-            domainEl.textContent = s.dataset.domain;
-            visitEl.href = s.dataset.url;
-            visitEl.setAttribute('aria-label', 'Visit ' + s.dataset.name);
-            centerThumb(index);
-            updateVideos();
-        }
-        function next() { go(index + 1); }
-        function prev() { go(index - 1); }
+        let position = 0, target = 0, dragVel = 0;
+        let dragging = false, dragStartX = 0, dragStartPos = 0, moved = false, pointerId = null;
+        let raf = null, autoTimer = null, running = false;
+        let SPREAD = 320, DEPTH = 180;
 
-        function runProgress() {
-            if (!progressEl) return;
-            progressEl.style.transition = 'none';
-            progressEl.style.width = '0%';
-            void progressEl.offsetWidth;
-            progressEl.style.transition = 'width ' + DURATION + 'ms linear';
-            progressEl.style.width = '100%';
-        }
-        function clearTimer() { if (timer) { clearInterval(timer); timer = null; } }
-        function freezeProgress() { if (progressEl) { const w = getComputedStyle(progressEl).width; progressEl.style.transition = 'none'; progressEl.style.width = w; } }
-        function start() { running = true; clearTimer(); runProgress(); updateVideos(); timer = setInterval(function () { next(); runProgress(); }, DURATION); }
-        function pauseAdvance() { clearTimer(); freezeProgress(); }
-        function stop() { running = false; clearTimer(); updateVideos(); freezeProgress(); }
-        function restart() { start(); }
+        function wrap(d) { d = ((d % N) + N) % N; if (d > N / 2) d -= N; return d; }
+        function frontIndex() { return ((Math.round(position) % N) + N) % N; }
+        function measure() { const w = stage.getBoundingClientRect().width || 800; SPREAD = w * 0.30; DEPTH = w * 0.17; }
 
-        document.getElementById('pfNext').addEventListener('click', function () { next(); restart(); });
-        document.getElementById('pfPrev').addEventListener('click', function () { prev(); restart(); });
-        stage.addEventListener('click', function (e) {
+        function render() {
+            for (let i = 0; i < N; i++) {
+                const off = wrap(i - position);
+                const ax = Math.abs(off);
+                const x = off * SPREAD;
+                const tz = -ax * DEPTH;
+                const ry = -Math.max(-2.2, Math.min(2.2, off)) * 30;
+                const sc = Math.max(0.58, 1 - ax * 0.13);
+                const op = ax > 2.7 ? 0 : Math.max(0, 1 - ax * 0.34);
+                const blur = Math.min(5, Math.max(0, ax - 0.25) * 1.6);
+                const s = slides[i];
+                s.style.transform = 'translate(-50%,-50%) translateX(' + x.toFixed(1) + 'px) translateZ(' + tz.toFixed(1) + 'px) rotateY(' + ry.toFixed(1) + 'deg) scale(' + sc.toFixed(3) + ')';
+                s.style.opacity = op.toFixed(2);
+                s.style.filter = blur > 0.1 ? 'blur(' + blur.toFixed(1) + 'px)' : 'none';
+                s.style.zIndex = String(100 - Math.round(ax * 10));
+                s.style.pointerEvents = op > 0.05 ? 'auto' : 'none';
+            }
+        }
+
+        let lastFront = -1, lastVidFront = -1;
+        function updateFront() {
+            const fi = frontIndex();
+            if (fi !== lastFront) {
+                lastFront = fi;
+                const s = slides[fi];
+                titleEl.textContent = s.dataset.name;
+                domainEl.textContent = s.dataset.domain;
+                visitEl.href = s.dataset.url;
+                visitEl.setAttribute('aria-label', 'Visit ' + s.dataset.name);
+                thumbs.forEach(function (t, n) { t.classList.toggle('is-active', n === fi); });
+                centerThumb(fi);
+            }
+            const settled = Math.abs(target - position) < 0.45 && !dragging;
+            if (settled && fi !== lastVidFront) {
+                lastVidFront = fi;
+                slides.forEach(function (sl, n) { const v = sl.querySelector('.pf-vid'); if (!v) return; if (n === fi && running) v.play().catch(function () {}); else v.pause(); });
+            }
+        }
+
+        function tick() {
+            raf = requestAnimationFrame(tick);
+            if (!dragging) {
+                const d = target - position;
+                position += d * 0.16;
+                if (Math.abs(d) < 0.0006) { const m = ((target % N) + N) % N; position = m; target = m; }
+            }
+            render(); updateFront();
+        }
+        function startTick() { if (!raf) raf = requestAnimationFrame(tick); }
+        function stopTick() { if (raf) { cancelAnimationFrame(raf); raf = null; } }
+
+        function focusCard(i) { target = Math.round(position + wrap(i - position)); }
+        function step(d) { target = Math.round(target) + d; }
+
+        function runProgress() { if (!progressEl) return; progressEl.style.transition = 'none'; progressEl.style.width = '0%'; void progressEl.offsetWidth; progressEl.style.transition = 'width ' + AUTO + 'ms linear'; progressEl.style.width = '100%'; }
+        function clearAuto() { if (autoTimer) { clearInterval(autoTimer); autoTimer = null; } }
+        function startAuto() { running = true; clearAuto(); lastVidFront = -1; updateFront(); if (!reduceMotion) { runProgress(); autoTimer = setInterval(function () { if (!dragging) { step(1); runProgress(); } }, AUTO); } }
+        function pauseAuto() { clearAuto(); if (progressEl) { const w = getComputedStyle(progressEl).width; progressEl.style.transition = 'none'; progressEl.style.width = w; } }
+        function stopAll() { running = false; clearAuto(); slides.forEach(function (s) { const v = s.querySelector('.pf-vid'); if (v) v.pause(); }); }
+        function restartAuto() { startAuto(); }
+
+        stage.addEventListener('pointerdown', function (e) {
             if (e.target.closest('.pf-arrow') || e.target.closest('.pf-visit')) return;
-            window.open(slides[index].dataset.url, '_blank', 'noopener');
+            dragging = true; moved = false; dragStartX = e.clientX; dragStartPos = position; dragVel = 0; pointerId = e.pointerId;
+            try { stage.setPointerCapture(e.pointerId); } catch (err) {}
+            clearAuto();
         });
-        stage.addEventListener('mouseenter', pauseAdvance);
-        stage.addEventListener('mouseleave', start);
+        stage.addEventListener('pointermove', function (e) {
+            if (!dragging) return;
+            const dx = e.clientX - dragStartX;
+            if (Math.abs(dx) > 4) moved = true;
+            const prev = position;
+            position = dragStartPos - dx / (SPREAD * 0.9);
+            dragVel = position - prev;
+            render(); updateFront();
+        });
+        function endDrag() {
+            if (!dragging) return; dragging = false;
+            try { stage.releasePointerCapture(pointerId); } catch (err) {}
+            target = Math.round(position + Math.max(-3, Math.min(3, dragVel * 7)));
+            startAuto();
+        }
+        stage.addEventListener('pointerup', endDrag);
+        stage.addEventListener('pointercancel', endDrag);
+
+        slides.forEach(function (s, i) {
+            s.addEventListener('click', function () {
+                if (moved) return;
+                if (i === frontIndex()) window.open(s.dataset.url, '_blank', 'noopener');
+                else { focusCard(i); restartAuto(); }
+            });
+        });
+
+        document.getElementById('pfNext').addEventListener('click', function () { step(1); restartAuto(); });
+        document.getElementById('pfPrev').addEventListener('click', function () { step(-1); restartAuto(); });
+        stage.addEventListener('mouseenter', pauseAuto);
+        stage.addEventListener('mouseleave', function () { if (running) startAuto(); });
         stage.addEventListener('keydown', function (e) {
-            if (e.key === 'ArrowRight') { next(); restart(); }
-            else if (e.key === 'ArrowLeft') { prev(); restart(); }
-            else if (e.key === 'Enter') { window.open(slides[index].dataset.url, '_blank', 'noopener'); }
+            if (e.key === 'ArrowRight') { step(1); restartAuto(); }
+            else if (e.key === 'ArrowLeft') { step(-1); restartAuto(); }
+            else if (e.key === 'Enter') { window.open(slides[frontIndex()].dataset.url, '_blank', 'noopener'); }
         });
+
+        function centerThumb(i) { const t = thumbs[i]; if (!t) return; const tg = t.offsetLeft - (thumbsWrap.clientWidth - t.clientWidth) / 2; thumbsWrap.scrollTo({ left: Math.max(0, tg), behavior: 'smooth' }); }
+
+        window.addEventListener('resize', function () { measure(); render(); });
+        measure(); render(); updateFront(); startTick();
 
         if ('IntersectionObserver' in window) {
             const io = new IntersectionObserver(function (entries) {
-                entries.forEach(function (en) { if (en.isIntersecting) start(); else stop(); });
-            }, { threshold: 0.25 });
+                entries.forEach(function (en) { if (en.isIntersecting) { startTick(); startAuto(); } else { stopAll(); stopTick(); } });
+            }, { threshold: 0.2 });
             io.observe(stage);
-        } else { start(); }
+        } else { startAuto(); }
     })();
     </script>
 </body>
