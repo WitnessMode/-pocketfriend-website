@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pocketfriend - Web Design & Local Marketing</title>
     <link rel="icon" href="./assets/logo-icon.png">
+    <script defer src="./assets/js/i18n-data.js"></script>
+    <script defer src="./assets/js/i18n.js"></script>
     
     <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&f[]=cabinet-grotesk@900,800,700,500,400&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1546,7 +1548,11 @@
         
         // Trigger scramble on load
         const heroTitle = document.getElementById('heroTitle');
-        const allowHeroScramble = window.matchMedia('(min-width: 700px) and (pointer: fine)').matches;
+        const requestedLanguage = new URLSearchParams(window.location.search).get('l')
+            || localStorage.getItem('pf_language')
+            || 'en';
+        const allowHeroScramble = requestedLanguage === 'en'
+            && window.matchMedia('(min-width: 700px) and (pointer: fine)').matches;
         if (heroTitle && allowHeroScramble) {
             const originalText = heroTitle.innerText;
             const fx = new TextScramble(heroTitle);
